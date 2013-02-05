@@ -1,27 +1,84 @@
 # See PwnPlantGrowth's page on https://dev.bukkit.org for more config details.
 
 # CROPS
-CACTUS: 50
-CARROT: 50
-COCOA: 50
-MELON: 50
-MELON_STEM: 50
-NETHERWART: 25
-POTATO: 50
-PUMPKIN: 50
-PUMPKIN_STEM: 50
-SUGAR_CANE: 50
-WHEAT: 50
+Cactus:
+    Growth: 50
+    Biome: 
+    - DESERT
+    - DESERT_HILLS
+Carrot: 
+    Growth: 50
+    Biome: []
+Cocoa: 
+    Growth: 25
+    Biome:
+    - JUNGLE
+    - JUNGLE_HILLS
+Melon_Block: 
+    Growth: 50
+    Biome: []
+Melon_Stem:
+    Growth: 50
+    Biome: []
+Nether_Wart:
+    Growth: 25
+    Biome: 
+    - HELL
+Potato:
+    Growth: 50
+    Biome: []
+Pumpkin_Block:
+    Growth: 50
+    Biome: []
+Pumpkin_Stem:
+    Growth: 50
+    Biome: []
+Sugar_Cane:
+    Growth: 50
+    Biome:
+    - BEACH
+    - SWAMPLAND
+Wheat:
+    Growth: 50
+    Biome:
+    - PLAINS
+    - RIVER
 
 # TREES
-BIRCH: 50
-JUNGLE: 50
-SPRUCE: 50
-TREE: 50
+Birch:
+    Growth: 50
+    Biome: []
+Jungle:
+    Growth: 50
+    Biome:
+    - JUNGLE
+    - JUNGLE_HILLS    
+Spruce:
+    Growth: 50
+    Biome:
+    - FOREST
+    - FOREST_HILLS
+    - TAIGA
+    - TAIGA_HILLS
+Tree:
+    Growth: 50
+    Biome: []
 
 # BIG TREE
-BIG_TREE: 25
+Big_Tree:
+    Growth: 50
+    Biome: []
 
 # GIANT MUSHROOMS
-BROWN_MUSHROOM: 50
-RED_MUSHROOM: 50
+Brown_Mushroom:
+    Growth: 50
+    Biome:
+    - MUSHROOM_ISLAND
+    - MUSHROOM_SHORE
+Red_Mushroom:
+    Growth: 50
+    Biome:
+    - MUSHROOM_ISLAND
+    - MUSHROOM_SHORE
+# run a debug log
+debug_log: false
