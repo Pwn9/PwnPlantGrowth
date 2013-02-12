@@ -78,7 +78,7 @@ public class PwnPlantGrowth extends JavaPlugin implements Listener {
 		
 	}
 	
-	@EventHandler(ignoreCancelled = true)
+	/*@EventHandler(ignoreCancelled = true)
 	public void onBlockBreak(BlockBreakEvent breakEvent) {
 		if(breakEvent.getBlock().getType() == Material.NETHER_WARTS) {
 			breakEvent.setCancelled(true);
@@ -86,6 +86,7 @@ public class PwnPlantGrowth extends JavaPlugin implements Listener {
 			breakEvent.getBlock().getWorld().dropItemNaturally(breakEvent.getBlock().getLocation(), new ItemStack(Material.NETHER_STALK, randomNumberGenerator.nextInt(2)+1));
 		}
 	}
+	*/
 	
 	@EventHandler(ignoreCancelled = true)
 	public void plantGrow(BlockGrowEvent e) {
