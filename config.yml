@@ -3,14 +3,17 @@
 # CROPS
 Cactus:
     Growth: 50
+    Death: 5
     Biome: 
     - DESERT
     - DESERT_HILLS
 Carrot: 
     Growth: 50
+    Death: 5
     Biome: []
 Cocoa: 
     Growth: 25
+    Death: 5
     Biome:
     - JUNGLE
     - JUNGLE_HILLS
@@ -19,27 +22,33 @@ Melon_Block:
     Biome: []
 Melon_Stem:
     Growth: 50
+    Death: 5
     Biome: []
 Nether_Wart:
     Growth: 25
+    Death: 5
     Biome: 
     - HELL
 Potato:
     Growth: 50
+    Death: 5
     Biome: []
 Pumpkin_Block:
     Growth: 50
     Biome: []
 Pumpkin_Stem:
     Growth: 50
+    Death: 5
     Biome: []
 Sugar_Cane:
     Growth: 50
+    Death: 5
     Biome:
     - BEACH
     - SWAMPLAND
 Wheat:
     Growth: 50
+    Death: 5
     Biome:
     - PLAINS
     - RIVER
@@ -47,14 +56,17 @@ Wheat:
 # TREES
 Birch:
     Growth: 50
+    Death: 5
     Biome: []
 Jungle:
     Growth: 50
+    Death: 5
     Biome:
     - JUNGLE
     - JUNGLE_HILLS    
 Spruce:
     Growth: 50
+    Death: 5
     Biome:
     - FOREST
     - FOREST_HILLS
@@ -62,23 +74,28 @@ Spruce:
     - TAIGA_HILLS
 Tree:
     Growth: 50
+    Death: 5
     Biome: []
 
 # BIG TREE
 Big_Tree:
     Growth: 50
+    Death: 5
     Biome: []
 
 # GIANT MUSHROOMS
 Brown_Mushroom:
     Growth: 50
+    Death: 5
     Biome:
     - MUSHROOM_ISLAND
     - MUSHROOM_SHORE
 Red_Mushroom:
     Growth: 50
+    Death: 5
     Biome:
     - MUSHROOM_ISLAND
     - MUSHROOM_SHORE
+    
 # run a debug log
 debug_log: false
