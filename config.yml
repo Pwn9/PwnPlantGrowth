@@ -96,6 +96,9 @@ Red_Mushroom:
     Biome:
     - MUSHROOM_ISLAND
     - MUSHROOM_SHORE
+
+# stop buckets from transporting source blocks
+block_water_bucket: false
     
 # run a debug log
 debug_log: false
