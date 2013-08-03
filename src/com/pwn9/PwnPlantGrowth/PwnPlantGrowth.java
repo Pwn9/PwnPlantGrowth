@@ -78,6 +78,14 @@ public class PwnPlantGrowth extends JavaPlugin implements Listener {
 		this.saveDefaultConfig();
 		this.getServer().getPluginManager().registerEvents(this, this);
 		
+		// Start Metrics
+		try {
+		    MetricsLite metricslite = new MetricsLite(this);
+		    metricslite.start();
+		} catch (IOException e) {
+		    // Failed to submit the stats :-(
+		}
+		
 		// Config Growth imports
 		this.CarrotChance = getConfig().getInt("Carrot.Growth");
 		this.CocoaChance = getConfig().getInt("Cocoa.Growth");
