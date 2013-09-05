@@ -7,12 +7,14 @@ import java.io.PrintWriter;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.TreeType;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -33,6 +35,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class PwnPlantGrowth extends JavaPlugin implements Listener {
 	
 	public ArrayList<Integer> softBlocks = new ArrayList<Integer>();
+
+	public static List<String> enabledWorlds;
 	
 	static Random randomNumberGenerator = new Random();
 	
@@ -85,6 +89,9 @@ public class PwnPlantGrowth extends JavaPlugin implements Listener {
 		} catch (IOException e) {
 		    // Failed to submit the stats :-(
 		}
+		
+		// Get enabled worlds
+		PwnPlantGrowth.enabledWorlds = getConfig().getStringList("enabled_worlds");
 		
 		// Config Growth imports
 		this.CarrotChance = getConfig().getInt("Carrot.Growth");
@@ -145,186 +152,89 @@ public class PwnPlantGrowth extends JavaPlugin implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerEmptyBucket(PlayerBucketEmptyEvent event)
 	{
-		Player player = event.getPlayer();
-    	String noSourceWater = getConfig().getString("block_water_bucket");
-    	if (noSourceWater == "true") {	
-    		if(player.getItemInHand().getType() == Material.WATER_BUCKET) {   			
-    			Block block = event.getBlockClicked().getRelative(event.getBlockFace());
-    			EvaporateWaterTask task = new EvaporateWaterTask(block);
-    			getServer().getScheduler().scheduleSyncDelayedTask(this, task, 30L);		
-    		}
-    	}
+		World world = event.getPlayer().getWorld();
+		if (PwnPlantGrowth.isEnabledIn(world.getName())) 
+		{
+	    	Boolean noSourceWater = getConfig().getBoolean("block_water_bucket");
+	    	if (noSourceWater) 
+	    	{				
+	    		Player player = event.getPlayer();
+	    		if(player.getItemInHand().getType() == Material.WATER_BUCKET) 
+	    		{   			
+	    			Block block = event.getBlockClicked().getRelative(event.getBlockFace());
+	    			EvaporateWaterTask task = new EvaporateWaterTask(block);
+	    			getServer().getScheduler().scheduleSyncDelayedTask(this, task, 30L);		
+	    		}
+	    	}
+		}
 	}
 	
 	//when a dispenser dispenses...
 	@EventHandler(ignoreCancelled = true)
 	public void onBlockDispense(BlockDispenseEvent event)
 	{
-		//only care about water
-		if(event.getItem().getType() == Material.WATER_BUCKET)
+		World world = event.getBlock().getWorld();
+		if (PwnPlantGrowth.isEnabledIn(world.getName())) 
 		{
-			Block dispenser = event.getBlock();
-			// Get location of dispenser 
-			Location loc = dispenser.getLocation();
-			// Get direction dispenser is facing 
-			MaterialData mat = dispenser.getState().getData(); 
-			Dispenser disp_mat = (Dispenser) mat; 
-			BlockFace face = disp_mat.getFacing(); 			
-			Block block;
-			if(face.toString() == "WEST") 
-			{
-				block = loc.add(-1, 0, 0).getBlock();			
-			}
-			else if(face.toString() == "EAST") 
-			{
-				block = loc.add(1, 0, 0).getBlock();
-			}
-			else if(face.toString() == "NORTH") 
-			{
-				block = loc.add(0, 0, -1).getBlock();
-			}
-			else
-			{
-				block = loc.add(0, 0, 1).getBlock();
-			}			
-			EvaporateWaterTask task = new EvaporateWaterTask(block);
-			getServer().getScheduler().scheduleSyncDelayedTask(this, task, 45L);
-		}	
+	    	Boolean noSourceWater = getConfig().getBoolean("block_water_bucket");
+	    	if (noSourceWater) 
+	    	{				
+				//only care about water
+				if(event.getItem().getType() == Material.WATER_BUCKET)
+				{
+					Block dispenser = event.getBlock();
+					// Get location of dispenser 
+					Location loc = dispenser.getLocation();
+					// Get direction dispenser is facing 
+					MaterialData mat = dispenser.getState().getData(); 
+					Dispenser disp_mat = (Dispenser) mat; 
+					BlockFace face = disp_mat.getFacing(); 			
+					Block block;
+					if(face.toString() == "WEST") 
+					{
+						block = loc.add(-1, 0, 0).getBlock();			
+					}
+					else if(face.toString() == "EAST") 
+					{
+						block = loc.add(1, 0, 0).getBlock();
+					}
+					else if(face.toString() == "NORTH") 
+					{
+						block = loc.add(0, 0, -1).getBlock();
+					}
+					else
+					{
+						block = loc.add(0, 0, 1).getBlock();
+					}			
+					EvaporateWaterTask task = new EvaporateWaterTask(block);
+					getServer().getScheduler().scheduleSyncDelayedTask(this, task, 45L);
+				}
+	    	}
+		}
 	}
 	
 	// Listen for plant growth
 	@EventHandler(ignoreCancelled = true)
 	public void plantGrow(BlockGrowEvent e) {
-		String toLog = "";
-		if (e.getBlock().getType() == Material.AIR){
-			toLog = "Growing: ";
-		}
-		else {
-			toLog = "Growing: " +e.getBlock().getType();
-		}
-
-		if (e.getBlock().getType() == Material.CARROT){
-			if ((getConfig().getList("Carrot.Biome").contains(e.getBlock().getBiome().toString())) || (getConfig().getList("Carrot.Biome").isEmpty())) {		
-				if (!(PwnPlantGrowth.random(CarrotChance))) {
-					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(CarrotDeath)) {
-						e.getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
-					}
-				}
+		
+		World world = e.getBlock().getWorld();
+		if (PwnPlantGrowth.isEnabledIn(world.getName())) {
+			
+			String toLog = "";
+			if (e.getBlock().getType() == Material.AIR){
+				toLog = "Growing: ";
 			}
 			else {
-				e.setCancelled(true);
-				toLog += " Failed: Bad Biome";				
-			}				
-		}
-		if (e.getBlock().getType() == Material.COCOA){
-			if ((getConfig().getList("Cocoa.Biome").contains(e.getBlock().getBiome().toString())) || (getConfig().getList("Cocoa.Biome").isEmpty())) {		
-				if (!(PwnPlantGrowth.random(CocoaChance))) {	
-					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(CocoaDeath)) {
-						e.getBlock().setType(Material.VINE);
-						toLog += " and Died";
-					}
-				}
+				toLog = "Growing: " +e.getBlock().getType();
 			}
-			else {
-				e.setCancelled(true);
-				toLog += " Failed: Bad Biome";				
-			}				
-		}	
-		if (e.getBlock().getType() == Material.CROPS){
-			if ((getConfig().getList("Wheat.Biome").contains(e.getBlock().getBiome().toString())) || (getConfig().getList("Wheat.Biome").isEmpty())) {		
-				if (!(PwnPlantGrowth.random(WheatChance))) {	
-					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(WheatDeath)) {
-						e.getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
-					}
-				}
-			}
-			else {
-				e.setCancelled(true);
-				toLog += " Failed: Bad Biome";				
-			}				
-		}			
-		if (e.getBlock().getType() == Material.MELON_STEM){
-			if ((getConfig().getList("Melon_Stem.Biome").contains(e.getBlock().getBiome().toString())) || (getConfig().getList("Melon_Stem.Biome").isEmpty())) {		
-				if (!(PwnPlantGrowth.random(MelonStemChance))) {	
-					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(MelonStemDeath)) {
-						e.getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
-					}
-				}
-			}
-			else {
-				e.setCancelled(true);
-				toLog += " Failed: Bad Biome";				
-			}				
-		}			
-		if (e.getBlock().getType() == Material.NETHER_WARTS){
-			if ((getConfig().getList("Nether_Wart.Biome").contains(e.getBlock().getBiome().toString())) || (getConfig().getList("Nether_Wart.Biome").isEmpty())) {		
-				if (!(PwnPlantGrowth.random(NetherWartChance))) {	
-					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(NetherWartDeath)) {
-						e.getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
-					}
-				}	
-			}
-			else {
-				e.setCancelled(true);
-				toLog += " Failed: Bad Biome";				
-			}
-		}	
-		if (e.getBlock().getType() == Material.POTATO){
-			if ((getConfig().getList("Potato.Biome").contains(e.getBlock().getBiome().toString())) || (getConfig().getList("Potato.Biome").isEmpty())) {		
-				if (!(PwnPlantGrowth.random(PotatoChance))) {	
-					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(PotatoDeath)) {
-						e.getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
-					}
-				}
-			}
-			else {
-				e.setCancelled(true);
-				toLog += " Failed: Bad Biome";				
-			}				
-		}			
-		if (e.getBlock().getType() == Material.PUMPKIN_STEM){
-			if ((getConfig().getList("Pumpkin_Stem.Biome").contains(e.getBlock().getBiome().toString())) || (getConfig().getList("Pumpkin_Stem.Biome").isEmpty())) {		
-				if (!(PwnPlantGrowth.random(PumpkinStemChance))) {
-					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(PumpkinStemDeath)) {
-						e.getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
-					}
-				}
-			}
-			else {
-				e.setCancelled(true);
-				toLog += " Failed: Bad Biome";				
-			}				
-		}	
-		// AIR BLOCKS
-		if (e.getBlock().getType() == Material.AIR){
-			if (e.getBlock().getRelative(BlockFace.DOWN).getType() == Material.CACTUS) {
-				toLog += "CACTUS";
-				if ((getConfig().getList("Cactus.Biome").contains(e.getBlock().getBiome().toString())) || (getConfig().getList("Cactus.Biome").isEmpty())) {		
-					if (!(PwnPlantGrowth.random(CactusChance))) {
+	
+			if (e.getBlock().getType() == Material.CARROT){
+				if ((getConfig().getList("Carrot.Biome").contains(e.getBlock().getBiome().toString())) || (getConfig().getList("Carrot.Biome").isEmpty())) {		
+					if (!(PwnPlantGrowth.random(CarrotChance))) {
 						e.setCancelled(true);
 						toLog += " Failed";
-						if (PwnPlantGrowth.random(CactusDeath)) {
-							e.getBlock().getRelative(BlockFace.DOWN).setType(Material.LONG_GRASS);
+						if (PwnPlantGrowth.random(CarrotDeath)) {
+							e.getBlock().setType(Material.LONG_GRASS);
 							toLog += " and Died";
 						}
 					}
@@ -332,16 +242,15 @@ public class PwnPlantGrowth extends JavaPlugin implements Listener {
 				else {
 					e.setCancelled(true);
 					toLog += " Failed: Bad Biome";				
-				}					
+				}				
 			}
-			else if (e.getBlock().getRelative(BlockFace.DOWN).getType() == Material.SUGAR_CANE_BLOCK) {
-				toLog += "CANE";
-				if ((getConfig().getList("Sugar_Cane.Biome").contains(e.getBlock().getBiome().toString())) || (getConfig().getList("Sugar_Cane.Biome").isEmpty())) {
-					if (!(PwnPlantGrowth.random(CaneChance))) {
+			if (e.getBlock().getType() == Material.COCOA){
+				if ((getConfig().getList("Cocoa.Biome").contains(e.getBlock().getBiome().toString())) || (getConfig().getList("Cocoa.Biome").isEmpty())) {		
+					if (!(PwnPlantGrowth.random(CocoaChance))) {	
 						e.setCancelled(true);
 						toLog += " Failed";
-						if (PwnPlantGrowth.random(CaneDeath)) {
-							e.getBlock().getRelative(BlockFace.DOWN).setType(Material.LONG_GRASS);
+						if (PwnPlantGrowth.random(CocoaDeath)) {
+							e.getBlock().setType(Material.VINE);
 							toLog += " and Died";
 						}
 					}
@@ -349,239 +258,365 @@ public class PwnPlantGrowth extends JavaPlugin implements Listener {
 				else {
 					e.setCancelled(true);
 					toLog += " Failed: Bad Biome";				
-				}					
-			}
-			else if ((e.getBlock().getRelative(BlockFace.EAST).getType() == Material.MELON_STEM) ||
-					(e.getBlock().getRelative(BlockFace.WEST).getType() == Material.MELON_STEM) ||
-					(e.getBlock().getRelative(BlockFace.NORTH).getType() == Material.MELON_STEM) ||
-					(e.getBlock().getRelative(BlockFace.SOUTH).getType() == Material.MELON_STEM)) {
-				toLog += "MELON_BLOCK";
-				if ((getConfig().getList("Melon_Block.Biome").contains(e.getBlock().getBiome().toString())) || (getConfig().getList("Melon_Block.Biome").isEmpty())) {				
-					if (!(PwnPlantGrowth.random(MelonChance))) {
+				}				
+			}	
+			if (e.getBlock().getType() == Material.CROPS){
+				if ((getConfig().getList("Wheat.Biome").contains(e.getBlock().getBiome().toString())) || (getConfig().getList("Wheat.Biome").isEmpty())) {		
+					if (!(PwnPlantGrowth.random(WheatChance))) {	
 						e.setCancelled(true);
 						toLog += " Failed";
+						if (PwnPlantGrowth.random(WheatDeath)) {
+							e.getBlock().setType(Material.LONG_GRASS);
+							toLog += " and Died";
+						}
 					}
 				}
 				else {
 					e.setCancelled(true);
 					toLog += " Failed: Bad Biome";				
-				}					
-			}
-			else if ((e.getBlock().getRelative(BlockFace.EAST).getType() == Material.PUMPKIN_STEM) ||
-					(e.getBlock().getRelative(BlockFace.WEST).getType() == Material.PUMPKIN_STEM) ||
-					(e.getBlock().getRelative(BlockFace.NORTH).getType() == Material.PUMPKIN_STEM) ||
-					(e.getBlock().getRelative(BlockFace.SOUTH).getType() == Material.PUMPKIN_STEM)) {
-				toLog += "PUMPKIN_BLOCK";
-				if ((getConfig().getList("Pumpkin_Block.Biome").contains(e.getBlock().getBiome().toString())) || (getConfig().getList("Pumpkin_Block.Biome").isEmpty())) {				
-					if (!(PwnPlantGrowth.random(PumpkinChance))) {
+				}				
+			}			
+			if (e.getBlock().getType() == Material.MELON_STEM){
+				if ((getConfig().getList("Melon_Stem.Biome").contains(e.getBlock().getBiome().toString())) || (getConfig().getList("Melon_Stem.Biome").isEmpty())) {		
+					if (!(PwnPlantGrowth.random(MelonStemChance))) {	
 						e.setCancelled(true);
 						toLog += " Failed";
+						if (PwnPlantGrowth.random(MelonStemDeath)) {
+							e.getBlock().setType(Material.LONG_GRASS);
+							toLog += " and Died";
+						}
 					}
 				}
 				else {
 					e.setCancelled(true);
 					toLog += " Failed: Bad Biome";				
-				}					
-			}
-		}	
-    	String logEnabled = getConfig().getString("debug_log");
-    	if (logEnabled == "true") {	
-    		logToFile(toLog);
-    	}
+				}				
+			}			
+			if (e.getBlock().getType() == Material.NETHER_WARTS){
+				if ((getConfig().getList("Nether_Wart.Biome").contains(e.getBlock().getBiome().toString())) || (getConfig().getList("Nether_Wart.Biome").isEmpty())) {		
+					if (!(PwnPlantGrowth.random(NetherWartChance))) {	
+						e.setCancelled(true);
+						toLog += " Failed";
+						if (PwnPlantGrowth.random(NetherWartDeath)) {
+							e.getBlock().setType(Material.LONG_GRASS);
+							toLog += " and Died";
+						}
+					}	
+				}
+				else {
+					e.setCancelled(true);
+					toLog += " Failed: Bad Biome";				
+				}
+			}	
+			if (e.getBlock().getType() == Material.POTATO){
+				if ((getConfig().getList("Potato.Biome").contains(e.getBlock().getBiome().toString())) || (getConfig().getList("Potato.Biome").isEmpty())) {		
+					if (!(PwnPlantGrowth.random(PotatoChance))) {	
+						e.setCancelled(true);
+						toLog += " Failed";
+						if (PwnPlantGrowth.random(PotatoDeath)) {
+							e.getBlock().setType(Material.LONG_GRASS);
+							toLog += " and Died";
+						}
+					}
+				}
+				else {
+					e.setCancelled(true);
+					toLog += " Failed: Bad Biome";				
+				}				
+			}			
+			if (e.getBlock().getType() == Material.PUMPKIN_STEM){
+				if ((getConfig().getList("Pumpkin_Stem.Biome").contains(e.getBlock().getBiome().toString())) || (getConfig().getList("Pumpkin_Stem.Biome").isEmpty())) {		
+					if (!(PwnPlantGrowth.random(PumpkinStemChance))) {
+						e.setCancelled(true);
+						toLog += " Failed";
+						if (PwnPlantGrowth.random(PumpkinStemDeath)) {
+							e.getBlock().setType(Material.LONG_GRASS);
+							toLog += " and Died";
+						}
+					}
+				}
+				else {
+					e.setCancelled(true);
+					toLog += " Failed: Bad Biome";				
+				}				
+			}	
+			// AIR BLOCKS
+			if (e.getBlock().getType() == Material.AIR){
+				if (e.getBlock().getRelative(BlockFace.DOWN).getType() == Material.CACTUS) {
+					toLog += "CACTUS";
+					if ((getConfig().getList("Cactus.Biome").contains(e.getBlock().getBiome().toString())) || (getConfig().getList("Cactus.Biome").isEmpty())) {		
+						if (!(PwnPlantGrowth.random(CactusChance))) {
+							e.setCancelled(true);
+							toLog += " Failed";
+							if (PwnPlantGrowth.random(CactusDeath)) {
+								e.getBlock().getRelative(BlockFace.DOWN).setType(Material.LONG_GRASS);
+								toLog += " and Died";
+							}
+						}
+					}
+					else {
+						e.setCancelled(true);
+						toLog += " Failed: Bad Biome";				
+					}					
+				}
+				else if (e.getBlock().getRelative(BlockFace.DOWN).getType() == Material.SUGAR_CANE_BLOCK) {
+					toLog += "CANE";
+					if ((getConfig().getList("Sugar_Cane.Biome").contains(e.getBlock().getBiome().toString())) || (getConfig().getList("Sugar_Cane.Biome").isEmpty())) {
+						if (!(PwnPlantGrowth.random(CaneChance))) {
+							e.setCancelled(true);
+							toLog += " Failed";
+							if (PwnPlantGrowth.random(CaneDeath)) {
+								e.getBlock().getRelative(BlockFace.DOWN).setType(Material.LONG_GRASS);
+								toLog += " and Died";
+							}
+						}
+					}
+					else {
+						e.setCancelled(true);
+						toLog += " Failed: Bad Biome";				
+					}					
+				}
+				else if ((e.getBlock().getRelative(BlockFace.EAST).getType() == Material.MELON_STEM) ||
+						(e.getBlock().getRelative(BlockFace.WEST).getType() == Material.MELON_STEM) ||
+						(e.getBlock().getRelative(BlockFace.NORTH).getType() == Material.MELON_STEM) ||
+						(e.getBlock().getRelative(BlockFace.SOUTH).getType() == Material.MELON_STEM)) {
+					toLog += "MELON_BLOCK";
+					if ((getConfig().getList("Melon_Block.Biome").contains(e.getBlock().getBiome().toString())) || (getConfig().getList("Melon_Block.Biome").isEmpty())) {				
+						if (!(PwnPlantGrowth.random(MelonChance))) {
+							e.setCancelled(true);
+							toLog += " Failed";
+						}
+					}
+					else {
+						e.setCancelled(true);
+						toLog += " Failed: Bad Biome";				
+					}					
+				}
+				else if ((e.getBlock().getRelative(BlockFace.EAST).getType() == Material.PUMPKIN_STEM) ||
+						(e.getBlock().getRelative(BlockFace.WEST).getType() == Material.PUMPKIN_STEM) ||
+						(e.getBlock().getRelative(BlockFace.NORTH).getType() == Material.PUMPKIN_STEM) ||
+						(e.getBlock().getRelative(BlockFace.SOUTH).getType() == Material.PUMPKIN_STEM)) {
+					toLog += "PUMPKIN_BLOCK";
+					if ((getConfig().getList("Pumpkin_Block.Biome").contains(e.getBlock().getBiome().toString())) || (getConfig().getList("Pumpkin_Block.Biome").isEmpty())) {				
+						if (!(PwnPlantGrowth.random(PumpkinChance))) {
+							e.setCancelled(true);
+							toLog += " Failed";
+						}
+					}
+					else {
+						e.setCancelled(true);
+						toLog += " Failed: Bad Biome";				
+					}					
+				}
+			}	
+	    	String logEnabled = getConfig().getString("debug_log");
+	    	if (logEnabled == "true") {	
+	    		logToFile(toLog);
+	    	}
+		}
 	}
 
 	@EventHandler(ignoreCancelled = true)
-	public void structureGrow(StructureGrowEvent e) {	
-		//System.out.println("Structure " +e.getSpecies().toString());	
+	public void structureGrow(StructureGrowEvent e) {
 		
-		String toLog = "Growing: " +e.getSpecies();
+		World world = e.getWorld();
+		if (PwnPlantGrowth.isEnabledIn(world.getName())) {
 
-		if (e.getSpecies() == TreeType.BIG_TREE){
-			if ((getConfig().getList("Big_Tree.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (getConfig().getList("Big_Tree.Biome").isEmpty())) {			
-				if (!(PwnPlantGrowth.random(BigTreeChance))) {
-					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(BigTreeDeath)) {
-						e.getLocation().getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
-					}
-				}
-			}
-			else {
-				e.setCancelled(true);
-				toLog += " Failed: Bad Biome";				
-			}				
-		}
-		if (e.getSpecies() == TreeType.BIRCH){
-			if ((getConfig().getList("Birch.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (getConfig().getList("Birch.Biome").isEmpty())) {				
-				if (!(PwnPlantGrowth.random(BirchChance))) {
-					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(BirchDeath)) {
-						e.getLocation().getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
-					}
-				}
-			}
-			else {
-				e.setCancelled(true);
-				toLog += " Failed: Bad Biome";				
-			}				
-		}
-		if (e.getSpecies() == TreeType.BROWN_MUSHROOM){
-			if ((getConfig().getList("Brown_Mushroom.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (getConfig().getList("Brown_Mushroom.Biome").isEmpty())) {			
-				if (!(PwnPlantGrowth.random(BrownShroomChance))) {
-					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(BrownShroomDeath)) {
-						e.getLocation().getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
-					}
-				}
-			}
-			else {
-				e.setCancelled(true);
-				toLog += " Failed: Bad Biome";				
-			}
-		}
-		if (e.getSpecies() == TreeType.JUNGLE){
-			if ((getConfig().getList("Jungle.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (getConfig().getList("Jungle.Biome").isEmpty())) {			
-				if (!(PwnPlantGrowth.random(JungleChance))) {
-					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(JungleDeath)) {
-						e.getLocation().getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
-					}
-				}
-			}
-			else {
-				e.setCancelled(true);
-				toLog += " Failed: Bad Biome";				
-			}				
-		}
-		if (e.getSpecies() == TreeType.JUNGLE_BUSH){
-			if ((getConfig().getList("Jungle.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (getConfig().getList("Jungle.Biome").isEmpty())) {				
-				if (!(PwnPlantGrowth.random(JungleChance))) {
-					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(JungleDeath)) {
-						e.getLocation().getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
-					}
-				}
-			}
-			else {
-				e.setCancelled(true);
-				toLog += " Failed: Bad Biome";				
-			}				
-		}
-		if (e.getSpecies() == TreeType.RED_MUSHROOM){
-			if ((getConfig().getList("Red_Mushroom.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (getConfig().getList("Red_Mushroom.Biome").isEmpty())) {			
-				if (!(PwnPlantGrowth.random(RedShroomChance))) {
-					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(RedShroomDeath)) {
-						e.getLocation().getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
-					}
-				}
-			}
-			else {
-				e.setCancelled(true);
-				toLog += " Failed: Bad Biome";				
-			}				
-		}
-		if (e.getSpecies() == TreeType.REDWOOD){
-			if ((getConfig().getList("Spruce.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (getConfig().getList("Spruce.Biome").isEmpty())) {			
-				if (!(PwnPlantGrowth.random(SpruceChance))) {
-					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(SpruceDeath)) {
-						e.getLocation().getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
-					}
-				}
-			}
-			else {
-				e.setCancelled(true);
-				toLog += " Failed: Bad Biome";				
-			}				
-		}
-		if (e.getSpecies() == TreeType.SMALL_JUNGLE){
-			if ((getConfig().getList("Jungle.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (getConfig().getList("Jungle.Biome").isEmpty())) {				
-				if (!(PwnPlantGrowth.random(JungleChance))) {
-					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(JungleDeath)) {
-						e.getLocation().getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
-					}
-				}
-			}
-			else {
-				e.setCancelled(true);
-				toLog += " Failed: Bad Biome";				
-			}				
-		}
-		if (e.getSpecies() == TreeType.SWAMP){
-			if ((getConfig().getList("Tree.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (getConfig().getList("Tree.Biome").isEmpty())) {			
-				if (!(PwnPlantGrowth.random(TreeChance))) {
-					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(TreeDeath)) {
-						e.getLocation().getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
-					}
-				}
-			}
-			else {
-				e.setCancelled(true);
-				toLog += " Failed: Bad Biome";				
-			}				
-		}
-		if (e.getSpecies() == TreeType.TALL_REDWOOD){
-			if ((getConfig().getList("Spruce.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (getConfig().getList("Spruce.Biome").isEmpty())) {			
-				if (!(PwnPlantGrowth.random(SpruceChance))) {
-					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(SpruceDeath)) {
-						e.getLocation().getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
-					}
-				}
-			}
-			else {
-				e.setCancelled(true);
-				toLog += " Failed: Bad Biome";				
-			}				
-		}
-		if (e.getSpecies() == TreeType.TREE){
-			if ((getConfig().getList("Tree.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (getConfig().getList("Tree.Biome").isEmpty())) {			
-				if (!(PwnPlantGrowth.random(TreeChance))) {
-					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(TreeDeath)) {
-						e.getLocation().getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
-					}
-				}
-			}
-			else {
-				e.setCancelled(true);
-				toLog += " Failed: Bad Biome";				
-			}				
-		}
+			//System.out.println("Structure " +e.getSpecies().toString());	
 			
-    	String logEnabled = getConfig().getString("debug_log");
-    	if (logEnabled == "true") {	
-    		logToFile(toLog);
-    	}
+			String toLog = "Growing: " +e.getSpecies();
+	
+			if (e.getSpecies() == TreeType.BIG_TREE){
+				if ((getConfig().getList("Big_Tree.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (getConfig().getList("Big_Tree.Biome").isEmpty())) {			
+					if (!(PwnPlantGrowth.random(BigTreeChance))) {
+						e.setCancelled(true);
+						toLog += " Failed";
+						if (PwnPlantGrowth.random(BigTreeDeath)) {
+							e.getLocation().getBlock().setType(Material.LONG_GRASS);
+							toLog += " and Died";
+						}
+					}
+				}
+				else {
+					e.setCancelled(true);
+					toLog += " Failed: Bad Biome";				
+				}				
+			}
+			if (e.getSpecies() == TreeType.BIRCH){
+				if ((getConfig().getList("Birch.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (getConfig().getList("Birch.Biome").isEmpty())) {				
+					if (!(PwnPlantGrowth.random(BirchChance))) {
+						e.setCancelled(true);
+						toLog += " Failed";
+						if (PwnPlantGrowth.random(BirchDeath)) {
+							e.getLocation().getBlock().setType(Material.LONG_GRASS);
+							toLog += " and Died";
+						}
+					}
+				}
+				else {
+					e.setCancelled(true);
+					toLog += " Failed: Bad Biome";				
+				}				
+			}
+			if (e.getSpecies() == TreeType.BROWN_MUSHROOM){
+				if ((getConfig().getList("Brown_Mushroom.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (getConfig().getList("Brown_Mushroom.Biome").isEmpty())) {			
+					if (!(PwnPlantGrowth.random(BrownShroomChance))) {
+						e.setCancelled(true);
+						toLog += " Failed";
+						if (PwnPlantGrowth.random(BrownShroomDeath)) {
+							e.getLocation().getBlock().setType(Material.LONG_GRASS);
+							toLog += " and Died";
+						}
+					}
+				}
+				else {
+					e.setCancelled(true);
+					toLog += " Failed: Bad Biome";				
+				}
+			}
+			if (e.getSpecies() == TreeType.JUNGLE){
+				if ((getConfig().getList("Jungle.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (getConfig().getList("Jungle.Biome").isEmpty())) {			
+					if (!(PwnPlantGrowth.random(JungleChance))) {
+						e.setCancelled(true);
+						toLog += " Failed";
+						if (PwnPlantGrowth.random(JungleDeath)) {
+							e.getLocation().getBlock().setType(Material.LONG_GRASS);
+							toLog += " and Died";
+						}
+					}
+				}
+				else {
+					e.setCancelled(true);
+					toLog += " Failed: Bad Biome";				
+				}				
+			}
+			if (e.getSpecies() == TreeType.JUNGLE_BUSH){
+				if ((getConfig().getList("Jungle.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (getConfig().getList("Jungle.Biome").isEmpty())) {				
+					if (!(PwnPlantGrowth.random(JungleChance))) {
+						e.setCancelled(true);
+						toLog += " Failed";
+						if (PwnPlantGrowth.random(JungleDeath)) {
+							e.getLocation().getBlock().setType(Material.LONG_GRASS);
+							toLog += " and Died";
+						}
+					}
+				}
+				else {
+					e.setCancelled(true);
+					toLog += " Failed: Bad Biome";				
+				}				
+			}
+			if (e.getSpecies() == TreeType.RED_MUSHROOM){
+				if ((getConfig().getList("Red_Mushroom.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (getConfig().getList("Red_Mushroom.Biome").isEmpty())) {			
+					if (!(PwnPlantGrowth.random(RedShroomChance))) {
+						e.setCancelled(true);
+						toLog += " Failed";
+						if (PwnPlantGrowth.random(RedShroomDeath)) {
+							e.getLocation().getBlock().setType(Material.LONG_GRASS);
+							toLog += " and Died";
+						}
+					}
+				}
+				else {
+					e.setCancelled(true);
+					toLog += " Failed: Bad Biome";				
+				}				
+			}
+			if (e.getSpecies() == TreeType.REDWOOD){
+				if ((getConfig().getList("Spruce.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (getConfig().getList("Spruce.Biome").isEmpty())) {			
+					if (!(PwnPlantGrowth.random(SpruceChance))) {
+						e.setCancelled(true);
+						toLog += " Failed";
+						if (PwnPlantGrowth.random(SpruceDeath)) {
+							e.getLocation().getBlock().setType(Material.LONG_GRASS);
+							toLog += " and Died";
+						}
+					}
+				}
+				else {
+					e.setCancelled(true);
+					toLog += " Failed: Bad Biome";				
+				}				
+			}
+			if (e.getSpecies() == TreeType.SMALL_JUNGLE){
+				if ((getConfig().getList("Jungle.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (getConfig().getList("Jungle.Biome").isEmpty())) {				
+					if (!(PwnPlantGrowth.random(JungleChance))) {
+						e.setCancelled(true);
+						toLog += " Failed";
+						if (PwnPlantGrowth.random(JungleDeath)) {
+							e.getLocation().getBlock().setType(Material.LONG_GRASS);
+							toLog += " and Died";
+						}
+					}
+				}
+				else {
+					e.setCancelled(true);
+					toLog += " Failed: Bad Biome";				
+				}				
+			}
+			if (e.getSpecies() == TreeType.SWAMP){
+				if ((getConfig().getList("Tree.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (getConfig().getList("Tree.Biome").isEmpty())) {			
+					if (!(PwnPlantGrowth.random(TreeChance))) {
+						e.setCancelled(true);
+						toLog += " Failed";
+						if (PwnPlantGrowth.random(TreeDeath)) {
+							e.getLocation().getBlock().setType(Material.LONG_GRASS);
+							toLog += " and Died";
+						}
+					}
+				}
+				else {
+					e.setCancelled(true);
+					toLog += " Failed: Bad Biome";				
+				}				
+			}
+			if (e.getSpecies() == TreeType.TALL_REDWOOD){
+				if ((getConfig().getList("Spruce.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (getConfig().getList("Spruce.Biome").isEmpty())) {			
+					if (!(PwnPlantGrowth.random(SpruceChance))) {
+						e.setCancelled(true);
+						toLog += " Failed";
+						if (PwnPlantGrowth.random(SpruceDeath)) {
+							e.getLocation().getBlock().setType(Material.LONG_GRASS);
+							toLog += " and Died";
+						}
+					}
+				}
+				else {
+					e.setCancelled(true);
+					toLog += " Failed: Bad Biome";				
+				}				
+			}
+			if (e.getSpecies() == TreeType.TREE){
+				if ((getConfig().getList("Tree.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (getConfig().getList("Tree.Biome").isEmpty())) {			
+					if (!(PwnPlantGrowth.random(TreeChance))) {
+						e.setCancelled(true);
+						toLog += " Failed";
+						if (PwnPlantGrowth.random(TreeDeath)) {
+							e.getLocation().getBlock().setType(Material.LONG_GRASS);
+							toLog += " and Died";
+						}
+					}
+				}
+				else {
+					e.setCancelled(true);
+					toLog += " Failed: Bad Biome";				
+				}				
+			}
+				
+	    	String logEnabled = getConfig().getString("debug_log");
+	    	if (logEnabled == "true") {	
+	    		logToFile(toLog);
+	    	}
+		}
 	}
 	
 	static boolean random(int percentChance) {
 			return randomNumberGenerator.nextInt(100) < percentChance;
 	}
+	
+	public static boolean isEnabledIn(String world) {
+		return enabledWorlds.contains(world);
+	}	
 
     public void logToFile(String message) {   
 	    	try {

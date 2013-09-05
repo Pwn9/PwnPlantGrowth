@@ -102,3 +102,8 @@ block_water_bucket: false
     
 # run a debug log
 debug_log: false
+
+# which worlds should this be enabled in
+enabled_worlds:
+  - world
+  - world_nether
