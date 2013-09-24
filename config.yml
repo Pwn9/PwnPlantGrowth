@@ -1,4 +1,25 @@
-# See PwnPlantGrowth's page on https://dev.bukkit.org for more config details.
+# See PwnPlantGrowth's page on http://dev.bukkit.org for more config details.
+
+# which worlds should this plugin be enabled in? worlds not in this list will have default growth.
+enabled_worlds:
+  - world
+  - world_nether
+
+# stop buckets and dispensers from transporting source blocks - adds realism
+block_water_bucket: false
+    
+# natural sky light level: 0 allows any, 10 is sunlight through glass/tree leaves, 15 is direct sunlight
+min_natural_light: 10
+
+# list of items allowed to grow in false light (torches, lightstone, lava) - use offical MATERIAL names to add to this list
+grow_in_dark: 
+  - RED_MUSHROOM
+  - BROWN_MUSHROOM
+  - NETHER_WARTS
+  - COCOA 
+
+# run a debug log to view additional plugin data for troubleshooting and configuration, turn off in production!
+debug_log: false
 
 # CROPS
 Cactus:
@@ -96,14 +117,4 @@ Red_Mushroom:
     Biome:
     - MUSHROOM_ISLAND
     - MUSHROOM_SHORE
-
-# stop buckets from transporting source blocks
-block_water_bucket: false
-    
-# run a debug log
-debug_log: false
-
-# which worlds should this be enabled in
-enabled_worlds:
-  - world
-  - world_nether
+      

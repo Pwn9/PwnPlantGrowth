@@ -22,7 +22,8 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.zip.GZIPOutputStream;
 
-public class MetricsLite {
+public class MetricsLite 
+{
 
     /**
 * The current revision number
@@ -79,8 +80,10 @@ public class MetricsLite {
 */
     private volatile BukkitTask task = null;
 
-    public MetricsLite(Plugin plugin) throws IOException {
-        if (plugin == null) {
+    public MetricsLite(Plugin plugin) throws IOException 
+    {
+        if (plugin == null) 
+        {
             throw new IllegalArgumentException("Plugin cannot be null");
         }
 
@@ -96,7 +99,8 @@ public class MetricsLite {
         configuration.addDefault("debug", false);
 
         // Do we need to create the file?
-        if (configuration.get("guid", null) == null) {
+        if (configuration.get("guid", null) == null) 
+        {
             configuration.options().header("http://mcstats.org").copyDefaults(true);
             configuration.save(configurationFile);
         }
@@ -113,29 +117,37 @@ public class MetricsLite {
 *
 * @return True if statistics measuring is running, otherwise false.
 */
-    public boolean start() {
-        synchronized (optOutLock) {
+    public boolean start() 
+    {
+        synchronized (optOutLock) 
+        {
             // Did we opt out?
-            if (isOptOut()) {
+            if (isOptOut()) 
+            {
                 return false;
             }
 
             // Is metrics already running?
-            if (task != null) {
+            if (task != null)
+            {
                 return true;
             }
 
             // Begin hitting the server with glorious data
-            task = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
+            task = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() 
+            {
 
                 private boolean firstPost = true;
 
-                public void run() {
+                public void run() 
+                {
                     try {
                         // This has to be synchronized or it can collide with the disable method.
-                        synchronized (optOutLock) {
+                        synchronized (optOutLock) 
+                        {
                             // Disable Task, if it is running and the server owner decided to opt-out
-                            if (isOptOut() && task != null) {
+                            if (isOptOut() && task != null)
+                            {
                                 task.cancel();
                                 task = null;
                             }
@@ -149,8 +161,11 @@ public class MetricsLite {
                         // After the first post we set firstPost to false
                         // Each post thereafter will be a ping
                         firstPost = false;
-                    } catch (IOException e) {
-                        if (debug) {
+                    } 
+                    catch (IOException e) 
+                    {
+                        if (debug) 
+                        {
                             Bukkit.getLogger().log(Level.INFO, "[Metrics] " + e.getMessage());
                         }
                     }
@@ -166,18 +181,27 @@ public class MetricsLite {
 *
 * @return true if metrics should be opted out of it
 */
-    public boolean isOptOut() {
-        synchronized (optOutLock) {
-            try {
+    public boolean isOptOut() 
+    {
+        synchronized (optOutLock) 
+        {
+            try 
+            {
                 // Reload the metrics file
                 configuration.load(getConfigFile());
-            } catch (IOException ex) {
-                if (debug) {
+            } 
+            catch (IOException ex) 
+            {
+                if (debug) 
+                {
                     Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
                 }
                 return true;
-            } catch (InvalidConfigurationException ex) {
-                if (debug) {
+            } 
+            catch (InvalidConfigurationException ex) 
+            {
+                if (debug) 
+                {
                     Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
                 }
                 return true;
@@ -191,17 +215,21 @@ public class MetricsLite {
 *
 * @throws java.io.IOException
 */
-    public void enable() throws IOException {
+    public void enable() throws IOException 
+    {
         // This has to be synchronized or it can collide with the check in the task.
-        synchronized (optOutLock) {
+        synchronized (optOutLock) 
+        {
             // Check if the server owner has already set opt-out, if not, set it.
-            if (isOptOut()) {
+            if (isOptOut()) 
+            {
                 configuration.set("opt-out", false);
                 configuration.save(configurationFile);
             }
 
             // Enable Task, if it is not running
-            if (task == null) {
+            if (task == null) 
+            {
                 start();
             }
         }
@@ -212,17 +240,21 @@ public class MetricsLite {
 *
 * @throws java.io.IOException
 */
-    public void disable() throws IOException {
+    public void disable() throws IOException 
+    {
         // This has to be synchronized or it can collide with the check in the task.
-        synchronized (optOutLock) {
+        synchronized (optOutLock) 
+        {
             // Check if the server owner has already set opt-out, if not, set it.
-            if (!isOptOut()) {
+            if (!isOptOut()) 
+            {
                 configuration.set("opt-out", true);
                 configuration.save(configurationFile);
             }
 
             // Disable Task, if it is running
-            if (task != null) {
+            if (task != null) 
+            {
                 task.cancel();
                 task = null;
             }
@@ -234,7 +266,8 @@ public class MetricsLite {
 *
 * @return the File object for the config file
 */
-    public File getConfigFile() {
+    public File getConfigFile() 
+    {
         // I believe the easiest way to get the base folder (e.g craftbukkit set via -P) for plugins to use
         // is to abuse the plugin object we already have
         // plugin.getDataFolder() => base/plugins/PluginA/
@@ -249,7 +282,8 @@ public class MetricsLite {
     /**
 * Generic method that posts a plugin to the metrics website
 */
-    private void postPlugin(boolean isPing) throws IOException {
+    private void postPlugin(boolean isPing) throws IOException 
+    {
         // Server software specific section
         PluginDescriptionFile description = plugin.getDescription();
         String pluginName = description.getName();
@@ -278,7 +312,8 @@ public class MetricsLite {
         int coreCount = Runtime.getRuntime().availableProcessors();
 
         // normalize os arch .. amd64 -> x86_64
-        if (osarch.equals("amd64")) {
+        if (osarch.equals("amd64")) 
+        {
             osarch = "x86_64";
         }
 
@@ -290,7 +325,8 @@ public class MetricsLite {
         appendJSONPair(json, "java_version", java_version);
 
         // If we're pinging, append it
-        if (isPing) {
+        if (isPing) 
+        {
             appendJSONPair(json, "ping", "1");
         }
 
@@ -305,12 +341,14 @@ public class MetricsLite {
 
         // Mineshafter creates a socks proxy, so we can safely bypass it
         // It does not reroute POST requests so we need to go around it
-        if (isMineshafterPresent()) {
+        if (isMineshafterPresent()) 
+        {
             connection = url.openConnection(Proxy.NO_PROXY);
-        } else {
+        } 
+        else 
+        {
             connection = url.openConnection();
         }
-
 
         byte[] uncompressed = json.toString().getBytes();
         byte[] compressed = gzip(json.toString());
@@ -325,7 +363,8 @@ public class MetricsLite {
 
         connection.setDoOutput(true);
 
-        if (debug) {
+        if (debug) 
+        {
             System.out.println("[Metrics] Prepared request for " + pluginName + " uncompressed=" + uncompressed.length + " compressed=" + compressed.length);
         }
 
@@ -342,10 +381,14 @@ public class MetricsLite {
         os.close();
         reader.close();
 
-        if (response == null || response.startsWith("ERR") || response.startsWith("7")) {
-            if (response == null) {
+        if (response == null || response.startsWith("ERR") || response.startsWith("7")) 
+        {
+            if (response == null) 
+            {
                 response = "null";
-            } else if (response.startsWith("7")) {
+            } 
+            else if (response.startsWith("7")) 
+            {
                 response = response.substring(response.startsWith("7,") ? 2 : 1);
             }
 
@@ -359,19 +402,29 @@ public class MetricsLite {
 * @param input
 * @return
 */
-    public static byte[] gzip(String input) {
+    public static byte[] gzip(String input) 
+    {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         GZIPOutputStream gzos = null;
 
-        try {
+        try 
+        {
             gzos = new GZIPOutputStream(baos);
             gzos.write(input.getBytes("UTF-8"));
-        } catch (IOException e) {
+        } 
+        catch (IOException e) 
+        {
             e.printStackTrace();
-        } finally {
-            if (gzos != null) try {
+        } 
+        finally 
+        {
+            if (gzos != null) try 
+            {
                 gzos.close();
-            } catch (IOException ignore) {
+            } 
+            catch (IOException ignore) 
+            {
+            	
             }
         }
 
@@ -383,11 +436,15 @@ public class MetricsLite {
 *
 * @return true if mineshafter is installed on the server
 */
-    private boolean isMineshafterPresent() {
-        try {
+    private boolean isMineshafterPresent() 
+    {
+        try 
+        {
             Class.forName("mineshafter.MineServer");
             return true;
-        } catch (Exception e) {
+        } 
+        catch (Exception e) 
+        {
             return false;
         }
     }
@@ -400,28 +457,37 @@ public class MetricsLite {
 * @param value
 * @throws UnsupportedEncodingException
 */
-    private static void appendJSONPair(StringBuilder json, String key, String value) throws UnsupportedEncodingException {
+    private static void appendJSONPair(StringBuilder json, String key, String value) throws UnsupportedEncodingException 
+    {
         boolean isValueNumeric = false;
 
-        try {
-            if (value.equals("0") || !value.endsWith("0")) {
+        try 
+        {
+            if (value.equals("0") || !value.endsWith("0")) 
+            {
                 Double.parseDouble(value);
                 isValueNumeric = true;
             }
-        } catch (NumberFormatException e) {
+        } 
+        catch (NumberFormatException e) 
+        {
             isValueNumeric = false;
         }
 
-        if (json.charAt(json.length() - 1) != '{') {
+        if (json.charAt(json.length() - 1) != '{') 
+        {
             json.append(',');
         }
 
         json.append(escapeJSON(key));
         json.append(':');
 
-        if (isValueNumeric) {
+        if (isValueNumeric) 
+        {
             json.append(value);
-        } else {
+        } 
+        else 
+        {
             json.append(escapeJSON(value));
         }
     }
@@ -432,14 +498,17 @@ public class MetricsLite {
 * @param text
 * @return
 */
-    private static String escapeJSON(String text) {
+    private static String escapeJSON(String text) 
+    {
         StringBuilder builder = new StringBuilder();
 
         builder.append('"');
-        for (int index = 0; index < text.length(); index++) {
+        for (int index = 0; index < text.length(); index++) 
+        {
             char chr = text.charAt(index);
 
-            switch (chr) {
+            switch (chr) 
+            {
                 case '"':
                 case '\\':
                     builder.append('\\');
@@ -458,10 +527,13 @@ public class MetricsLite {
                     builder.append("\\r");
                     break;
                 default:
-                    if (chr < ' ') {
+                    if (chr < ' ') 
+                    {
                         String t = "000" + Integer.toHexString(chr);
                         builder.append("\\u" + t.substring(t.length() - 4));
-                    } else {
+                    } 
+                    else 
+                    {
                         builder.append(chr);
                     }
                     break;
@@ -478,7 +550,8 @@ public class MetricsLite {
 * @param text the text to encode
 * @return the encoded text, as UTF-8
 */
-    private static String urlEncode(final String text) throws UnsupportedEncodingException {
+    private static String urlEncode(final String text) throws UnsupportedEncodingException 
+    {
         return URLEncoder.encode(text, "UTF-8");
     }
 
