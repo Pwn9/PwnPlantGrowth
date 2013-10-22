@@ -31,7 +31,7 @@ public class WaterListener implements Listener
 		World world = event.getPlayer().getWorld();
 		if (PwnPlantGrowth.isEnabledIn(world.getName())) 
 		{
-			if(PwnPlantGrowth.blockWater)
+			if(PwnPlantGrowth.blockWaterBucket)
 	    	{				
 	    		Player player = event.getPlayer();
 	    		if(player.getItemInHand().getType() == Material.WATER_BUCKET) 
@@ -55,7 +55,7 @@ public class WaterListener implements Listener
 		World world = event.getBlock().getWorld();
 		if (PwnPlantGrowth.isEnabledIn(world.getName())) 
 		{
-			if(PwnPlantGrowth.blockWater)
+			if(PwnPlantGrowth.blockWaterDispenser)
 	    	{				
 				//only care about water
 				if(event.getItem().getType() == Material.WATER_BUCKET)

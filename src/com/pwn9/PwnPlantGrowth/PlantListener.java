@@ -55,22 +55,43 @@ public class PlantListener implements Listener
 			toLog += "Growing: " +e.getBlock().getType();
 		}
 			
-
+		// Get current biome and make a string for comparison later
+		String curBiome = e.getBlock().getBiome().toString();
+		
+		// Get current block type and make a string for comparison later
+		String curBlock = e.getBlock().getType().toString();
+		
 		// Regular growth blocks
-		if (e.getBlock().getType() == Material.CARROT)
+		
+		
+		
+		// Carrot
+		if (curBlock == "CARROT")
 		{
-			if ((plugin.getConfig().getList("Carrot.Biome").contains(e.getBlock().getBiome().toString())) || (plugin.getConfig().getList("Carrot.Biome").isEmpty())) 
-			{		
-				if (!(PwnPlantGrowth.random(PwnPlantGrowth.CarrotChance))) 
+			if ((plugin.getConfig().getList("Carrot.Biome").contains(curBiome)) || (plugin.getConfig().getList("Carrot.Biome").isEmpty())) 
+			{
+				
+				int curGrowth = PwnPlantGrowth.CarrotChance;
+				int curDeath = PwnPlantGrowth.CarrotDeath;
+				
+				if (plugin.getConfig().isSet("Carrot."+curBiome+".Growth")) {
+					curGrowth = plugin.getConfig().getInt("Carrot."+curBiome+".Growth");
+				}
+				
+				if (plugin.getConfig().isSet("Carrot."+curBiome+".Death")) {
+					curDeath = plugin.getConfig().getInt("Carrot."+curBiome+".Death");
+				}
+									
+				if (!(PwnPlantGrowth.random(curGrowth))) 
 				{
 					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(PwnPlantGrowth.CarrotDeath)) 
+					toLog += " Failed (Rate: "+curGrowth+") ";
+					if (PwnPlantGrowth.random(curDeath)) 
 					{
 						e.getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
+						toLog += " and Died (Rate: "+curDeath+")";
 					}
-				}
+				}		
 			}
 			else 
 			{
@@ -78,20 +99,32 @@ public class PlantListener implements Listener
 				toLog += " Failed: Bad Biome";				
 			}				
 		}
-		if (e.getBlock().getType() == Material.COCOA)
+		
+		if (curBlock == "COCOA")
 		{
-			if ((plugin.getConfig().getList("Cocoa.Biome").contains(e.getBlock().getBiome().toString())) || (plugin.getConfig().getList("Cocoa.Biome").isEmpty())) 
+			if ((plugin.getConfig().getList("Cocoa.Biome").contains(curBiome)) || (plugin.getConfig().getList("Cocoa.Biome").isEmpty())) 
 			{		
-				if (!(PwnPlantGrowth.random(PwnPlantGrowth.CocoaChance))) 
-				{	
-					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(PwnPlantGrowth.CocoaDeath)) 
-					{
-						e.getBlock().setType(Material.VINE);
-						toLog += " and Died";
-					}
+				int curGrowth = PwnPlantGrowth.CocoaChance;
+				int curDeath = PwnPlantGrowth.CocoaDeath;
+				
+				if (plugin.getConfig().isSet("Cocoa."+curBiome+".Growth")) {
+					curGrowth = plugin.getConfig().getInt("Cocoa."+curBiome+".Growth");
 				}
+				
+				if (plugin.getConfig().isSet("Cocoa."+curBiome+".Death")) {
+					curDeath = plugin.getConfig().getInt("Cocoa."+curBiome+".Death");
+				}
+							
+				if (!(PwnPlantGrowth.random(curGrowth))) 
+				{
+					e.setCancelled(true);
+					toLog += " Failed (Rate: "+curGrowth+") ";
+					if (PwnPlantGrowth.random(curDeath)) 
+					{
+						e.getBlock().setType(Material.LONG_GRASS);
+						toLog += " and Died (Rate: "+curDeath+")";
+					}
+				}	
 			}
 			else 
 			{
@@ -99,60 +132,98 @@ public class PlantListener implements Listener
 				toLog += " Failed: Bad Biome";				
 			}				
 		}	
-		if (e.getBlock().getType() == Material.CROPS)
+		
+		
+		
+		if (curBlock == "CROPS")
 		{
-			if ((plugin.getConfig().getList("Wheat.Biome").contains(e.getBlock().getBiome().toString())) || (plugin.getConfig().getList("Wheat.Biome").isEmpty())) 
+			if ((plugin.getConfig().getList("Wheat.Biome").contains(curBiome)) || (plugin.getConfig().getList("Wheat.Biome").isEmpty())) 
 			{		
-				if (!(PwnPlantGrowth.random(PwnPlantGrowth.WheatChance))) 
-				{	
+				int curGrowth = PwnPlantGrowth.WheatChance;
+				int curDeath = PwnPlantGrowth.WheatDeath;
+				
+				if (plugin.getConfig().isSet("Wheat."+curBiome+".Growth")) {
+					curGrowth = plugin.getConfig().getInt("Wheat."+curBiome+".Growth");
+				}
+				
+				if (plugin.getConfig().isSet("Wheat."+curBiome+".Death")) {
+					curDeath = plugin.getConfig().getInt("Wheat."+curBiome+".Death");
+				}
+							
+				if (!(PwnPlantGrowth.random(curGrowth))) 
+				{
 					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(PwnPlantGrowth.WheatDeath)) 
+					toLog += " Failed (Rate: "+curGrowth+") ";
+					if (PwnPlantGrowth.random(curDeath)) 
 					{
 						e.getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
+						toLog += " and Died (Rate: "+curDeath+")";
 					}
-				}
+				}	
 			}
 			else 
 			{
 				e.setCancelled(true);
 				toLog += " Failed: Bad Biome";				
 			}				
-		}			
-		if (e.getBlock().getType() == Material.MELON_STEM)
+		}	
+		
+		if (curBlock == "MELON_STEM")
 		{
-			if ((plugin.getConfig().getList("Melon_Stem.Biome").contains(e.getBlock().getBiome().toString())) || (plugin.getConfig().getList("Melon_Stem.Biome").isEmpty())) 
+			if ((plugin.getConfig().getList("Melon_Stem.Biome").contains(curBiome)) || (plugin.getConfig().getList("Melon_Stem.Biome").isEmpty())) 
 			{		
-				if (!(PwnPlantGrowth.random(PwnPlantGrowth.MelonStemChance))) 
-				{	
+				int curGrowth = PwnPlantGrowth.MelonStemChance;
+				int curDeath = PwnPlantGrowth.MelonStemDeath;
+				
+				if (plugin.getConfig().isSet("Melon_Stem."+curBiome+".Growth")) {
+					curGrowth = plugin.getConfig().getInt("Melon_Stem."+curBiome+".Growth");
+				}
+				
+				if (plugin.getConfig().isSet("Melon_Stem."+curBiome+".Death")) {
+					curDeath = plugin.getConfig().getInt("Melon_Stem."+curBiome+".Death");
+				}
+							
+				if (!(PwnPlantGrowth.random(curGrowth))) 
+				{
 					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(PwnPlantGrowth.MelonStemDeath)) 
+					toLog += " Failed (Rate: "+curGrowth+") ";
+					if (PwnPlantGrowth.random(curDeath)) 
 					{
 						e.getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
+						toLog += " and Died (Rate: "+curDeath+")";
 					}
-				}
+				}	
 			}
 			else 
 			{
 				e.setCancelled(true);
 				toLog += " Failed: Bad Biome";				
 			}				
-		}			
-		if (e.getBlock().getType() == Material.NETHER_WARTS)
+		}	
+		
+		if (curBlock == "NETHER_WARTS")
 		{
-			if ((plugin.getConfig().getList("Nether_Wart.Biome").contains(e.getBlock().getBiome().toString())) || (plugin.getConfig().getList("Nether_Wart.Biome").isEmpty())) 
+			if ((plugin.getConfig().getList("Nether_Wart.Biome").contains(curBiome)) || (plugin.getConfig().getList("Nether_Wart.Biome").isEmpty())) 
 			{		
-				if (!(PwnPlantGrowth.random(PwnPlantGrowth.NetherWartChance))) 
-				{	
+				int curGrowth = PwnPlantGrowth.NetherWartChance;
+				int curDeath = PwnPlantGrowth.NetherWartDeath;
+				
+				if (plugin.getConfig().isSet("Nether_Wart."+curBiome+".Growth")) {
+					curGrowth = plugin.getConfig().getInt("Nether_Wart."+curBiome+".Growth");
+				}
+				
+				if (plugin.getConfig().isSet("Nether_Wart."+curBiome+".Death")) {
+					curDeath = plugin.getConfig().getInt("Nether_Wart."+curBiome+".Death");
+				}
+							
+				if (!(PwnPlantGrowth.random(curGrowth))) 
+				{
 					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(PwnPlantGrowth.NetherWartDeath)) 
+					toLog += " Failed (Rate: "+curGrowth+") ";
+					if (PwnPlantGrowth.random(curDeath)) 
 					{
 						e.getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
+						toLog += " and Died (Rate: "+curDeath+")";
 					}
 				}	
 			}
@@ -162,41 +233,65 @@ public class PlantListener implements Listener
 				toLog += " Failed: Bad Biome";				
 			}
 		}	
-		if (e.getBlock().getType() == Material.POTATO)
+		
+		if (curBlock == "POTATO")
 		{
-			if ((plugin.getConfig().getList("Potato.Biome").contains(e.getBlock().getBiome().toString())) || (plugin.getConfig().getList("Potato.Biome").isEmpty())) 
+			if ((plugin.getConfig().getList("Potato.Biome").contains(curBiome)) || (plugin.getConfig().getList("Potato.Biome").isEmpty())) 
 			{		
-				if (!(PwnPlantGrowth.random(PwnPlantGrowth.PotatoChance))) 
-				{	
+				int curGrowth = PwnPlantGrowth.PotatoChance;
+				int curDeath = PwnPlantGrowth.PotatoDeath;
+				
+				if (plugin.getConfig().isSet("Potato."+curBiome+".Growth")) {
+					curGrowth = plugin.getConfig().getInt("Potato."+curBiome+".Growth");
+				}
+				
+				if (plugin.getConfig().isSet("Potato."+curBiome+".Death")) {
+					curDeath = plugin.getConfig().getInt("Potato."+curBiome+".Death");
+				}
+							
+				if (!(PwnPlantGrowth.random(curGrowth))) 
+				{
 					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(PwnPlantGrowth.PotatoDeath)) 
+					toLog += " Failed (Rate: "+curGrowth+") ";
+					if (PwnPlantGrowth.random(curDeath)) 
 					{
 						e.getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
+						toLog += " and Died (Rate: "+curDeath+")";
 					}
-				}
+				}	
 			}
 			else 
 			{
 				e.setCancelled(true);
 				toLog += " Failed: Bad Biome";				
 			}				
-		}			
-		if (e.getBlock().getType() == Material.PUMPKIN_STEM)
+		}	
+		
+		if (curBlock == "PUMPKIN_STEM")
 		{
-			if ((plugin.getConfig().getList("Pumpkin_Stem.Biome").contains(e.getBlock().getBiome().toString())) || (plugin.getConfig().getList("Pumpkin_Stem.Biome").isEmpty())) 
+			if ((plugin.getConfig().getList("Pumpkin_Stem.Biome").contains(curBiome)) || (plugin.getConfig().getList("Pumpkin_Stem.Biome").isEmpty())) 
 			{		
-				if (!(PwnPlantGrowth.random(PwnPlantGrowth.PumpkinStemChance))) 
+				int curGrowth = PwnPlantGrowth.PumpkinStemChance;
+				int curDeath = PwnPlantGrowth.PumpkinStemDeath;
+				
+				if (plugin.getConfig().isSet("Pumpkin_Stem."+curBiome+".Growth")) {
+					curGrowth = plugin.getConfig().getInt("Pumpkin_Stem."+curBiome+".Growth");
+				}
+				
+				if (plugin.getConfig().isSet("Pumpkin_Stem."+curBiome+".Death")) {
+					curDeath = plugin.getConfig().getInt("Pumpkin_Stem."+curBiome+".Death");
+				}
+							
+				if (!(PwnPlantGrowth.random(curGrowth))) 
 				{
 					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(PwnPlantGrowth.PumpkinStemDeath)) 
+					toLog += " Failed (Rate: "+curGrowth+") ";
+					if (PwnPlantGrowth.random(curDeath)) 
 					{
 						e.getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
+						toLog += " and Died (Rate: "+curDeath+")";
 					}
-				}
+				}	
 			}
 			else 
 			{
@@ -205,24 +300,39 @@ public class PlantListener implements Listener
 			}				
 		}
 		
+		
 		// AIR BLOCKS - when event returns AIR as the block type, it must be one of the following
-		if (e.getBlock().getType() == Material.AIR)
+		if (curBlock == "AIR")
 		{
+			
 			if (e.getBlock().getRelative(BlockFace.DOWN).getType() == Material.CACTUS) 
 			{
 				toLog += "CACTUS";
-				if ((plugin.getConfig().getList("Cactus.Biome").contains(e.getBlock().getBiome().toString())) || (plugin.getConfig().getList("Cactus.Biome").isEmpty()))
-				{		
-					if (!(PwnPlantGrowth.random(PwnPlantGrowth.CactusChance))) 
+				if ((plugin.getConfig().getList("Cactus.Biome").contains(curBiome)) || (plugin.getConfig().getList("Cactus.Biome").isEmpty()))
+				{
+					
+					int curGrowth = PwnPlantGrowth.CactusChance;
+					int curDeath = PwnPlantGrowth.CactusDeath;
+					
+					if (plugin.getConfig().isSet("Cactus."+curBiome+".Growth")) {
+						curGrowth = plugin.getConfig().getInt("Cactus."+curBiome+".Growth");
+					}
+					
+					if (plugin.getConfig().isSet("Cactus."+curBiome+".Death")) {
+						curDeath = plugin.getConfig().getInt("Cactus."+curBiome+".Death");
+					}
+					
+					if (!(PwnPlantGrowth.random(curGrowth))) 
 					{
 						e.setCancelled(true);
-						toLog += " Failed";
-						if (PwnPlantGrowth.random(PwnPlantGrowth.CactusDeath)) 
+						toLog += " Failed (Rate: "+curGrowth+") ";
+						if (PwnPlantGrowth.random(curDeath)) 
 						{
 							e.getBlock().getRelative(BlockFace.DOWN).setType(Material.LONG_GRASS);
-							toLog += " and Died";
+							toLog += " and Died (Rate: "+curDeath+")";
 						}
 					}
+					
 				}
 				else 
 				{
@@ -230,21 +340,36 @@ public class PlantListener implements Listener
 					toLog += " Failed: Bad Biome";				
 				}					
 			}
+			
+	
 			else if (e.getBlock().getRelative(BlockFace.DOWN).getType() == Material.SUGAR_CANE_BLOCK) 
 			{
 				toLog += "CANE";
-				if ((plugin.getConfig().getList("Sugar_Cane.Biome").contains(e.getBlock().getBiome().toString())) || (plugin.getConfig().getList("Sugar_Cane.Biome").isEmpty())) 
+				if ((plugin.getConfig().getList("Sugar_Cane.Biome").contains(curBiome)) || (plugin.getConfig().getList("Sugar_Cane.Biome").isEmpty())) 
 				{
-					if (!(PwnPlantGrowth.random(PwnPlantGrowth.CaneChance))) 
+					
+					int curGrowth = PwnPlantGrowth.CaneChance;
+					int curDeath = PwnPlantGrowth.CaneDeath;
+					
+					if (plugin.getConfig().isSet("Sugar_Cane."+curBiome+".Growth")) {
+						curGrowth = plugin.getConfig().getInt("Sugar_Cane."+curBiome+".Growth");
+					}
+					
+					if (plugin.getConfig().isSet("Sugar_Cane."+curBiome+".Death")) {
+						curDeath = plugin.getConfig().getInt("Sugar_Cane."+curBiome+".Death");
+					}
+					
+					if (!(PwnPlantGrowth.random(curGrowth))) 
 					{
 						e.setCancelled(true);
-						toLog += " Failed";
-						if (PwnPlantGrowth.random(PwnPlantGrowth.CaneDeath)) 
+						toLog += " Failed (Rate: "+curGrowth+") ";
+						if (PwnPlantGrowth.random(curDeath)) 
 						{
 							e.getBlock().getRelative(BlockFace.DOWN).setType(Material.LONG_GRASS);
-							toLog += " and Died";
+							toLog += " and Died (Rate: "+curDeath+")";
 						}
 					}
+					
 				}
 				else 
 				{
@@ -252,6 +377,8 @@ public class PlantListener implements Listener
 					toLog += " Failed: Bad Biome";				
 				}					
 			}
+			
+			
 			else if ((e.getBlock().getRelative(BlockFace.EAST).getType() == Material.MELON_STEM) ||
 					(e.getBlock().getRelative(BlockFace.WEST).getType() == Material.MELON_STEM) ||
 					(e.getBlock().getRelative(BlockFace.NORTH).getType() == Material.MELON_STEM) ||
@@ -259,12 +386,30 @@ public class PlantListener implements Listener
 			{
 				toLog += "MELON_BLOCK";
 				if ((plugin.getConfig().getList("Melon_Block.Biome").contains(e.getBlock().getBiome().toString())) || (plugin.getConfig().getList("Melon_Block.Biome").isEmpty())) 
-				{				
-					if (!(PwnPlantGrowth.random(PwnPlantGrowth.MelonChance))) 
+				{	
+					
+					int curGrowth = PwnPlantGrowth.MelonChance;
+					int curDeath = PwnPlantGrowth.MelonDeath;
+					
+					if (plugin.getConfig().isSet("Melon_Block."+curBiome+".Growth")) {
+						curGrowth = plugin.getConfig().getInt("Melon_Block."+curBiome+".Growth");
+					}
+					
+					if (plugin.getConfig().isSet("Melon_Block."+curBiome+".Death")) {
+						curDeath = plugin.getConfig().getInt("Melon_Block."+curBiome+".Death");
+					}
+					
+					if (!(PwnPlantGrowth.random(curGrowth))) 
 					{
 						e.setCancelled(true);
-						toLog += " Failed";
+						toLog += " Failed (Rate: "+curGrowth+") ";
+						if (PwnPlantGrowth.random(curDeath)) 
+						{
+							e.getBlock().setType(Material.LONG_GRASS);
+							toLog += " and Died (Rate: "+curDeath+")";
+						}
 					}
+					
 				}
 				else 
 				{
@@ -272,18 +417,37 @@ public class PlantListener implements Listener
 					toLog += " Failed: Bad Biome";				
 				}					
 			}
+			
+			
 			else if ((e.getBlock().getRelative(BlockFace.EAST).getType() == Material.PUMPKIN_STEM) ||
 					(e.getBlock().getRelative(BlockFace.WEST).getType() == Material.PUMPKIN_STEM) ||
 					(e.getBlock().getRelative(BlockFace.NORTH).getType() == Material.PUMPKIN_STEM) ||
 					(e.getBlock().getRelative(BlockFace.SOUTH).getType() == Material.PUMPKIN_STEM)) 
 			{
 				toLog += "PUMPKIN_BLOCK";
-				if ((plugin.getConfig().getList("Pumpkin_Block.Biome").contains(e.getBlock().getBiome().toString())) || (plugin.getConfig().getList("Pumpkin_Block.Biome").isEmpty())) 
+				if ((plugin.getConfig().getList("Pumpkin_Block.Biome").contains(curBiome)) || (plugin.getConfig().getList("Pumpkin_Block.Biome").isEmpty())) 
 				{				
-					if (!(PwnPlantGrowth.random(PwnPlantGrowth.PumpkinChance))) 
+					
+					int curGrowth = PwnPlantGrowth.PumpkinChance;
+					int curDeath = PwnPlantGrowth.PumpkinDeath;
+					
+					if (plugin.getConfig().isSet("Pumpkin_Block."+curBiome+".Growth")) {
+						curGrowth = plugin.getConfig().getInt("Pumpkin_Block."+curBiome+".Growth");
+					}
+					
+					if (plugin.getConfig().isSet("Pumpkin_Block."+curBiome+".Death")) {
+						curDeath = plugin.getConfig().getInt("Pumpkin_Block."+curBiome+".Death");
+					}
+					
+					if (!(PwnPlantGrowth.random(curGrowth))) 
 					{
 						e.setCancelled(true);
-						toLog += " Failed";
+						toLog += " Failed (Rate: "+curGrowth+") ";
+						if (PwnPlantGrowth.random(curDeath)) 
+						{
+							e.getBlock().setType(Material.LONG_GRASS);
+							toLog += " and Died (Rate: "+curDeath+")";
+						}
 					}
 				}
 				else 
@@ -292,8 +456,10 @@ public class PlantListener implements Listener
 					toLog += " Failed: Bad Biome";				
 				}					
 			}
+			
 		}	
 
+		
 		// Log it
     	if (PwnPlantGrowth.logEnabled) 
     	{	
@@ -329,20 +495,38 @@ public class PlantListener implements Listener
 		
 		String toLog = "Growing: " +e.getSpecies();
 
+		// Get current biome and make a string for comparison later
+		String curBiome = e.getLocation().getBlock().getBiome().toString();
+		
+		// Get current block type and make a string for comparison later
+		//String curBlock = e.getLocation().getBlock().getType().toString();
+		
 		if (e.getSpecies() == TreeType.BIG_TREE)
 		{
 			if ((plugin.getConfig().getList("Big_Tree.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (plugin.getConfig().getList("Big_Tree.Biome").isEmpty())) 
-			{			
-				if (!(PwnPlantGrowth.random(PwnPlantGrowth.BigTreeChance))) 
+			{	
+				
+				int curGrowth = PwnPlantGrowth.BigTreeChance;
+				int curDeath = PwnPlantGrowth.BigTreeDeath;
+				
+				if (plugin.getConfig().isSet("Big_Tree."+curBiome+".Growth")) {
+					curGrowth = plugin.getConfig().getInt("Big_Tree."+curBiome+".Growth");
+				}
+				
+				if (plugin.getConfig().isSet("Big_Tree."+curBiome+".Death")) {
+					curDeath = plugin.getConfig().getInt("Big_Tree."+curBiome+".Death");
+				}
+				
+				if (!(PwnPlantGrowth.random(curGrowth))) 
 				{
 					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(PwnPlantGrowth.BigTreeDeath)) 
+					toLog += " Failed (Rate: "+curGrowth+") ";
+					if (PwnPlantGrowth.random(curDeath)) 
 					{
 						e.getLocation().getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
+						toLog += " and Died (Rate: "+curDeath+")";
 					}
-				}
+				}					
 			}
 			else 
 			{
@@ -350,18 +534,31 @@ public class PlantListener implements Listener
 				toLog += " Failed: Bad Biome";				
 			}				
 		}
+		
+		
 		if (e.getSpecies() == TreeType.BIRCH)
 		{
 			if ((plugin.getConfig().getList("Birch.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (plugin.getConfig().getList("Birch.Biome").isEmpty())) 
 			{				
-				if (!(PwnPlantGrowth.random(PwnPlantGrowth.BirchChance))) 
+				int curGrowth = PwnPlantGrowth.BirchChance;
+				int curDeath = PwnPlantGrowth.BirchDeath;
+				
+				if (plugin.getConfig().isSet("Birch."+curBiome+".Growth")) {
+					curGrowth = plugin.getConfig().getInt("Birch."+curBiome+".Growth");
+				}
+				
+				if (plugin.getConfig().isSet("Birch."+curBiome+".Death")) {
+					curDeath = plugin.getConfig().getInt("Birch."+curBiome+".Death");
+				}
+				
+				if (!(PwnPlantGrowth.random(curGrowth))) 
 				{
 					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(PwnPlantGrowth.BirchDeath)) 
+					toLog += " Failed (Rate: "+curGrowth+") ";
+					if (PwnPlantGrowth.random(curDeath)) 
 					{
 						e.getLocation().getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
+						toLog += " and Died (Rate: "+curDeath+")";
 					}
 				}
 			}
@@ -371,18 +568,31 @@ public class PlantListener implements Listener
 				toLog += " Failed: Bad Biome";				
 			}				
 		}
+		
+		
 		if (e.getSpecies() == TreeType.BROWN_MUSHROOM)
 		{
 			if ((plugin.getConfig().getList("Brown_Mushroom.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (plugin.getConfig().getList("Brown_Mushroom.Biome").isEmpty())) 
 			{			
-				if (!(PwnPlantGrowth.random(PwnPlantGrowth.BrownShroomChance))) 
+				int curGrowth = PwnPlantGrowth.BrownShroomChance;
+				int curDeath = PwnPlantGrowth.BrownShroomDeath;
+				
+				if (plugin.getConfig().isSet("Brown_Mushroom."+curBiome+".Growth")) {
+					curGrowth = plugin.getConfig().getInt("Brown_Mushroom."+curBiome+".Growth");
+				}
+				
+				if (plugin.getConfig().isSet("Brown_Mushroom."+curBiome+".Death")) {
+					curDeath = plugin.getConfig().getInt("Brown_Mushroom."+curBiome+".Death");
+				}
+				
+				if (!(PwnPlantGrowth.random(curGrowth))) 
 				{
 					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(PwnPlantGrowth.BrownShroomDeath)) 
+					toLog += " Failed (Rate: "+curGrowth+") ";
+					if (PwnPlantGrowth.random(curDeath)) 
 					{
 						e.getLocation().getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
+						toLog += " and Died (Rate: "+curDeath+")";
 					}
 				}
 			}
@@ -392,18 +602,31 @@ public class PlantListener implements Listener
 				toLog += " Failed: Bad Biome";				
 			}
 		}
-		if (e.getSpecies() == TreeType.JUNGLE)
+		
+		
+		if ((e.getSpecies() == TreeType.JUNGLE) || (e.getSpecies() == TreeType.SMALL_JUNGLE) || (e.getSpecies() == TreeType.JUNGLE_BUSH))
 		{
 			if ((plugin.getConfig().getList("Jungle.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (plugin.getConfig().getList("Jungle.Biome").isEmpty())) 
 			{			
-				if (!(PwnPlantGrowth.random(PwnPlantGrowth.JungleChance))) 
+				int curGrowth = PwnPlantGrowth.JungleChance;
+				int curDeath = PwnPlantGrowth.JungleDeath;
+				
+				if (plugin.getConfig().isSet("Jungle."+curBiome+".Growth")) {
+					curGrowth = plugin.getConfig().getInt("Jungle."+curBiome+".Growth");
+				}
+				
+				if (plugin.getConfig().isSet("Jungle."+curBiome+".Death")) {
+					curDeath = plugin.getConfig().getInt("Jungle."+curBiome+".Death");
+				}
+				
+				if (!(PwnPlantGrowth.random(curGrowth))) 
 				{
 					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(PwnPlantGrowth.JungleDeath)) 
+					toLog += " Failed (Rate: "+curGrowth+") ";
+					if (PwnPlantGrowth.random(curDeath)) 
 					{
 						e.getLocation().getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
+						toLog += " and Died (Rate: "+curDeath+")";
 					}
 				}
 			}
@@ -413,39 +636,31 @@ public class PlantListener implements Listener
 				toLog += " Failed: Bad Biome";				
 			}				
 		}
-		if (e.getSpecies() == TreeType.JUNGLE_BUSH)
-		{
-			if ((plugin.getConfig().getList("Jungle.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (plugin.getConfig().getList("Jungle.Biome").isEmpty())) 
-			{				
-				if (!(PwnPlantGrowth.random(PwnPlantGrowth.JungleChance))) 
-				{
-					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(PwnPlantGrowth.JungleDeath)) 
-					{
-						e.getLocation().getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
-					}
-				}
-			}
-			else 
-			{
-				e.setCancelled(true);
-				toLog += " Failed: Bad Biome";				
-			}				
-		}
+		
+				
 		if (e.getSpecies() == TreeType.RED_MUSHROOM)
 		{
 			if ((plugin.getConfig().getList("Red_Mushroom.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (plugin.getConfig().getList("Red_Mushroom.Biome").isEmpty())) 
 			{			
-				if (!(PwnPlantGrowth.random(PwnPlantGrowth.RedShroomChance))) 
+				int curGrowth = PwnPlantGrowth.RedShroomChance;
+				int curDeath = PwnPlantGrowth.RedShroomDeath;
+				
+				if (plugin.getConfig().isSet("Red_Mushroom."+curBiome+".Growth")) {
+					curGrowth = plugin.getConfig().getInt("Red_Mushroom."+curBiome+".Growth");
+				}
+				
+				if (plugin.getConfig().isSet("Red_Mushroom."+curBiome+".Death")) {
+					curDeath = plugin.getConfig().getInt("Red_Mushroom."+curBiome+".Death");
+				}
+				
+				if (!(PwnPlantGrowth.random(curGrowth))) 
 				{
 					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(PwnPlantGrowth.RedShroomDeath)) 
+					toLog += " Failed (Rate: "+curGrowth+") ";
+					if (PwnPlantGrowth.random(curDeath)) 
 					{
 						e.getLocation().getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
+						toLog += " and Died (Rate: "+curDeath+")";
 					}
 				}
 			}
@@ -455,18 +670,31 @@ public class PlantListener implements Listener
 				toLog += " Failed: Bad Biome";				
 			}				
 		}
-		if (e.getSpecies() == TreeType.REDWOOD)
+		
+		
+		if ((e.getSpecies() == TreeType.REDWOOD) || (e.getSpecies() == TreeType.TALL_REDWOOD))
 		{
 			if ((plugin.getConfig().getList("Spruce.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (plugin.getConfig().getList("Spruce.Biome").isEmpty())) 
 			{			
-				if (!(PwnPlantGrowth.random(PwnPlantGrowth.SpruceChance))) 
+				int curGrowth = PwnPlantGrowth.SpruceChance;
+				int curDeath = PwnPlantGrowth.SpruceDeath;
+				
+				if (plugin.getConfig().isSet("Spruce."+curBiome+".Growth")) {
+					curGrowth = plugin.getConfig().getInt("Spruce."+curBiome+".Growth");
+				}
+				
+				if (plugin.getConfig().isSet("Spruce."+curBiome+".Death")) {
+					curDeath = plugin.getConfig().getInt("Spruce."+curBiome+".Death");
+				}
+				
+				if (!(PwnPlantGrowth.random(curGrowth))) 
 				{
 					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(PwnPlantGrowth.SpruceDeath)) 
+					toLog += " Failed (Rate: "+curGrowth+") ";
+					if (PwnPlantGrowth.random(curDeath)) 
 					{
 						e.getLocation().getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
+						toLog += " and Died (Rate: "+curDeath+")";
 					}
 				}
 			}
@@ -476,39 +704,30 @@ public class PlantListener implements Listener
 				toLog += " Failed: Bad Biome";				
 			}				
 		}
-		if (e.getSpecies() == TreeType.SMALL_JUNGLE)
-		{
-			if ((plugin.getConfig().getList("Jungle.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (plugin.getConfig().getList("Jungle.Biome").isEmpty())) 
-			{				
-				if (!(PwnPlantGrowth.random(PwnPlantGrowth.JungleChance))) 
-				{
-					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(PwnPlantGrowth.JungleDeath)) 
-					{
-						e.getLocation().getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
-					}
-				}
-			}
-			else 
-			{
-				e.setCancelled(true);
-				toLog += " Failed: Bad Biome";				
-			}				
-		}
-		if (e.getSpecies() == TreeType.SWAMP)
+		
+		if ((e.getSpecies() == TreeType.SWAMP) || (e.getSpecies() == TreeType.TREE))
 		{
 			if ((plugin.getConfig().getList("Tree.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (plugin.getConfig().getList("Tree.Biome").isEmpty())) 
 			{			
-				if (!(PwnPlantGrowth.random(PwnPlantGrowth.TreeChance)))
+				int curGrowth = PwnPlantGrowth.TreeChance;
+				int curDeath = PwnPlantGrowth.TreeDeath;
+				
+				if (plugin.getConfig().isSet("Tree."+curBiome+".Growth")) {
+					curGrowth = plugin.getConfig().getInt("Tree."+curBiome+".Growth");
+				}
+				
+				if (plugin.getConfig().isSet("Tree."+curBiome+".Death")) {
+					curDeath = plugin.getConfig().getInt("Tree."+curBiome+".Death");
+				}
+				
+				if (!(PwnPlantGrowth.random(curGrowth))) 
 				{
 					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(PwnPlantGrowth.TreeDeath))
+					toLog += " Failed (Rate: "+curGrowth+") ";
+					if (PwnPlantGrowth.random(curDeath)) 
 					{
 						e.getLocation().getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
+						toLog += " and Died (Rate: "+curDeath+")";
 					}
 				}
 			}
@@ -518,48 +737,7 @@ public class PlantListener implements Listener
 				toLog += " Failed: Bad Biome";				
 			}				
 		}
-		if (e.getSpecies() == TreeType.TALL_REDWOOD)
-		{
-			if ((plugin.getConfig().getList("Spruce.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (plugin.getConfig().getList("Spruce.Biome").isEmpty())) 
-			{			
-				if (!(PwnPlantGrowth.random(PwnPlantGrowth.SpruceChance))) 
-				{
-					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(PwnPlantGrowth.SpruceDeath)) 
-					{
-						e.getLocation().getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
-					}
-				}
-			}
-			else 
-			{
-				e.setCancelled(true);
-				toLog += " Failed: Bad Biome";				
-			}				
-		}
-		if (e.getSpecies() == TreeType.TREE)
-		{
-			if ((plugin.getConfig().getList("Tree.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (plugin.getConfig().getList("Tree.Biome").isEmpty())) 
-			{			
-				if (!(PwnPlantGrowth.random(PwnPlantGrowth.TreeChance))) 
-				{
-					e.setCancelled(true);
-					toLog += " Failed";
-					if (PwnPlantGrowth.random(PwnPlantGrowth.TreeDeath)) 
-					{
-						e.getLocation().getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died";
-					}
-				}
-			}
-			else 
-			{
-				e.setCancelled(true);
-				toLog += " Failed: Bad Biome";				
-			}				
-		}
+	
 		
 		// log it
 		if (PwnPlantGrowth.logEnabled) 

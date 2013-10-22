@@ -7,6 +7,7 @@ enabled_worlds:
 
 # stop buckets and dispensers from transporting source blocks - adds realism
 block_water_bucket: false
+block_water_dispenser: false
     
 # natural sky light level: 0 allows any, 10 is sunlight through glass/tree leaves, 15 is direct sunlight
 min_natural_light: 10
@@ -31,7 +32,15 @@ Cactus:
 Carrot: 
     Growth: 50
     Death: 5
-    Biome: []
+    Biome: 
+    - PLAINS
+    - DESERT
+    PLAINS: 
+      Growth: 100
+      Death: 0 
+    DESERT:
+      Growth: 25
+      Death: 50
 Cocoa: 
     Growth: 25
     Death: 5

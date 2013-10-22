@@ -20,7 +20,8 @@ public class PwnPlantGrowth extends JavaPlugin
 	public ArrayList<Integer> softBlocks = new ArrayList<Integer>();
 	public static File dataFolder;
 	public static Boolean logEnabled;
-	public static Boolean blockWater;
+	public static Boolean blockWaterBucket;
+	public static Boolean blockWaterDispenser;
 	public static int naturalLight;
 	public static List<String> darkGrow;
 	public static List<String> enabledWorlds;
@@ -90,7 +91,10 @@ public class PwnPlantGrowth extends JavaPlugin
 		PwnPlantGrowth.enabledWorlds = getConfig().getStringList("enabled_worlds");
 		
 		// Get water source setting
-		PwnPlantGrowth.blockWater = getConfig().getBoolean("block_water_bucket");
+		PwnPlantGrowth.blockWaterBucket = getConfig().getBoolean("block_water_bucket");
+		
+		// Get water source setting
+		PwnPlantGrowth.blockWaterDispenser = getConfig().getBoolean("block_water_dispenser");
 		
 		// Get logfile setting
 		PwnPlantGrowth.logEnabled = getConfig().getBoolean("debug_log");
