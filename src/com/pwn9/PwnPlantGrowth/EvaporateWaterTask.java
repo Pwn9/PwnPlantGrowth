@@ -2,6 +2,7 @@ package com.pwn9.PwnPlantGrowth;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 
 public class EvaporateWaterTask implements Runnable 
 {
@@ -15,11 +16,39 @@ public class EvaporateWaterTask implements Runnable
 	@Override
 	public void run()
 	{
-		if(this.block.getType() == Material.STATIONARY_WATER)
+		if (isWater(this.block))
 		{
-			// setData is now deprecated, try setType instead.
-			//this.block.setData((byte)1);
-			this.block.setType(Material.AIR);
+			this.block.setType(Material.AIR);			
 		}
+		if (isWater(this.block.getRelative(BlockFace.NORTH)))
+		{
+			this.block.getRelative(BlockFace.NORTH).setType(Material.AIR);
+		}
+		if (isWater(this.block.getRelative(BlockFace.SOUTH)))
+		{
+			this.block.getRelative(BlockFace.SOUTH).setType(Material.AIR);
+		}
+		if (isWater(this.block.getRelative(BlockFace.WEST)))
+		{
+			this.block.getRelative(BlockFace.WEST).setType(Material.AIR);
+		}
+		if (isWater(this.block.getRelative(BlockFace.EAST)))
+		{
+			this.block.getRelative(BlockFace.EAST).setType(Material.AIR);
+		}
+	}	
+	
+	public boolean isWater(Block block)
+	{
+		Block b = block;
+		
+		if (b.getType() == Material.STATIONARY_WATER || b.getType() == Material.WATER) 
+		{
+			return true;
+		}
+		else 
+		{
+			return false;
+		}		
 	}	
 }

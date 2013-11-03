@@ -1,6 +1,5 @@
 package com.pwn9.PwnPlantGrowth;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -36,9 +35,20 @@ public class WaterListener implements Listener
 	    		Player player = event.getPlayer();
 	    		if(player.getItemInHand().getType() == Material.WATER_BUCKET) 
 	    		{   			
+	    			player.getItemInHand().setType(Material.BUCKET);
 	    			Block block = event.getBlockClicked().getRelative(event.getBlockFace());
-	    			EvaporateWaterTask task = new EvaporateWaterTask(block);
-	    			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, task, 30L);
+	    			
+	    			// If the block is already water then don't do anything, otherwise set it water then set it air for water effect.
+	    			if (!isWater(block)) 
+	    			{
+		    			block.setType(Material.WATER);
+		    			EvaporateWaterTask task = new EvaporateWaterTask(block);
+		    			//plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, task, 15L);
+		    			plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, task, 15L);
+	    			}	 
+	    			
+		    		event.setCancelled(true);
+		    		
 	    	    	if (PwnPlantGrowth.logEnabled) 
 	    	    	{	
 	    	    		PwnPlantGrowth.logToFile("Blocked water source from bucket");
@@ -59,33 +69,18 @@ public class WaterListener implements Listener
 	    	{				
 				//only care about water
 				if(event.getItem().getType() == Material.WATER_BUCKET)
-				{
+				{					
 					Block dispenser = event.getBlock();
-					// Get location of dispenser 
-					Location loc = dispenser.getLocation();
 					// Get direction dispenser is facing 
 					MaterialData mat = dispenser.getState().getData(); 
 					Dispenser disp_mat = (Dispenser) mat; 
 					BlockFace face = disp_mat.getFacing(); 			
-					Block block;
-					if(face.toString() == "WEST") 
-					{
-						block = loc.add(-1, 0, 0).getBlock();			
-					}
-					else if(face.toString() == "EAST") 
-					{
-						block = loc.add(1, 0, 0).getBlock();
-					}
-					else if(face.toString() == "NORTH") 
-					{
-						block = loc.add(0, 0, -1).getBlock();
-					}
-					else
-					{
-						block = loc.add(0, 0, 1).getBlock();
-					}			
-					EvaporateWaterTask task = new EvaporateWaterTask(block);
-					plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, task, 45L);
+					Block block = dispenser.getRelative(face);			
+					
+	    			EvaporateWaterTask task = new EvaporateWaterTask(block);
+	    			//plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, task, 30L);
+	    			plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, task, 15L);
+	    			
 	    	    	if (PwnPlantGrowth.logEnabled) 
 	    	    	{	
 	    	    		PwnPlantGrowth.logToFile("Blocked water source from dispenser");
@@ -94,6 +89,15 @@ public class WaterListener implements Listener
 	    	}
 		}
 	}
+	
+	public boolean isWater(Block block)
+	{	
+		if(block.getType() == Material.STATIONARY_WATER || block.getType() == Material.WATER) 
+		{
+			return true;
+		}
+		return false;	
+	}		
 
 }
 	
