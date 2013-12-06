@@ -738,6 +738,71 @@ public class PlantListener implements Listener
 			}				
 		}
 	
+		if (e.getSpecies() == TreeType.ACACIA)
+		{
+			if ((plugin.getConfig().getList("Acacia.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (plugin.getConfig().getList("Acacia.Biome").isEmpty())) 
+			{			
+				int curGrowth = PwnPlantGrowth.AcaciaChance;
+				int curDeath = PwnPlantGrowth.AcaciaDeath;
+				
+				if (plugin.getConfig().isSet("Acacia."+curBiome+".Growth")) {
+					curGrowth = plugin.getConfig().getInt("Acacia."+curBiome+".Growth");
+				}
+				
+				if (plugin.getConfig().isSet("Acacia."+curBiome+".Death")) {
+					curDeath = plugin.getConfig().getInt("Acacia."+curBiome+".Death");
+				}
+				
+				if (!(PwnPlantGrowth.random(curGrowth))) 
+				{
+					e.setCancelled(true);
+					toLog += " Failed (Rate: "+curGrowth+") ";
+					if (PwnPlantGrowth.random(curDeath)) 
+					{
+						e.getLocation().getBlock().setType(Material.LONG_GRASS);
+						toLog += " and Died (Rate: "+curDeath+")";
+					}
+				}
+			}
+			else 
+			{
+				e.setCancelled(true);
+				toLog += " Failed: Bad Biome";				
+			}				
+		}
+		
+		if (e.getSpecies() == TreeType.DARK_OAK)
+		{
+			if ((plugin.getConfig().getList("Oak.Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (plugin.getConfig().getList("Oak.Biome").isEmpty())) 
+			{			
+				int curGrowth = PwnPlantGrowth.OakChance;
+				int curDeath = PwnPlantGrowth.OakDeath;
+				
+				if (plugin.getConfig().isSet("Oak."+curBiome+".Growth")) {
+					curGrowth = plugin.getConfig().getInt("Oak."+curBiome+".Growth");
+				}
+				
+				if (plugin.getConfig().isSet("Oak."+curBiome+".Death")) {
+					curDeath = plugin.getConfig().getInt("Oak."+curBiome+".Death");
+				}
+				
+				if (!(PwnPlantGrowth.random(curGrowth))) 
+				{
+					e.setCancelled(true);
+					toLog += " Failed (Rate: "+curGrowth+") ";
+					if (PwnPlantGrowth.random(curDeath)) 
+					{
+						e.getLocation().getBlock().setType(Material.LONG_GRASS);
+						toLog += " and Died (Rate: "+curDeath+")";
+					}
+				}
+			}
+			else 
+			{
+				e.setCancelled(true);
+				toLog += " Failed: Bad Biome";				
+			}				
+		}		
 		
 		// log it
 		if (PwnPlantGrowth.logEnabled) 

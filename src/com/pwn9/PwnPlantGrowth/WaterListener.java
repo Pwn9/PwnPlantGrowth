@@ -43,8 +43,7 @@ public class WaterListener implements Listener
 	    			{
 		    			block.setType(Material.WATER);
 		    			EvaporateWaterTask task = new EvaporateWaterTask(block);
-		    			//plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, task, 15L);
-		    			plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, task, 15L);
+		    			plugin.getServer().getScheduler().runTaskLater(plugin, task, 30L);
 	    			}	 
 	    			
 		    		event.setCancelled(true);
@@ -78,8 +77,7 @@ public class WaterListener implements Listener
 					Block block = dispenser.getRelative(face);			
 					
 	    			EvaporateWaterTask task = new EvaporateWaterTask(block);
-	    			//plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, task, 30L);
-	    			plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, task, 15L);
+	    			plugin.getServer().getScheduler().runTaskLater(plugin, task, 20L);
 	    			
 	    	    	if (PwnPlantGrowth.logEnabled) 
 	    	    	{	

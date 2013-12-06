@@ -64,6 +64,10 @@ public class PwnPlantGrowth extends JavaPlugin
 	public static int SpruceDeath;
 	public static int TreeChance;
 	public static int TreeDeath;
+	public static int AcaciaChance;
+	public static int AcaciaDeath;
+	public static int OakChance;
+	public static int OakDeath;
 	
 	public void onEnable() 
 	{
@@ -124,6 +128,8 @@ public class PwnPlantGrowth extends JavaPlugin
 		PwnPlantGrowth.JungleChance = getConfig().getInt("Jungle.Growth");
 		PwnPlantGrowth.SpruceChance = getConfig().getInt("Spruce.Growth");
 		PwnPlantGrowth.TreeChance = getConfig().getInt("Tree.Growth");
+		PwnPlantGrowth.AcaciaChance = getConfig().getInt("Acacia.Growth");
+		PwnPlantGrowth.OakChance = getConfig().getInt("Oak.Growth");
 		
 		//Config Death imports
 		PwnPlantGrowth.CarrotDeath = getConfig().getInt("Carrot.Death");
@@ -143,7 +149,9 @@ public class PwnPlantGrowth extends JavaPlugin
 		PwnPlantGrowth.RedShroomDeath = getConfig().getInt("Red_Mushroom.Death");
 		PwnPlantGrowth.JungleDeath = getConfig().getInt("Jungle.Death");
 		PwnPlantGrowth.SpruceDeath = getConfig().getInt("Spruce.Death");
-		PwnPlantGrowth.TreeDeath = getConfig().getInt("Tree.Death");			
+		PwnPlantGrowth.TreeDeath = getConfig().getInt("Tree.Death");	
+		PwnPlantGrowth.AcaciaDeath = getConfig().getInt("Acacia.Death");	
+		PwnPlantGrowth.OakDeath = getConfig().getInt("Oak.Death");	
 	}
 		
 	public void onDisable() 

@@ -1,9 +1,10 @@
 # See PwnPlantGrowth's page on http://dev.bukkit.org for more config details.
+# Full biome list available at http://jd.bukkit.org/dev/apidocs/org/bukkit/block/Biome.html
 
 # which worlds should this plugin be enabled in? worlds not in this list will have default growth.
 enabled_worlds:
-  - world
-  - world_nether
+  - example_world
+  - example_world_nether
 
 # stop buckets and dispensers from transporting source blocks - adds realism
 block_water_bucket: false
@@ -58,7 +59,7 @@ Nether_Wart:
     Growth: 25
     Death: 5
     Biome: 
-    - HELL
+    - HELL    
 Potato:
     Growth: 50
     Death: 5
@@ -75,7 +76,8 @@ Sugar_Cane:
     Death: 5
     Biome:
     - BEACH
-    - SWAMPLAND
+    - RIVER
+    - SWAMPLAND   
 Wheat:
     Growth: 50
     Death: 5
@@ -84,6 +86,14 @@ Wheat:
     - RIVER
 
 # TREES
+Acacia:
+    Growth: 50
+    Death: 5
+    Biome:
+    - SAVANNA
+    - SAVANNA_MOUNTAINS
+    - SAVANNA_PLATEAU
+    - SAVANNA_PLATEAU_MOUNTAINS
 Birch:
     Growth: 50
     Death: 5
@@ -93,7 +103,13 @@ Jungle:
     Death: 5
     Biome:
     - JUNGLE
-    - JUNGLE_HILLS    
+    - JUNGLE_HILLS  
+Oak:
+    Growth: 50
+    Death: 5
+    Biome: 
+    - ROOFED_FOREST        
+    - ROOFED_FOREST_MOUNTAINS   
 Spruce:
     Growth: 50
     Death: 5
