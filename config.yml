@@ -1,36 +1,48 @@
 # See PwnPlantGrowth's page on http://dev.bukkit.org for more config details.
+
 # Full biome list available at http://jd.bukkit.org/dev/apidocs/org/bukkit/block/Biome.html
 
-# which worlds should this plugin be enabled in? worlds not in this list will have default growth.
+# Plants / Crops are available in the "Material" list. See the following for official material names.
+# Full material list available at http://jd.bukkit.org/rb/apidocs/org/bukkit/Material.html
+
+# Which worlds should this plugin be enabled in? Worlds not in this list will have default growth.
 enabled_worlds:
   - example_world
   - example_world_nether
 
-# stop buckets and dispensers from transporting source blocks - adds realism
+# Stop buckets and dispensers from transporting source blocks - adds realism.
 block_water_bucket: false
 block_water_dispenser: false
     
-# natural sky light level: 0 allows any, 10 is sunlight through glass/tree leaves, 15 is direct sunlight
+# Natural sky light level: 0 allows any, 10 is sunlight through glass/tree leaves, 15 is direct sunlight
 min_natural_light: 10
 
-# list of items allowed to grow in false light (torches, lightstone, lava) - use offical MATERIAL names to add to this list
+# List of items allowed to grow in false light (torches, lightstone, lava) - use offical MATERIAL names to add to this list
 grow_in_dark: 
   - RED_MUSHROOM
   - BROWN_MUSHROOM
   - NETHER_WARTS
   - COCOA 
 
-# run a debug log to view additional plugin data for troubleshooting and configuration, turn off in production!
+# A Block that can act as a weed killer (keeps plants from dying, will NOT affect growth rates)
+weed_killer: GOLD_BLOCK
+
+# Radius that weed killer protects, plants within this distance of the weed killer block will not turn to dead shrubs
+weed_killer_radius: 5
+
+# Run a debug log to view additional plugin data for troubleshooting and configuration, turn off in production!
 debug_log: false
 
-# CROPS
-Cactus:
+# CROPS - Important note, as of PPG 1.6 the plant names are now all in UPPER CASE matching the actual Bukkit Material.TYPE 
+
+CACTUS:
     Growth: 50
     Death: 5
     Biome: 
     - DESERT
     - DESERT_HILLS
-Carrot: 
+
+CARROT: 
     Growth: 50
     Death: 5
     Biome: 
@@ -42,51 +54,64 @@ Carrot:
     DESERT:
       Growth: 25
       Death: 50
-Cocoa: 
+
+COCOA: 
     Growth: 25
     Death: 5
     Biome:
     - JUNGLE
     - JUNGLE_HILLS
-Melon_Block: 
+
+MELON_BLOCK: 
     Growth: 50
     Biome: []
-Melon_Stem:
+
+MELON_STEM:
     Growth: 50
     Death: 5
     Biome: []
-Nether_Wart:
+
+NETHER_WARTS:
     Growth: 25
     Death: 5
     Biome: 
     - HELL    
-Potato:
+
+POTATO:
     Growth: 50
     Death: 5
     Biome: []
-Pumpkin_Block:
+
+PUMPKIN_BLOCK:
     Growth: 50
     Biome: []
-Pumpkin_Stem:
+
+PUMPKIN_STEM:
     Growth: 50
     Death: 5
     Biome: []
-Sugar_Cane:
+    
+SUGAR_CANE_BLOCK:
     Growth: 50
     Death: 5
     Biome:
     - BEACH
     - RIVER
-    - SWAMPLAND   
-Wheat:
+    - SWAMPLAND  
+    
+# This is WHEAT - In this example wheat will grow everywhere at 50% rate, except plains it will grow at %100
+CROPS:
     Growth: 50
     Death: 5
-    Biome:
-    - PLAINS
-    - RIVER
+    Biome: []
+    PLAINS: 
+      Growth: 100
+      Death: 0 
+      
+# TREES 
+# Full tree list available at http://jd.bukkit.org/dev/apidocs/org/bukkit/TreeType.html
 
-# TREES
-Acacia:
+ACACIA:
     Growth: 50
     Death: 5
     Biome:
@@ -94,23 +119,46 @@ Acacia:
     - SAVANNA_MOUNTAINS
     - SAVANNA_PLATEAU
     - SAVANNA_PLATEAU_MOUNTAINS
-Birch:
+
+BIRCH:
     Growth: 50
     Death: 5
     Biome: []
-Jungle:
+
+TALL_BIRCH:
+    Growth: 50
+    Death: 5
+    Biome: []
+    
+JUNGLE:
     Growth: 50
     Death: 5
     Biome:
     - JUNGLE
     - JUNGLE_HILLS  
-Oak:
+
+JUNGLE_BUSH:
+    Growth: 50
+    Death: 5
+    Biome:
+    - JUNGLE
+    - JUNGLE_HILLS      
+
+SMALL_JUNGLE:
+    Growth: 50
+    Death: 5
+    Biome:
+    - JUNGLE
+    - JUNGLE_HILLS  
+    
+DARK_OAK:
     Growth: 50
     Death: 5
     Biome: 
     - ROOFED_FOREST        
     - ROOFED_FOREST_MOUNTAINS   
-Spruce:
+
+REDWOOD:
     Growth: 50
     Death: 5
     Biome:
@@ -118,25 +166,49 @@ Spruce:
     - FOREST_HILLS
     - TAIGA
     - TAIGA_HILLS
-Tree:
+
+TALL_REDWOOD:
+    Growth: 50
+    Death: 5
+    Biome:
+    - FOREST
+    - FOREST_HILLS
+    - TAIGA
+    - TAIGA_HILLS
+
+MEGA_REDWOOD:
+    Growth: 50
+    Death: 5
+    Biome:
+    - FOREST
+    - FOREST_HILLS
+    - TAIGA
+    - TAIGA_HILLS    
+
+SWAMP:
+    Growth: 50
+    Death: 5
+    Biome: []
+        
+TREE:
     Growth: 50
     Death: 5
     Biome: []
 
-# BIG TREE
-Big_Tree:
+BIG_TREE:
     Growth: 50
     Death: 5
     Biome: []
 
 # GIANT MUSHROOMS
-Brown_Mushroom:
+BROWN_MUSHROOM:
     Growth: 50
     Death: 5
     Biome:
     - MUSHROOM_ISLAND
     - MUSHROOM_SHORE
-Red_Mushroom:
+
+RED_MUSHROOM:
     Growth: 50
     Death: 5
     Biome:
