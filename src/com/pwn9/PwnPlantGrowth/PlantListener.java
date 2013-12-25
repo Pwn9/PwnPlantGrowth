@@ -1,5 +1,8 @@
 package com.pwn9.PwnPlantGrowth;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
@@ -23,7 +26,6 @@ public class PlantListener implements Listener
 	@EventHandler(ignoreCancelled = true)
 	public void plantGrow(BlockGrowEvent e) 
 	{
-		
 		// Enabled in world?
 		World world = e.getBlock().getWorld();
 		if (!PwnPlantGrowth.isEnabledIn(world.getName())) 
@@ -31,21 +33,55 @@ public class PlantListener implements Listener
 			return;
 		}
 		
+		List<String> fBlocksFound = new ArrayList<String>();
+		List<String> wkBlocksFound = new ArrayList<String>();
+		
+		if (PwnPlantGrowth.fenabled) 
+		{
+			for (int x = -(PwnPlantGrowth.fradius); x <= PwnPlantGrowth.fradius; x++) 
+			{
+	            for (int y = -(PwnPlantGrowth.fradius); y <= PwnPlantGrowth.fradius; y++) 
+	            {
+	               for (int z = -(PwnPlantGrowth.fradius); z <= PwnPlantGrowth.fradius; z++) 
+	               {
+	            	   fBlocksFound.add(e.getBlock().getRelative(x, y, z).getType().toString());
+	               }
+	            }
+	        }
+		}		
+		
+		if (PwnPlantGrowth.wkenabled)
+		{
+			for (int xx = -(PwnPlantGrowth.wkradius); xx <= PwnPlantGrowth.wkradius; xx++) 
+			{
+	            for (int yy = -(PwnPlantGrowth.wkradius); yy <= PwnPlantGrowth.wkradius; yy++) 
+	            {
+	               for (int zz = -(PwnPlantGrowth.wkradius); zz <= PwnPlantGrowth.wkradius; zz++) 
+	               {
+	            	   wkBlocksFound.add(e.getBlock().getRelative(xx, yy, zz).getType().toString());
+	               }
+	            }
+	        }
+		}		
+		
+		String coords = e.getBlock().getLocation().toString();
+		
 		// Light level acceptable?
 		int lightLevel = e.getBlock().getLightFromSky();
 		if ((PwnPlantGrowth.naturalLight > lightLevel) && (!PwnPlantGrowth.canDarkGrow(e.getBlock().getType().toString())))
 		{
 	    	if (PwnPlantGrowth.logEnabled) 
 	    	{	
-	    		PwnPlantGrowth.logToFile("Too dark to grow " + e.getBlock().getType());
+	    		PwnPlantGrowth.logToFile(coords +": Too dark to grow " + e.getBlock().getType());
 	    	}			
 			e.setCancelled(true);
 			return;
 		}
 		
-		String toLog = "";
-				
-		if (e.getBlock().getType() == Material.AIR)
+		String toLog = coords +": ";
+			
+		// Start log, if AIR or NORMAL growth event
+		if (e.getBlock().getType() == Material.AIR) 
 		{
 			toLog += "Growing: ";
 		}
@@ -65,31 +101,45 @@ public class PlantListener implements Listener
 		{
 			if ((plugin.getConfig().getList(curBlock+".Biome").contains(curBiome)) || (plugin.getConfig().getList(curBlock+".Biome").isEmpty())) 
 			{
-				
-				int curGrowth = plugin.getConfig().getInt(curBlock+".Growth");
-				int curDeath = plugin.getConfig().getInt(curBlock+".Death");
-				
-				if (plugin.getConfig().isSet(curBlock+"."+curBiome+".Growth")) {
-					curGrowth = plugin.getConfig().getInt(curBlock+"."+curBiome+".Growth");
-				}
-				
-				if (plugin.getConfig().isSet(curBlock+"."+curBiome+".Death")) {
-					curDeath = plugin.getConfig().getInt(curBlock+"."+curBiome+".Death");
-				}
-									
-				if (!(PwnPlantGrowth.random(curGrowth))) 
+				if (fBlocksFound.contains(PwnPlantGrowth.fertilizer))
 				{
-					e.setCancelled(true);
-					toLog += " Failed (Rate: "+curGrowth+") ";
+					toLog += " has Fertilizer.";
+				}
+				else 
+				{
+					int curGrowth = plugin.getConfig().getInt(curBlock+".Growth");
+					int curDeath = plugin.getConfig().getInt(curBlock+".Death");
 					
-					// If there is no weedkiller, give plant a chance to die
-					if (!PwnPlantGrowth.weedKiller(e.getBlock())) {
-						if (PwnPlantGrowth.random(curDeath)) {
-							e.getBlock().setType(Material.LONG_GRASS);
-							toLog += " and Died (Rate: "+curDeath+")";
-						}
+					if (plugin.getConfig().isSet(curBlock+"."+curBiome+".Growth")) 
+					{
+						curGrowth = plugin.getConfig().getInt(curBlock+"."+curBiome+".Growth");
 					}
-				}		
+					
+					if (plugin.getConfig().isSet(curBlock+"."+curBiome+".Death")) 
+					{
+						curDeath = plugin.getConfig().getInt(curBlock+"."+curBiome+".Death");
+					}
+										
+					if (!(PwnPlantGrowth.random(curGrowth))) 
+					{
+						e.setCancelled(true);
+						toLog += " Failed (Rate: "+curGrowth+") ";
+						
+						if (wkBlocksFound.contains(PwnPlantGrowth.weedKiller))
+						{
+							toLog += " Has Weed Killer. ";
+						}
+						else 
+						{
+							toLog += " No Weed Killer. ";
+							if (PwnPlantGrowth.random(curDeath)) 
+							{
+								e.getBlock().setType(Material.LONG_GRASS);
+								toLog += " Died (Rate: "+curDeath+")";
+							}
+						}
+					}	
+				}
 			}
 			else 
 			{
@@ -99,7 +149,7 @@ public class PlantListener implements Listener
 		}		
 					
 		// AIR BLOCKS - when event returns AIR as the block type, it must be one of the following
-		if (curBlock == "AIR")
+		if (curBlock == "AIR") 
 		{
 			
 			String downBlock = e.getBlock().getRelative(BlockFace.DOWN).getType().toString();
@@ -107,34 +157,50 @@ public class PlantListener implements Listener
 			// Handle Cactus and Sugar Cane, the 2 that grow vertically only.
 			if (downBlock == "CACTUS" || downBlock == "SUGAR_CANE_BLOCK") 
 			{
+				
 				toLog += downBlock;
-				if ((plugin.getConfig().getList(downBlock+".Biome").contains(curBiome)) || (plugin.getConfig().getList(downBlock+".Biome").isEmpty()))
+				
+				if ((plugin.getConfig().getList(downBlock+".Biome").contains(curBiome)) || (plugin.getConfig().getList(downBlock+".Biome").isEmpty())) 
 				{
 					
-					int curGrowth = plugin.getConfig().getInt(downBlock+".Growth");
-					int curDeath = plugin.getConfig().getInt(downBlock+".Death");
-					
-					if (plugin.getConfig().isSet(downBlock+"."+curBiome+".Growth")) {
-						curGrowth = plugin.getConfig().getInt(downBlock+"."+curBiome+".Growth");
-					}
-					
-					if (plugin.getConfig().isSet(downBlock+"."+curBiome+".Death")) {
-						curDeath = plugin.getConfig().getInt(downBlock+"."+curBiome+".Death");
-					}
-					
-					if (!(PwnPlantGrowth.random(curGrowth))) 
+					if (fBlocksFound.contains(PwnPlantGrowth.fertilizer))
 					{
-						e.setCancelled(true);
-						toLog += " Failed (Rate: "+curGrowth+") ";
-						// If there is no weedkiller, give plant a chance to die
-						if (!PwnPlantGrowth.weedKiller(e.getBlock())) {						
-							if (PwnPlantGrowth.random(curDeath)) {
-								e.getBlock().getRelative(BlockFace.DOWN).setType(Material.LONG_GRASS);
-								toLog += " and Died (Rate: "+curDeath+")";
-							}
-						}
+						toLog += " has Fertilizer.";
 					}
-					
+					else 
+					{
+						int curGrowth = plugin.getConfig().getInt(downBlock+".Growth");
+						int curDeath = plugin.getConfig().getInt(downBlock+".Death");
+						
+						if (plugin.getConfig().isSet(downBlock+"."+curBiome+".Growth")) 
+						{
+							curGrowth = plugin.getConfig().getInt(downBlock+"."+curBiome+".Growth");
+						}
+						
+						if (plugin.getConfig().isSet(downBlock+"."+curBiome+".Death")) 
+						{
+							curDeath = plugin.getConfig().getInt(downBlock+"."+curBiome+".Death");
+						}
+						
+						if (!(PwnPlantGrowth.random(curGrowth))) 
+						{
+							e.setCancelled(true);
+							toLog += " Failed (Rate: "+curGrowth+") ";
+							if (wkBlocksFound.contains(PwnPlantGrowth.weedKiller))
+							{
+								toLog += " Has Weed Killer. ";
+							}
+							else 
+							{
+								toLog += " No Weed Killer. ";
+								if (PwnPlantGrowth.random(curDeath)) 
+								{
+									e.getBlock().getRelative(BlockFace.DOWN).setType(Material.LONG_GRASS);
+									toLog += " Died (Rate: "+curDeath+")";
+								}
+							}
+						}						
+					}
 				}
 				else 
 				{
@@ -153,31 +219,45 @@ public class PlantListener implements Listener
 				if ((plugin.getConfig().getList("MELON_BLOCK.Biome").contains(e.getBlock().getBiome().toString())) || (plugin.getConfig().getList("MELON_BLOCK.Biome").isEmpty())) 
 				{	
 					
-					int curGrowth = plugin.getConfig().getInt("MELON_BLOCK.Growth");
-					int curDeath = plugin.getConfig().getInt("MELON_BLOCK.Death");
-					
-					if (plugin.getConfig().isSet("MELON_BLOCK."+curBiome+".Growth")) {
-						curGrowth = plugin.getConfig().getInt("MELON_BLOCK."+curBiome+".Growth");
-					}
-					
-					if (plugin.getConfig().isSet("MELON_BLOCK."+curBiome+".Death")) {
-						curDeath = plugin.getConfig().getInt("MELON_BLOCK."+curBiome+".Death");
-					}
-					
-					if (!(PwnPlantGrowth.random(curGrowth))) 
+					if (fBlocksFound.contains(PwnPlantGrowth.fertilizer))
 					{
-						e.setCancelled(true);
-						toLog += " Failed (Rate: "+curGrowth+") ";
-						
-						// If there is no weedkiller, give plant a chance to die
-						if (!PwnPlantGrowth.weedKiller(e.getBlock())) {
-							if (PwnPlantGrowth.random(curDeath)) {
-								e.getBlock().setType(Material.LONG_GRASS);
-								toLog += " and Died (Rate: "+curDeath+")";
-							}
-						}
+						toLog += " has Fertilizer.";
 					}
-					
+					else 
+					{
+						int curGrowth = plugin.getConfig().getInt("MELON_BLOCK.Growth");
+						int curDeath = plugin.getConfig().getInt("MELON_BLOCK.Death");
+						
+						if (plugin.getConfig().isSet("MELON_BLOCK."+curBiome+".Growth")) 
+						{
+							curGrowth = plugin.getConfig().getInt("MELON_BLOCK."+curBiome+".Growth");
+						}
+						
+						if (plugin.getConfig().isSet("MELON_BLOCK."+curBiome+".Death")) 
+						{
+							curDeath = plugin.getConfig().getInt("MELON_BLOCK."+curBiome+".Death");
+						}
+						
+						if (!(PwnPlantGrowth.random(curGrowth))) 
+						{
+							e.setCancelled(true);
+							toLog += " Failed (Rate: "+curGrowth+") ";
+							
+							if (wkBlocksFound.contains(PwnPlantGrowth.weedKiller)) 
+							{
+								toLog += " Has Weed Killer. ";
+							}
+							else 
+							{
+								toLog += " No Weed Killer. ";
+								if (PwnPlantGrowth.random(curDeath)) 
+								{
+									e.getBlock().setType(Material.LONG_GRASS);
+									toLog += " Died (Rate: "+curDeath+")";
+								}
+							}
+						}	
+					}								
 				}
 				else 
 				{
@@ -195,31 +275,46 @@ public class PlantListener implements Listener
 				toLog += "PUMPKIN_BLOCK";
 				if ((plugin.getConfig().getList("PUMPKIN_BLOCK.Biome").contains(curBiome)) || (plugin.getConfig().getList("PUMPKIN_BLOCK.Biome").isEmpty())) 
 				{				
-					
-					int curGrowth = plugin.getConfig().getInt("PUMPKIN_BLOCK.Growth");
-					int curDeath = plugin.getConfig().getInt("PUMPKIN_BLOCK.Death");
-					
-					if (plugin.getConfig().isSet("PUMPKIN_BLOCK."+curBiome+".Growth")) {
-						curGrowth = plugin.getConfig().getInt("PUMPKIN_BLOCK."+curBiome+".Growth");
-					}
-					
-					if (plugin.getConfig().isSet("PUMPKIN_BLOCK."+curBiome+".Death")) {
-						curDeath = plugin.getConfig().getInt("PUMPKIN_BLOCK."+curBiome+".Death");
-					}
-					
-					if (!(PwnPlantGrowth.random(curGrowth))) 
+	
+					if (fBlocksFound.contains(PwnPlantGrowth.fertilizer))
 					{
-						e.setCancelled(true);
-						toLog += " Failed (Rate: "+curGrowth+") ";
-						
-						// If there is no weedkiller, give plant a chance to die
-						if (!PwnPlantGrowth.weedKiller(e.getBlock())) {
-							if (PwnPlantGrowth.random(curDeath)) {
-								e.getBlock().setType(Material.LONG_GRASS);
-								toLog += " and Died (Rate: "+curDeath+")";
-							}
-						}
+						toLog += " has Fertilizer.";
 					}
+					else 
+					{
+						int curGrowth = plugin.getConfig().getInt("PUMPKIN_BLOCK.Growth");
+						int curDeath = plugin.getConfig().getInt("PUMPKIN_BLOCK.Death");
+						
+						if (plugin.getConfig().isSet("PUMPKIN_BLOCK."+curBiome+".Growth")) 
+						{
+							curGrowth = plugin.getConfig().getInt("PUMPKIN_BLOCK."+curBiome+".Growth");
+						}
+						
+						if (plugin.getConfig().isSet("PUMPKIN_BLOCK."+curBiome+".Death")) 
+						{
+							curDeath = plugin.getConfig().getInt("PUMPKIN_BLOCK."+curBiome+".Death");
+						}
+						
+						if (!(PwnPlantGrowth.random(curGrowth))) 
+						{
+							e.setCancelled(true);
+							toLog += " Failed (Rate: "+curGrowth+") ";
+							
+							if (wkBlocksFound.contains(PwnPlantGrowth.weedKiller))
+							{
+								toLog += " Has Weed Killer. ";
+							}
+							else 
+							{
+								toLog += " No Weed Killer. ";
+								if (PwnPlantGrowth.random(curDeath)) 
+								{
+									e.getBlock().setType(Material.LONG_GRASS);
+									toLog += " Died (Rate: "+curDeath+")";
+								}
+							}
+						}	
+					}								
 				}
 				else 
 				{
@@ -227,11 +322,11 @@ public class PlantListener implements Listener
 					toLog += " Failed: Bad Biome";				
 				}					
 			}
-			
 		}	
 
 		// Log it
-    	if (PwnPlantGrowth.logEnabled) {	
+    	if (PwnPlantGrowth.logEnabled) 
+    	{	
     		PwnPlantGrowth.logToFile(toLog);
     	}	
 	}
@@ -240,27 +335,60 @@ public class PlantListener implements Listener
 	@EventHandler(ignoreCancelled = true)
 	public void structureGrow(StructureGrowEvent e) 
 	{
-		
+	
 		// Enabled in world?
 		World world = e.getLocation().getWorld();
 		if (!PwnPlantGrowth.isEnabledIn(world.getName())) 
 		{
 			return;
 		}
+
+		List<String> fBlocksFound = new ArrayList<String>();
+		List<String> wkBlocksFound = new ArrayList<String>();
 		
+		if (PwnPlantGrowth.fenabled) 
+		{
+			for (int x = -(PwnPlantGrowth.fradius); x <= PwnPlantGrowth.fradius; x++) 
+			{
+	            for (int y = -(PwnPlantGrowth.fradius); y <= PwnPlantGrowth.fradius; y++) 
+	            {
+	               for (int z = -(PwnPlantGrowth.fradius); z <= PwnPlantGrowth.fradius; z++) 
+	               {
+	            	   fBlocksFound.add(e.getLocation().getBlock().getRelative(x, y, z).getType().toString());
+	               }
+	            }
+	        }
+		}		
+		
+		if (PwnPlantGrowth.wkenabled)
+		{
+			for (int xx = -(PwnPlantGrowth.wkradius); xx <= PwnPlantGrowth.wkradius; xx++) 
+			{
+	            for (int yy = -(PwnPlantGrowth.wkradius); yy <= PwnPlantGrowth.wkradius; yy++) 
+	            {
+	               for (int zz = -(PwnPlantGrowth.wkradius); zz <= PwnPlantGrowth.wkradius; zz++) 
+	               {
+	            	   wkBlocksFound.add(e.getLocation().getBlock().getRelative(xx, yy, zz).getType().toString());
+	               }
+	            }
+	        }
+		}		
+		
+		String coords = e.getLocation().toString();
+				
 		// Light level acceptable?
 		int lightLevel = e.getLocation().getBlock().getLightFromSky();
 		if ((PwnPlantGrowth.naturalLight > lightLevel) && (!PwnPlantGrowth.canDarkGrow(e.getSpecies().toString())))
 		{
 	    	if (PwnPlantGrowth.logEnabled) 
 	    	{	
-	    		PwnPlantGrowth.logToFile("Too dark to grow " + e.getSpecies());
+	    		PwnPlantGrowth.logToFile(coords + ": Too dark to grow " + e.getSpecies());
 	    	}			
 			e.setCancelled(true);
 			return;
 		}
 		
-		String toLog = "Growing: " +e.getSpecies();
+		String toLog = coords + ": Growing: " +e.getSpecies();
 
 		// Get current biome and make a string for comparison later
 		String curBiome = e.getLocation().getBlock().getBiome().toString();
@@ -271,38 +399,54 @@ public class PlantListener implements Listener
 		if ((plugin.getConfig().getList(curBlock+".Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (plugin.getConfig().getList(curBlock+".Biome").isEmpty())) 
 		{	
 			
-			int curGrowth = plugin.getConfig().getInt(curBlock+".Growth");
-			int curDeath = plugin.getConfig().getInt(curBlock+".Death");
-			
-			if (plugin.getConfig().isSet(curBlock+"."+curBiome+".Growth")) {
-				curGrowth = plugin.getConfig().getInt(curBlock+"."+curBiome+".Growth");
-			}
-			
-			if (plugin.getConfig().isSet(curBlock+"."+curBiome+".Death")) {
-				curDeath = plugin.getConfig().getInt(curBlock+"."+curBiome+".Death");
-			}
-			
-			if (!(PwnPlantGrowth.random(curGrowth))) 
+			if (fBlocksFound.contains(PwnPlantGrowth.fertilizer))
 			{
-				e.setCancelled(true);
-				toLog += " Failed (Rate: "+curGrowth+") ";
+				toLog += " has Fertilizer.";
+			}
+			else 
+			{
+				int curGrowth = plugin.getConfig().getInt(curBlock+".Growth");
+				int curDeath = plugin.getConfig().getInt(curBlock+".Death");
 				
-				// If there is no weedkiller, give plant a chance to die
-				if (!PwnPlantGrowth.weedKiller(e)) {
-					if (PwnPlantGrowth.random(curDeath)) {
-						e.getLocation().getBlock().setType(Material.LONG_GRASS);
-						toLog += " and Died (Rate: "+curDeath+")";
-					}
+				if (plugin.getConfig().isSet(curBlock+"."+curBiome+".Growth")) 
+				{
+					curGrowth = plugin.getConfig().getInt(curBlock+"."+curBiome+".Growth");
 				}
-			}					
+				
+				if (plugin.getConfig().isSet(curBlock+"."+curBiome+".Death")) {
+					curDeath = plugin.getConfig().getInt(curBlock+"."+curBiome+".Death");
+				}
+				
+				if (!(PwnPlantGrowth.random(curGrowth)))
+				{
+					e.setCancelled(true);
+					toLog += " Failed (Rate: "+curGrowth+") ";
+					
+					if (wkBlocksFound.contains(PwnPlantGrowth.weedKiller))
+					{
+						toLog += " Has Weed Killer. ";
+					}
+					else 
+					{
+						toLog += " No Weed Killer. ";
+						if (PwnPlantGrowth.random(curDeath)) 
+						{
+							e.getLocation().getBlock().setType(Material.LONG_GRASS);
+							toLog += " Died (Rate: "+curDeath+")";
+						}
+					}
+				}		
+			}										
 		}
-		else {
+		else 
+		{
 			e.setCancelled(true);
 			toLog += " Failed: Bad Biome";				
 		}				
 
 		// log it
-		if (PwnPlantGrowth.logEnabled) {	
+		if (PwnPlantGrowth.logEnabled) 
+		{	
 			PwnPlantGrowth.logToFile(toLog);
 		}
 	}

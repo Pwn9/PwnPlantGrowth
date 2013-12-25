@@ -24,11 +24,23 @@ grow_in_dark:
   - NETHER_WARTS
   - COCOA 
 
+# Enable use of weed killer
+weed_killer_enabled: false
+
 # A Block that can act as a weed killer (keeps plants from dying, will NOT affect growth rates)
 weed_killer: GOLD_BLOCK
 
 # Radius that weed killer protects, plants within this distance of the weed killer block will not turn to dead shrubs
 weed_killer_radius: 5
+
+# Enable use of fertilizer
+fertilizer_enabled: false
+
+# A Block that can act as a fertilizer (keeps plants growing at 100% - as long as they are in the right biome)
+fertilizer: SOUL_SAND
+
+# Radius that fertilizer affects, plants within this distance of the block will grow at 100%
+fertilizer_radius: 5
 
 # Run a debug log to view additional plugin data for troubleshooting and configuration, turn off in production!
 debug_log: false
@@ -64,6 +76,7 @@ COCOA:
 
 MELON_BLOCK: 
     Growth: 50
+    Death: 5
     Biome: []
 
 MELON_STEM:
@@ -84,6 +97,7 @@ POTATO:
 
 PUMPKIN_BLOCK:
     Growth: 50
+    Death: 5    
     Biome: []
 
 PUMPKIN_STEM:

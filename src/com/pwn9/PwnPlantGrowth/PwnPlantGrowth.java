@@ -12,6 +12,7 @@ import java.util.Random;
 import java.util.ArrayList;
 
 import org.bukkit.block.Block;
+import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -29,9 +30,15 @@ public class PwnPlantGrowth extends JavaPlugin
 	public static List<String> enabledWorlds;
 	static Random randomNumberGenerator = new Random();
 	
-	// Week killer
-	public static int radius;
-	public static String weedKiller;	
+	// Weedkiller
+	public static int wkradius;
+	public static String weedKiller;
+	public static Boolean wkenabled;
+
+	// Fertilizer
+	public static int fradius;
+	public static String fertilizer;
+	public static Boolean fenabled;
 	
 	public void onEnable() 
 	{
@@ -73,9 +80,15 @@ public class PwnPlantGrowth extends JavaPlugin
 		// Dark growth
 		PwnPlantGrowth.darkGrow = getConfig().getStringList("grow_in_dark");
 
-		// Week Killer
-		PwnPlantGrowth.radius = getConfig().getInt("weed_killer_radius");
+		// Weed Killer
+		PwnPlantGrowth.wkradius = getConfig().getInt("weed_killer_radius");
 		PwnPlantGrowth.weedKiller = getConfig().getString("weed_killer");
+		PwnPlantGrowth.wkenabled = getConfig().getBoolean("weed_killer_enabled");
+
+		// Fertilizer
+		PwnPlantGrowth.fradius = getConfig().getInt("fertilizer_radius");
+		PwnPlantGrowth.fertilizer = getConfig().getString("fertilizer");
+		PwnPlantGrowth.fenabled = getConfig().getBoolean("fertilizer_enabled");
 		
 	}
 		
@@ -99,43 +112,65 @@ public class PwnPlantGrowth extends JavaPlugin
 		return darkGrow.contains(plant);
 	}	
 	
-	public static boolean weedKiller(Block block) 
+	/*
+	public static boolean weedKiller(BlockGrowEvent e) 
 	{
-        int x = block.getX();
-        int y = block.getY();
-        int z = block.getZ();
-        
-	    for (x = -5; x <= 5; x++) {
-	        for (y = -5; y <= 5; y++) {
-	           for (z = -5; z <= 5; z++) {
-	        	   if (block.getRelative(x,y,z).getType().toString() == weedKiller) {
-	        		   return true;
-	        	   }
-	           }
-	        }
-	    } 
+		Block block = e.getBlock();
+        for (int x = -5; x <= 5; x++) {
+            for (int y = -5; y <= 5; y++) {
+               for (int z = -5; z <= 5; z++) {
+            	   if(block.getRelative(x, y, z).getType().toString() == weedKiller) {
+            		   return true; 
+            	   }
+               }
+            }
+        }
 		return false;
 	}
 	
 	public static boolean weedKiller(StructureGrowEvent e) {
-		
 		Block block = e.getLocation().getBlock();
-        int x = block.getX();
-        int y = block.getY();
-        int z = block.getZ();
-        
-	    for (x = -5; x <= 5; x++) {
-	        for (y = -5; y <= 5; y++) {
-	           for (z = -5; z <= 5; z++) {
-	        	   if (block.getRelative(x,y,z).getType().toString() == weedKiller) {
-	        		   return true;
-	        	   }
-	           }
-	        }
-	    } 
-		
+        for (int x = -5; x <= 5; x++) {
+            for (int y = -5; y <= 5; y++) {
+               for (int z = -5; z <= 5; z++) {
+            	   if(block.getRelative(x, y, z).getType().toString() == weedKiller) {
+            		   return true; 
+            	   }
+               }
+            }
+        }
 		return false;
 	}
+
+	public static boolean hasFertilizer(BlockGrowEvent e) 
+	{     
+		Block block = e.getBlock();
+        for (int x = -5; x <= 5; x++) {
+            for (int y = -5; y <= 5; y++) {
+               for (int z = -5; z <= 5; z++) {
+            	   if(block.getRelative(x, y, z).getType().toString() == fertilizer) {
+            		   return true; 
+            	   }
+               }
+            }
+        }
+		return false;
+	}
+	
+	public static boolean hasFertilizer(StructureGrowEvent e) {
+		Block block = e.getLocation().getBlock();
+        for (int x = -5; x <= 5; x++) {
+            for (int y = -5; y <= 5; y++) {
+               for (int z = -5; z <= 5; z++) {
+            	   if(block.getRelative(x, y, z).getType().toString() == fertilizer) {
+            		   return true; 
+            	   }
+               }
+            }
+        }
+		return false;
+	}
+	*/
 	
     public static void logToFile(String message) 
     {   
