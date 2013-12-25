@@ -11,9 +11,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
 
-import org.bukkit.block.Block;
-import org.bukkit.event.block.BlockGrowEvent;
-import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class PwnPlantGrowth extends JavaPlugin 
@@ -39,6 +36,10 @@ public class PwnPlantGrowth extends JavaPlugin
 	public static int fradius;
 	public static String fertilizer;
 	public static Boolean fenabled;
+	
+	// Common messages
+	public static String fertFound;
+	public static String wkFound;
 	
 	public void onEnable() 
 	{
@@ -90,6 +91,9 @@ public class PwnPlantGrowth extends JavaPlugin
 		PwnPlantGrowth.fertilizer = getConfig().getString("fertilizer");
 		PwnPlantGrowth.fenabled = getConfig().getBoolean("fertilizer_enabled");
 		
+		// Messages
+		PwnPlantGrowth.fertFound = " Fertilizer found, growth rate 100%";
+		PwnPlantGrowth.wkFound = " Weed Killer found, plants won't die.";
 	}
 		
 	public void onDisable() 
@@ -111,66 +115,6 @@ public class PwnPlantGrowth extends JavaPlugin
 	{
 		return darkGrow.contains(plant);
 	}	
-	
-	/*
-	public static boolean weedKiller(BlockGrowEvent e) 
-	{
-		Block block = e.getBlock();
-        for (int x = -5; x <= 5; x++) {
-            for (int y = -5; y <= 5; y++) {
-               for (int z = -5; z <= 5; z++) {
-            	   if(block.getRelative(x, y, z).getType().toString() == weedKiller) {
-            		   return true; 
-            	   }
-               }
-            }
-        }
-		return false;
-	}
-	
-	public static boolean weedKiller(StructureGrowEvent e) {
-		Block block = e.getLocation().getBlock();
-        for (int x = -5; x <= 5; x++) {
-            for (int y = -5; y <= 5; y++) {
-               for (int z = -5; z <= 5; z++) {
-            	   if(block.getRelative(x, y, z).getType().toString() == weedKiller) {
-            		   return true; 
-            	   }
-               }
-            }
-        }
-		return false;
-	}
-
-	public static boolean hasFertilizer(BlockGrowEvent e) 
-	{     
-		Block block = e.getBlock();
-        for (int x = -5; x <= 5; x++) {
-            for (int y = -5; y <= 5; y++) {
-               for (int z = -5; z <= 5; z++) {
-            	   if(block.getRelative(x, y, z).getType().toString() == fertilizer) {
-            		   return true; 
-            	   }
-               }
-            }
-        }
-		return false;
-	}
-	
-	public static boolean hasFertilizer(StructureGrowEvent e) {
-		Block block = e.getLocation().getBlock();
-        for (int x = -5; x <= 5; x++) {
-            for (int y = -5; y <= 5; y++) {
-               for (int z = -5; z <= 5; z++) {
-            	   if(block.getRelative(x, y, z).getType().toString() == fertilizer) {
-            		   return true; 
-            	   }
-               }
-            }
-        }
-		return false;
-	}
-	*/
 	
     public static void logToFile(String message) 
     {   

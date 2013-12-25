@@ -103,7 +103,7 @@ public class PlantListener implements Listener
 			{
 				if (fBlocksFound.contains(PwnPlantGrowth.fertilizer))
 				{
-					toLog += " has Fertilizer.";
+					toLog += PwnPlantGrowth.fertFound;
 				}
 				else 
 				{
@@ -127,14 +127,18 @@ public class PlantListener implements Listener
 						
 						if (wkBlocksFound.contains(PwnPlantGrowth.weedKiller))
 						{
-							toLog += " Has Weed Killer. ";
+							toLog += PwnPlantGrowth.wkFound;
 						}
 						else 
 						{
-							toLog += " No Weed Killer. ";
 							if (PwnPlantGrowth.random(curDeath)) 
 							{
-								e.getBlock().setType(Material.LONG_GRASS);
+								if (curBlock == "COCOA") {
+									e.getBlock().setType(Material.VINE);
+								}
+								else {
+									e.getBlock().setType(Material.LONG_GRASS);
+								}
 								toLog += " Died (Rate: "+curDeath+")";
 							}
 						}
@@ -165,7 +169,7 @@ public class PlantListener implements Listener
 					
 					if (fBlocksFound.contains(PwnPlantGrowth.fertilizer))
 					{
-						toLog += " has Fertilizer.";
+						toLog += PwnPlantGrowth.fertFound;
 					}
 					else 
 					{
@@ -188,11 +192,10 @@ public class PlantListener implements Listener
 							toLog += " Failed (Rate: "+curGrowth+") ";
 							if (wkBlocksFound.contains(PwnPlantGrowth.weedKiller))
 							{
-								toLog += " Has Weed Killer. ";
+								toLog += PwnPlantGrowth.wkFound;
 							}
 							else 
 							{
-								toLog += " No Weed Killer. ";
 								if (PwnPlantGrowth.random(curDeath)) 
 								{
 									e.getBlock().getRelative(BlockFace.DOWN).setType(Material.LONG_GRASS);
@@ -221,7 +224,7 @@ public class PlantListener implements Listener
 					
 					if (fBlocksFound.contains(PwnPlantGrowth.fertilizer))
 					{
-						toLog += " has Fertilizer.";
+						toLog += PwnPlantGrowth.fertFound;
 					}
 					else 
 					{
@@ -245,11 +248,10 @@ public class PlantListener implements Listener
 							
 							if (wkBlocksFound.contains(PwnPlantGrowth.weedKiller)) 
 							{
-								toLog += " Has Weed Killer. ";
+								toLog += PwnPlantGrowth.wkFound;
 							}
 							else 
 							{
-								toLog += " No Weed Killer. ";
 								if (PwnPlantGrowth.random(curDeath)) 
 								{
 									e.getBlock().setType(Material.LONG_GRASS);
@@ -278,7 +280,7 @@ public class PlantListener implements Listener
 	
 					if (fBlocksFound.contains(PwnPlantGrowth.fertilizer))
 					{
-						toLog += " has Fertilizer.";
+						toLog += PwnPlantGrowth.fertFound;
 					}
 					else 
 					{
@@ -302,11 +304,10 @@ public class PlantListener implements Listener
 							
 							if (wkBlocksFound.contains(PwnPlantGrowth.weedKiller))
 							{
-								toLog += " Has Weed Killer. ";
+								toLog += PwnPlantGrowth.wkFound;
 							}
 							else 
 							{
-								toLog += " No Weed Killer. ";
 								if (PwnPlantGrowth.random(curDeath)) 
 								{
 									e.getBlock().setType(Material.LONG_GRASS);
@@ -401,7 +402,7 @@ public class PlantListener implements Listener
 			
 			if (fBlocksFound.contains(PwnPlantGrowth.fertilizer))
 			{
-				toLog += " has Fertilizer.";
+				toLog += PwnPlantGrowth.fertFound;
 			}
 			else 
 			{
@@ -424,11 +425,10 @@ public class PlantListener implements Listener
 					
 					if (wkBlocksFound.contains(PwnPlantGrowth.weedKiller))
 					{
-						toLog += " Has Weed Killer. ";
+						toLog += PwnPlantGrowth.wkFound;
 					}
 					else 
 					{
-						toLog += " No Weed Killer. ";
 						if (PwnPlantGrowth.random(curDeath)) 
 						{
 							e.getLocation().getBlock().setType(Material.LONG_GRASS);
