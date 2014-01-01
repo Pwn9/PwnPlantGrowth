@@ -49,20 +49,26 @@ debug_log: false
 
 CACTUS:
     Growth: 50
+    GrowthDark: 25
     Death: 5
+    DeathDark: 25
     Biome: 
     - DESERT
     - DESERT_HILLS
 
 CARROT: 
     Growth: 50
+    GrowthDark: 25
     Death: 5
+    DeathDark: 25    
     Biome: 
     - PLAINS
     - DESERT
     PLAINS: 
       Growth: 100
+      GrowthDark: 75
       Death: 0 
+      DeathDark: 5
     DESERT:
       Growth: 25
       Death: 50
