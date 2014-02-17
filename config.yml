@@ -42,6 +42,15 @@ fertilizer: SOUL_SAND
 # Radius that fertilizer affects, plants within this distance of the block will grow at 100%
 fertilizer_radius: 5
 
+# Enable use of UV Light Block
+uv_enabled: false
+
+# A Block that can act as UV Light (will allow plants in radius to grow where there is no natural light, -note, still requires actual lighting)
+uv: GLOWSTONE
+
+# Radius that UV affects
+uv_radius: 5
+
 # Run a debug log to view additional plugin data for troubleshooting and configuration, turn off in production!
 debug_log: false
 
