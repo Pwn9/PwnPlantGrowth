@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -25,6 +26,7 @@ public class PwnPlantGrowth extends JavaPlugin
 	public static int naturalLight;
 	public static List<String> darkGrow;
 	public static List<String> enabledWorlds;
+	public static List<String> plantTypes;
 	static Random randomNumberGenerator = new Random();
 	
 	// Weedkiller
@@ -107,10 +109,16 @@ public class PwnPlantGrowth extends JavaPlugin
 		PwnPlantGrowth.wkFound = " Weed Killer found, plants won't die.";
 		PwnPlantGrowth.uvFound = " UV found, allowing false light growth.";
 		
+		// Load all possible plant types
+		String sArray[] = new String[] { "CACTUS", "CARROT", "COCOA", "CROPS", "MELON_BLOCK", "MELON_STEM", "NETHER_WARTS", "POTATO", "PUMPKIN_BLOCK", "PUMPKIN_STEM", "SUGAR_CANE_BLOCK", "ACACIA", "BIG_TREE", "BIRCH", "BROWN_MUSHROOM", "COCOA_TREE", "DARK_OAK", "JUNGLE", "JUNGLE_BUSH", "MEGA_REDWOOD", "RED_MUSHROOM", "REDWOOD", "SMALL_JUNGLE", "SWAMP", "TALL_BIRCH", "TALL_REDWOOD", "TREE" };
+		PwnPlantGrowth.plantTypes = Arrays.asList(sArray);
+		
     	if (PwnPlantGrowth.logEnabled) 
     	{	
     		PwnPlantGrowth.logToFile("PwnPlantGrowth Enabled");
     	}	
+    	
+    	configCheck();
 	}
 		
 	public void onDisable() 
@@ -119,6 +127,22 @@ public class PwnPlantGrowth extends JavaPlugin
     	{	
     		PwnPlantGrowth.logToFile("PwnPlantGrowth Disabled");
     	}	
+	}
+	
+	public void configCheck()
+	{
+		for (int i = 0; i < PwnPlantGrowth.plantTypes.size(); i++) {
+			//System.out.println(PwnPlantGrowth.plantTypes.get(i));
+			
+		    if (!(getConfig().contains(PwnPlantGrowth.plantTypes.get(i)))) {
+		        // The config does not contain this plant value
+		    	if (PwnPlantGrowth.logEnabled) 
+		    	{	
+		    		PwnPlantGrowth.logToFile("Configuration Error: " + PwnPlantGrowth.plantTypes.get(i) + " was not found in your config.yml and is required!");
+		    	}			    	
+		    }
+		}
+		
 	}
 	
 	static boolean random(int percentChance) 

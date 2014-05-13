@@ -40,13 +40,13 @@ public class PlantListener implements Listener
 		// Check for fertilizer blocks
 		if (PwnPlantGrowth.fenabled) 
 		{
-			for (int x = -(PwnPlantGrowth.fradius); x <= PwnPlantGrowth.fradius; x++) 
+			for (int fx = -(PwnPlantGrowth.fradius); fx <= PwnPlantGrowth.fradius; fx++) 
 			{
-	            for (int y = -(PwnPlantGrowth.fradius); y <= PwnPlantGrowth.fradius; y++) 
+	            for (int fy = -(PwnPlantGrowth.fradius); fy <= PwnPlantGrowth.fradius; fy++) 
 	            {
-	               for (int z = -(PwnPlantGrowth.fradius); z <= PwnPlantGrowth.fradius; z++) 
+	               for (int fz = -(PwnPlantGrowth.fradius); fz <= PwnPlantGrowth.fradius; fz++) 
 	               {
-	            	   fBlocksFound.add(e.getBlock().getRelative(x, y, z).getType().toString());
+	            	   fBlocksFound.add(String.valueOf(e.getBlock().getRelative(fx, fy, fz).getType()));
 	               }
 	            }
 	        }
@@ -55,13 +55,13 @@ public class PlantListener implements Listener
 		// Check for weed killer blocks
 		if (PwnPlantGrowth.wkenabled)
 		{
-			for (int xx = -(PwnPlantGrowth.wkradius); xx <= PwnPlantGrowth.wkradius; xx++) 
+			for (int wx = -(PwnPlantGrowth.wkradius); wx <= PwnPlantGrowth.wkradius; wx++) 
 			{
-	            for (int yy = -(PwnPlantGrowth.wkradius); yy <= PwnPlantGrowth.wkradius; yy++) 
+	            for (int wy = -(PwnPlantGrowth.wkradius); wy <= PwnPlantGrowth.wkradius; wy++) 
 	            {
-	               for (int zz = -(PwnPlantGrowth.wkradius); zz <= PwnPlantGrowth.wkradius; zz++) 
+	               for (int wz = -(PwnPlantGrowth.wkradius); wz <= PwnPlantGrowth.wkradius; wz++) 
 	               {
-	            	   wkBlocksFound.add(e.getBlock().getRelative(xx, yy, zz).getType().toString());
+	            	   wkBlocksFound.add(String.valueOf(e.getBlock().getRelative(wx, wy, wz).getType()));
 	               }
 	            }
 	        }
@@ -70,26 +70,26 @@ public class PlantListener implements Listener
 		// Check for uv blocks
 		if (PwnPlantGrowth.uvenabled)
 		{
-			for (int xx = -(PwnPlantGrowth.uvradius); xx <= PwnPlantGrowth.uvradius; xx++) 
+			for (int ux = -(PwnPlantGrowth.uvradius); ux <= PwnPlantGrowth.uvradius; ux++) 
 			{
-	            for (int yy = -(PwnPlantGrowth.uvradius); yy <= PwnPlantGrowth.uvradius; yy++) 
+	            for (int uy = -(PwnPlantGrowth.uvradius); uy <= PwnPlantGrowth.uvradius; uy++) 
 	            {
-	               for (int zz = -(PwnPlantGrowth.uvradius); zz <= PwnPlantGrowth.uvradius; zz++) 
+	               for (int uz = -(PwnPlantGrowth.uvradius); uz <= PwnPlantGrowth.uvradius; uz++) 
 	               {
-	            	   uvBlocksFound.add(e.getBlock().getRelative(xx, yy, zz).getType().toString());
+	            	   uvBlocksFound.add(String.valueOf(e.getBlock().getRelative(ux, uy, uz).getType()));
 	               }
 	            }
 	        }
 		}
 				
 		// Get coords of the event for logging
-		String coords = e.getBlock().getLocation().toString();
+		String coords = String.valueOf(e.getBlock().getLocation());
 		
 		// Get current biome and make a string for comparison later
-		String curBiome = e.getBlock().getBiome().toString();
+		String curBiome = String.valueOf(e.getBlock().getBiome());
 		
 		// Get current block type and make a string for comparison later
-		String curBlock = e.getBlock().getType().toString();
+		String curBlock = String.valueOf(e.getBlock().getType());
 		
 		// Setup boolean to see if event is in defined natural light or not
 		Boolean isDark = false;
@@ -119,8 +119,9 @@ public class PlantListener implements Listener
 		{
 			toLog += "Growing: " +e.getBlock().getType();
 		}
-					
-		// Regular growth blocks that do no report initially as AIR - this is most of the normal crops
+			
+		
+		// Regular growth blocks that do not report initially as AIR - this is most of the normal crops
 		if (curBlock != "AIR")
 		{
 			if ((plugin.getConfig().getList(curBlock+".Biome").contains(curBiome)) || (plugin.getConfig().getList(curBlock+".Biome").isEmpty())) 
@@ -223,7 +224,7 @@ public class PlantListener implements Listener
 		if (curBlock == "AIR") 
 		{
 			
-			String downBlock = e.getBlock().getRelative(BlockFace.DOWN).getType().toString();
+			String downBlock = String.valueOf(e.getBlock().getRelative(BlockFace.DOWN).getType());
 			
 			// Handle Cactus and Sugar Cane, the 2 that grow vertically only.
 			if (downBlock == "CACTUS" || downBlock == "SUGAR_CANE_BLOCK") 
@@ -343,11 +344,19 @@ public class PlantListener implements Listener
 				else 
 				{
 					 thisBlock = "UNKNOWN_BLOCK";
+					 toLog += thisBlock;	
+					 // Log it
+			    	 if (PwnPlantGrowth.logEnabled) 
+			    	 {	
+			    		 PwnPlantGrowth.logToFile(toLog);
+			    	 }	
+					 e.setCancelled(true);
+					 return;
 				}
 				
 				toLog += thisBlock;	
-				
-				if ((plugin.getConfig().getList(thisBlock+".Biome").contains(e.getBlock().getBiome().toString())) || (plugin.getConfig().getList(thisBlock+".Biome").isEmpty())) 
+		
+				if ((plugin.getConfig().getList(thisBlock+".Biome").contains(String.valueOf(e.getBlock().getBiome()))) || (plugin.getConfig().getList(thisBlock+".Biome").isEmpty())) 
 				{	
 					
 					if (fBlocksFound.contains(PwnPlantGrowth.fertilizer))
@@ -463,7 +472,7 @@ public class PlantListener implements Listener
 	            {
 	               for (int z = -(PwnPlantGrowth.fradius); z <= PwnPlantGrowth.fradius; z++) 
 	               {
-	            	   fBlocksFound.add(e.getLocation().getBlock().getRelative(x, y, z).getType().toString());
+	            	   fBlocksFound.add(String.valueOf(e.getLocation().getBlock().getRelative(x, y, z).getType()));
 	               }
 	            }
 	        }
@@ -477,7 +486,7 @@ public class PlantListener implements Listener
 	            {
 	               for (int zz = -(PwnPlantGrowth.wkradius); zz <= PwnPlantGrowth.wkradius; zz++) 
 	               {
-	            	   wkBlocksFound.add(e.getLocation().getBlock().getRelative(xx, yy, zz).getType().toString());
+	            	   wkBlocksFound.add(String.valueOf(e.getLocation().getBlock().getRelative(xx, yy, zz).getType()));
 	               }
 	            }
 	        }
@@ -492,19 +501,19 @@ public class PlantListener implements Listener
 	            {
 	               for (int zz = -(PwnPlantGrowth.uvradius); zz <= PwnPlantGrowth.uvradius; zz++) 
 	               {
-	            	   uvBlocksFound.add(e.getLocation().getBlock().getRelative(xx, yy, zz).getType().toString());
+	            	   uvBlocksFound.add(String.valueOf(e.getLocation().getBlock().getRelative(xx, yy, zz).getType()));
 	               }
 	            }
 	        }
 		}		
 		// Get event coords
-		String coords = e.getLocation().toString();
+		String coords = String.valueOf(e.getLocation());
 
 		// Get current biome and make a string for comparison later
-		String curBiome = e.getLocation().getBlock().getBiome().toString();
+		String curBiome = String.valueOf(e.getLocation().getBlock().getBiome());
 		
 		// Get current block type and make a string for comparison later
-		String curBlock = e.getSpecies().toString();
+		String curBlock = String.valueOf(e.getSpecies());
 		
 		// Setup boolean to see if event is in defined natural light or not
 		Boolean isDark = false;
@@ -520,7 +529,7 @@ public class PlantListener implements Listener
 		
 		String toLog = coords + ": Growing: " +e.getSpecies();
 
-		if ((plugin.getConfig().getList(curBlock+".Biome").contains(e.getLocation().getBlock().getBiome().toString())) || (plugin.getConfig().getList(curBlock+".Biome").isEmpty())) 
+		if ((plugin.getConfig().getList(curBlock+".Biome").contains(String.valueOf(e.getLocation().getBlock().getBiome()))) || (plugin.getConfig().getList(curBlock+".Biome").isEmpty())) 
 		{	
 			
 			if (fBlocksFound.contains(PwnPlantGrowth.fertilizer))
