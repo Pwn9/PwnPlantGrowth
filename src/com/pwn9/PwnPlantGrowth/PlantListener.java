@@ -33,6 +33,21 @@ public class PlantListener implements Listener
 			return;
 		}
 		
+		// Get current block type and make a string for comparison later
+		String curBlock = String.valueOf(e.getBlock().getType());
+		
+		// Is anything set for this block in the config, if not, abort
+		if (!(plugin.getConfig().isSet(curBlock)))
+		{
+			return;
+		}
+		
+		// Get current biome and make a string for comparison later
+		String curBiome = String.valueOf(e.getBlock().getBiome());
+				
+		// Get coords of the event for logging
+		String coords = String.valueOf(e.getBlock().getLocation());
+			
 		List<String> fBlocksFound = new ArrayList<String>();
 		List<String> wkBlocksFound = new ArrayList<String>();
 		List<String> uvBlocksFound = new ArrayList<String>();
@@ -82,15 +97,6 @@ public class PlantListener implements Listener
 	        }
 		}
 				
-		// Get coords of the event for logging
-		String coords = String.valueOf(e.getBlock().getLocation());
-		
-		// Get current biome and make a string for comparison later
-		String curBiome = String.valueOf(e.getBlock().getBiome());
-		
-		// Get current block type and make a string for comparison later
-		String curBlock = String.valueOf(e.getBlock().getType());
-		
 		// Setup boolean to see if event is in defined natural light or not
 		Boolean isDark = false;
 		
@@ -460,6 +466,21 @@ public class PlantListener implements Listener
 			return;
 		}
 
+		// Get current block type and make a string for comparison later
+		String curBlock = String.valueOf(e.getSpecies());
+		
+		// Is anything set for this block in the config, if not, abort
+		if (!(plugin.getConfig().isSet(curBlock)))
+		{
+			return;
+		}
+		
+		// Get current biome and make a string for comparison later
+		String curBiome = String.valueOf(e.getLocation().getBlock().getBiome());
+		
+		// Get event coords
+		String coords = String.valueOf(e.getLocation());	
+
 		List<String> fBlocksFound = new ArrayList<String>();
 		List<String> wkBlocksFound = new ArrayList<String>();
 		List<String> uvBlocksFound = new ArrayList<String>();
@@ -506,14 +527,6 @@ public class PlantListener implements Listener
 	            }
 	        }
 		}		
-		// Get event coords
-		String coords = String.valueOf(e.getLocation());
-
-		// Get current biome and make a string for comparison later
-		String curBiome = String.valueOf(e.getLocation().getBlock().getBiome());
-		
-		// Get current block type and make a string for comparison later
-		String curBlock = String.valueOf(e.getSpecies());
 		
 		// Setup boolean to see if event is in defined natural light or not
 		Boolean isDark = false;
