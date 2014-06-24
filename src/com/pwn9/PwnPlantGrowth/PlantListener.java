@@ -43,7 +43,7 @@ public class PlantListener implements Listener
 		}
 		
 		// Get current biome and make a string for comparison later
-		String curBiome = String.valueOf(e.getBlock().getBiome());
+		String curBiome = PwnPlantGrowth.getBiome(e);
 				
 		// Get coords of the event for logging
 		String coords = String.valueOf(e.getBlock().getLocation());
@@ -476,7 +476,7 @@ public class PlantListener implements Listener
 		}
 		
 		// Get current biome and make a string for comparison later
-		String curBiome = String.valueOf(e.getLocation().getBlock().getBiome());
+		String curBiome = PwnPlantGrowth.getBiome(e);
 		
 		// Get event coords
 		String coords = String.valueOf(e.getLocation());	

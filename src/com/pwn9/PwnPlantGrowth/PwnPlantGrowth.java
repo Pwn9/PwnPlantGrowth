@@ -12,7 +12,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
 
+import org.bukkit.event.block.BlockGrowEvent;
+import org.bukkit.event.world.StructureGrowEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.khorn.terraincontrol.TerrainControl;
 
 public class PwnPlantGrowth extends JavaPlugin 
 {
@@ -48,6 +53,9 @@ public class PwnPlantGrowth extends JavaPlugin
 	public static String fertFound;
 	public static String wkFound;
 	public static String uvFound;
+	
+	// Terrain Control Hook
+	public static TerrainControl tc;	
 	
 	public void onEnable() 
 	{
@@ -113,6 +121,16 @@ public class PwnPlantGrowth extends JavaPlugin
 		String sArray[] = new String[] { "CACTUS", "CARROT", "COCOA", "CROPS", "MELON_BLOCK", "MELON_STEM", "NETHER_WARTS", "POTATO", "PUMPKIN_BLOCK", "PUMPKIN_STEM", "SUGAR_CANE_BLOCK", "ACACIA", "BIG_TREE", "BIRCH", "BROWN_MUSHROOM", "COCOA_TREE", "DARK_OAK", "JUNGLE", "JUNGLE_BUSH", "MEGA_REDWOOD", "RED_MUSHROOM", "REDWOOD", "SMALL_JUNGLE", "SWAMP", "TALL_BIRCH", "TALL_REDWOOD", "TREE" };
 		PwnPlantGrowth.plantTypes = Arrays.asList(sArray);
 		
+		// Check for TerrainControl
+		Plugin plug = getServer().getPluginManager().getPlugin("TerrainControl");
+		if (plug != null)
+		{
+	    	if (PwnPlantGrowth.logEnabled) 
+	    	{				
+	    		PwnPlantGrowth.logToFile("Terrain Control Found, Enabling Hooks");	
+	    	}
+		}
+			
     	if (PwnPlantGrowth.logEnabled) 
     	{	
     		PwnPlantGrowth.logToFile("PwnPlantGrowth Enabled");
@@ -197,5 +215,45 @@ public class PwnPlantGrowth extends JavaPlugin
     	  s = formatter.format(date);
     	  return s;
     }
+
+	public static String getBiome(BlockGrowEvent e) 
+	{
+		if (tc != null) 
+		{		
+			String tControl = TerrainControl.getBiomeName(e.getBlock().getWorld().getName(), e.getBlock().getLocation().getBlockX(), e.getBlock().getLocation().getBlockZ());
+			if (tControl != null)
+			{
+				return tControl;
+			}
+			else
+			{
+				return String.valueOf(e.getBlock().getBiome());
+			}
+		}
+		else
+		{
+			return String.valueOf(e.getBlock().getBiome());
+		}
+	}
+
+	public static String getBiome(StructureGrowEvent e) 
+	{
+		if (tc != null) 
+		{
+			String tControl = TerrainControl.getBiomeName(e.getWorld().getName(), e.getLocation().getBlockX(), e.getLocation().getBlockZ());
+			if (tControl != null)
+			{
+				return tControl;
+			}
+			else 
+			{
+				return String.valueOf(e.getLocation().getBlock().getBiome());
+			}
+		}
+		else
+		{
+			return String.valueOf(e.getLocation().getBlock().getBiome());
+		}
+	}
 
 }
