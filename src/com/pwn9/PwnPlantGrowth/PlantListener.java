@@ -26,21 +26,17 @@ public class PlantListener implements Listener
 	@EventHandler(ignoreCancelled = true)
 	public void plantGrow(BlockGrowEvent e) 
 	{
+		
 		// Enabled in world?
 		World world = e.getBlock().getWorld();
-		if (!PwnPlantGrowth.isEnabledIn(world.getName())) 
-		{
-			return;
-		}
-		
+		if (!PwnPlantGrowth.isEnabledIn(world.getName())) return;
+
 		// Get current block type and make a string for comparison later
-		String curBlock = String.valueOf(e.getBlock().getType());
+		String curBlock = String.valueOf(e.getBlock().getType());	
+		String downBlock = String.valueOf(e.getBlock().getRelative(BlockFace.DOWN).getType());
 		
-		// Is anything set for this block in the config, if not, abort
-		if (!(plugin.getConfig().isSet(curBlock)))
-		{
-			return;
-		}
+		// Is anything set for this block in the config, if not, abort - NO this breaks AIR
+		if (!(plugin.getConfig().isSet(curBlock)) && (curBlock != "AIR")) return;
 		
 		// Get current biome and make a string for comparison later
 		String curBiome = PwnPlantGrowth.getBiome(e);
@@ -227,10 +223,8 @@ public class PlantListener implements Listener
 		}		
 					
 		// AIR BLOCKS - when event returns AIR as the block type, it must be one of the following
-		if (curBlock == "AIR") 
+		else if (curBlock == "AIR") 
 		{
-			
-			String downBlock = String.valueOf(e.getBlock().getRelative(BlockFace.DOWN).getType());
 			
 			// Handle Cactus and Sugar Cane, the 2 that grow vertically only.
 			if (downBlock == "CACTUS" || downBlock == "SUGAR_CANE_BLOCK") 
@@ -445,7 +439,11 @@ public class PlantListener implements Listener
 					toLog += " Failed: Bad Biome";				
 				}					
 			}
-		}	
+		}
+		else 
+		{
+			toLog += " Uncaptured block grow event, derp?";
+		}
 
 		// Log it
     	if (PwnPlantGrowth.logEnabled) 
@@ -461,19 +459,13 @@ public class PlantListener implements Listener
 	
 		// Enabled in world?
 		World world = e.getLocation().getWorld();
-		if (!PwnPlantGrowth.isEnabledIn(world.getName())) 
-		{
-			return;
-		}
+		if (!PwnPlantGrowth.isEnabledIn(world.getName())) return;
 
 		// Get current block type and make a string for comparison later
 		String curBlock = String.valueOf(e.getSpecies());
 		
 		// Is anything set for this block in the config, if not, abort
-		if (!(plugin.getConfig().isSet(curBlock)))
-		{
-			return;
-		}
+		if (!(plugin.getConfig().isSet(curBlock))) return;
 		
 		// Get current biome and make a string for comparison later
 		String curBiome = PwnPlantGrowth.getBiome(e);
