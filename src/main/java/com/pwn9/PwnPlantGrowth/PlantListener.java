@@ -6,7 +6,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockGrowEvent;
-import org.bukkit.event.world.StructureGrowEvent;
 
 public class PlantListener implements Listener 
 {
@@ -325,109 +324,5 @@ public class PlantListener implements Listener
     	{	
     		PwnPlantGrowth.logToFile(toLog);
     	}	
-	}
-	
-	// Structure Growth eg: trees
-	@EventHandler(ignoreCancelled = true)
-	public void structureGrow(StructureGrowEvent e) 
-	{
-	
-		// Enabled in world?
-		World world = e.getLocation().getWorld();
-		if (!PwnPlantGrowth.isEnabledIn(world.getName())) return;
-
-		// Get current block type and make a string for comparison later
-		String curBlock = String.valueOf(e.getSpecies());
-		
-		// Is anything set for this block in the config, if not, abort
-		if (!(plugin.getConfig().isSet(curBlock))) return;
-		
-		// Get current biome and make a string for comparison later
-		String curBiome = PwnPlantGrowth.getBiome(e);
-		
-		// Get event coords
-		String coords = String.valueOf(e.getLocation());	
-		
-		// Setup boolean to see if event is in defined natural light or not
-		Boolean isDark = false;
-		
-		// Get the current natural light level
-		int lightLevel = e.getLocation().getBlock().getLightFromSky();
-		
-		// If the light level is lower than configured threshold and the plant is NOT exempt from dark grow, set this transaction to isDark = true
-		if ((PwnPlantGrowth.naturalLight > lightLevel) && (!PwnPlantGrowth.canDarkGrow(e.getSpecies().toString())))
-		{
-			isDark = true;
-		}
-		
-		String toLog = coords + ": Growing: " +e.getSpecies();
-
-		if ((plugin.getConfig().getList(curBlock+".Biome").contains(String.valueOf(e.getLocation().getBlock().getBiome()))) || (plugin.getConfig().getList(curBlock+".Biome").isEmpty())) 
-		{	
-			
-				int curGrowth = plugin.getConfig().getInt(curBlock+".Growth");
-				int curDeath = plugin.getConfig().getInt(curBlock+".Death");
-				
-				if (plugin.getConfig().isSet(curBlock+"."+curBiome+".Growth")) 
-				{
-					curGrowth = plugin.getConfig().getInt(curBlock+"."+curBiome+".Growth");
-				}
-				
-				if (plugin.getConfig().isSet(curBlock+"."+curBiome+".Death")) {
-					curDeath = plugin.getConfig().getInt(curBlock+"."+curBiome+".Death");
-				}
-				
-				// See if there are special settings for dark growth
-				if (isDark) 
-				{				
-					toLog += " In dark. ";
-					
-					// default isDark config rates (if exist)
-					if (plugin.getConfig().isSet(curBlock+".GrowthDark")) 
-					{
-						curGrowth = plugin.getConfig().getInt(curBlock+".GrowthDark");
-					}
-					
-					if (plugin.getConfig().isSet(curBlock+".DeathDark")) 
-					{
-						curDeath = plugin.getConfig().getInt(curBlock+".DeathDark");
-					}
-					
-					// per biome isDark rates (if exist)
-					if (plugin.getConfig().isSet(curBlock+"."+curBiome+".GrowthDark")) 
-					{
-						curGrowth = plugin.getConfig().getInt(curBlock+"."+curBiome+".GrowthDark");
-					}
-					
-					if (plugin.getConfig().isSet(curBlock+"."+curBiome+".DeathDark")) 
-					{
-						curDeath = plugin.getConfig().getInt(curBlock+"."+curBiome+".DeathDark");
-					}
-				}				
-				
-				if (!(PwnPlantGrowth.random(curGrowth)))
-				{
-					e.setCancelled(true);
-					toLog += " Failed (Rate: "+curGrowth+") ";
-					
-					if (PwnPlantGrowth.random(curDeath)) 
-					{
-						e.getLocation().getBlock().setType(Material.LONG_GRASS);
-						toLog += " Died (Rate: "+curDeath+")";
-					}
-				}		
-			}										
-		else 
-		{
-			e.setCancelled(true);
-			toLog += " Failed: Bad Biome";				
-		}				
-
-		// log it
-		if (PwnPlantGrowth.logEnabled) 
-		{	
-			PwnPlantGrowth.logToFile(toLog);
-		}
-	}
-	
+	}	
 }
