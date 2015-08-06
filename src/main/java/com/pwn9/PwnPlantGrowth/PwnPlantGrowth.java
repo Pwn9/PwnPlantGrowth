@@ -50,7 +50,6 @@ public class PwnPlantGrowth extends JavaPlugin
 				
 		// Setup listeners
 		new PlantListener(this);
-		new WaterListener(this);
 		
 		// Get data folder
 		PwnPlantGrowth.dataFolder = getDataFolder();
