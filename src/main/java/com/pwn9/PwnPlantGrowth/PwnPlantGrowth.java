@@ -37,17 +37,6 @@ public class PwnPlantGrowth extends JavaPlugin
 	{
 		this.saveDefaultConfig();
 		
-		// Start Metrics
-		try 
-		{
-		    MetricsLite metricslite = new MetricsLite(this);
-		    metricslite.start();
-		} 
-		catch (IOException e) 
-		{
-		    // Failed to submit the stats :-(
-		}
-				
 		// Setup listeners
 		new PlantListener(this);
 		
