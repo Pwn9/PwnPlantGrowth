@@ -17,7 +17,7 @@ import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.khorn.terraincontrol.TerrainControl;
+//import com.khorn.terraincontrol.TerrainControl;
 
 public class PwnPlantGrowth extends JavaPlugin 
 {
@@ -55,7 +55,6 @@ public class PwnPlantGrowth extends JavaPlugin
 	public static String uvFound;
 	
 	// Terrain Control Hook
-	public static TerrainControl tc;	
 	
 	public void onEnable() 
 	{
@@ -218,42 +217,12 @@ public class PwnPlantGrowth extends JavaPlugin
 
 	public static String getBiome(BlockGrowEvent e) 
 	{
-		if (tc != null) 
-		{		
-			String tControl = TerrainControl.getBiomeName(e.getBlock().getWorld().getName(), e.getBlock().getLocation().getBlockX(), e.getBlock().getLocation().getBlockZ());
-			if (tControl != null)
-			{
-				return tControl;
-			}
-			else
-			{
-				return String.valueOf(e.getBlock().getBiome());
-			}
-		}
-		else
-		{
-			return String.valueOf(e.getBlock().getBiome());
-		}
+		return String.valueOf(e.getBlock().getBiome());
 	}
 
 	public static String getBiome(StructureGrowEvent e) 
 	{
-		if (tc != null) 
-		{
-			String tControl = TerrainControl.getBiomeName(e.getWorld().getName(), e.getLocation().getBlockX(), e.getLocation().getBlockZ());
-			if (tControl != null)
-			{
-				return tControl;
-			}
-			else 
-			{
-				return String.valueOf(e.getLocation().getBlock().getBiome());
-			}
-		}
-		else
-		{
 			return String.valueOf(e.getLocation().getBlock().getBiome());
-		}
 	}
 
 }
