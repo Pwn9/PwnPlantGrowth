@@ -142,7 +142,7 @@ public class PlantListener implements Listener
 			else 
 			{
 				e.setCancelled(true);
-				toLog += " Failed: Bad Biome";				
+				toLog += " Failed: Bad Biome (1)";				
 			}				
 		}		
 					
@@ -217,8 +217,15 @@ public class PlantListener implements Listener
 				}
 				else 
 				{
+					if (downBlock == "GRASS")
+					{
+						toLog += "Growing grass";
+					}
+					else
+					{
 					e.setCancelled(true);
-					toLog += " Failed: Bad Biome";				
+					toLog += " Failed: Bad Biome (2) "+downBlock+" - "+curBiome+"";
+					}
 				}					
 			}
 			
@@ -315,7 +322,7 @@ public class PlantListener implements Listener
 				else 
 				{
 					e.setCancelled(true);
-					toLog += " Failed: Bad Biome";				
+					toLog += " Failed: Bad Biome (3)";				
 				}					
 		}
 
