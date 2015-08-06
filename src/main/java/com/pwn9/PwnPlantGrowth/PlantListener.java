@@ -1,8 +1,5 @@
 package com.pwn9.PwnPlantGrowth;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
@@ -43,56 +40,7 @@ public class PlantListener implements Listener
 				
 		// Get coords of the event for logging
 		String coords = String.valueOf(e.getBlock().getLocation());
-			
-		List<String> fBlocksFound = new ArrayList<String>();
-		List<String> wkBlocksFound = new ArrayList<String>();
-		List<String> uvBlocksFound = new ArrayList<String>();
-		
-		// Check for fertilizer blocks
-		if (PwnPlantGrowth.fenabled) 
-		{
-			for (int fx = -(PwnPlantGrowth.fradius); fx <= PwnPlantGrowth.fradius; fx++) 
-			{
-	            for (int fy = -(PwnPlantGrowth.fradius); fy <= PwnPlantGrowth.fradius; fy++) 
-	            {
-	               for (int fz = -(PwnPlantGrowth.fradius); fz <= PwnPlantGrowth.fradius; fz++) 
-	               {
-	            	   fBlocksFound.add(String.valueOf(e.getBlock().getRelative(fx, fy, fz).getType()));
-	               }
-	            }
-	        }
-		}		
-		
-		// Check for weed killer blocks
-		if (PwnPlantGrowth.wkenabled)
-		{
-			for (int wx = -(PwnPlantGrowth.wkradius); wx <= PwnPlantGrowth.wkradius; wx++) 
-			{
-	            for (int wy = -(PwnPlantGrowth.wkradius); wy <= PwnPlantGrowth.wkradius; wy++) 
-	            {
-	               for (int wz = -(PwnPlantGrowth.wkradius); wz <= PwnPlantGrowth.wkradius; wz++) 
-	               {
-	            	   wkBlocksFound.add(String.valueOf(e.getBlock().getRelative(wx, wy, wz).getType()));
-	               }
-	            }
-	        }
-		}
-		
-		// Check for uv blocks
-		if (PwnPlantGrowth.uvenabled)
-		{
-			for (int ux = -(PwnPlantGrowth.uvradius); ux <= PwnPlantGrowth.uvradius; ux++) 
-			{
-	            for (int uy = -(PwnPlantGrowth.uvradius); uy <= PwnPlantGrowth.uvradius; uy++) 
-	            {
-	               for (int uz = -(PwnPlantGrowth.uvradius); uz <= PwnPlantGrowth.uvradius; uz++) 
-	               {
-	            	   uvBlocksFound.add(String.valueOf(e.getBlock().getRelative(ux, uy, uz).getType()));
-	               }
-	            }
-	        }
-		}
-				
+	
 		// Setup boolean to see if event is in defined natural light or not
 		Boolean isDark = false;
 		
@@ -128,12 +76,6 @@ public class PlantListener implements Listener
 		{
 			if ((plugin.getConfig().getList(curBlock+".Biome").contains(curBiome)) || (plugin.getConfig().getList(curBlock+".Biome").isEmpty())) 
 			{
-				// if there is fertilizer, grow this plant no questions - overrides isDark and all other settings
-				if (fBlocksFound.contains(PwnPlantGrowth.fertilizer))
-				{
-					toLog += PwnPlantGrowth.fertFound;
-				}
-				else 
 				{
 					// get the configured growth and death rates, by hierarchy of importance
 					
@@ -155,13 +97,6 @@ public class PlantListener implements Listener
 					// See if there are special settings for dark growth
 					if (isDark) 
 					{		
-						// If uv is enabled and found, isDark remains false.
-						if (uvBlocksFound.contains(PwnPlantGrowth.uv))
-						{
-							toLog += PwnPlantGrowth.uvFound;
-						}
-						else 
-						{
 							toLog += " In dark. ";
 							
 							// default isDark config rates (if exist)
@@ -185,22 +120,13 @@ public class PlantListener implements Listener
 							{
 								curDeath = plugin.getConfig().getInt(curBlock+"."+curBiome+".DeathDark");
 							}
-						}
 					}
 										
 					if (!(PwnPlantGrowth.random(curGrowth))) 
 					{
 						e.setCancelled(true);
 						toLog += " Failed (Rate: "+curGrowth+") ";
-						
-						// If weedkiller is enabled and found, don't let plant die.
-						if (wkBlocksFound.contains(PwnPlantGrowth.weedKiller))
-						{
-							toLog += PwnPlantGrowth.wkFound;
-						}
-						// Else get the death chance for plant.
-						else 
-						{
+
 							if (PwnPlantGrowth.random(curDeath)) 
 							{
 								if (curBlock == "COCOA") {
@@ -211,7 +137,6 @@ public class PlantListener implements Listener
 								}
 								toLog += " Died (Rate: "+curDeath+")";
 							}
-						}
 					}	
 				}
 			}
@@ -233,14 +158,7 @@ public class PlantListener implements Listener
 				toLog += downBlock;
 				
 				if ((plugin.getConfig().getList(downBlock+".Biome").contains(curBiome)) || (plugin.getConfig().getList(downBlock+".Biome").isEmpty())) 
-				{
-					
-					if (fBlocksFound.contains(PwnPlantGrowth.fertilizer))
-					{
-						toLog += PwnPlantGrowth.fertFound;
-					}
-					else 
-					{	
+				{	
 						// get the configured growth and death rates, by hierarchy of importance
 						
 						// default config rates
@@ -260,14 +178,7 @@ public class PlantListener implements Listener
 						
 						// See if there are special settings for dark growth
 						if (isDark) 
-						{
-							// If uv is enabled and found, isDark remains false.
-							if (uvBlocksFound.contains(PwnPlantGrowth.uv))
-							{
-								toLog += PwnPlantGrowth.uvFound;
-							}
-							else 
-							{							
+						{							
 								toLog += " In dark. ";
 								
 								// default isDark config rates (if exist)
@@ -291,25 +202,17 @@ public class PlantListener implements Listener
 								{
 									curDeath = plugin.getConfig().getInt(downBlock+"."+curBiome+".DeathDark");
 								}
-							}
 						}
 						
 						if (!(PwnPlantGrowth.random(curGrowth))) 
 						{
 							e.setCancelled(true);
 							toLog += " Failed (Rate: "+curGrowth+") ";
-							if (wkBlocksFound.contains(PwnPlantGrowth.weedKiller))
-							{
-								toLog += PwnPlantGrowth.wkFound;
-							}
-							else 
-							{
 								if (PwnPlantGrowth.random(curDeath)) 
 								{
 									e.getBlock().getRelative(BlockFace.DOWN).setType(Material.LONG_GRASS);
 									toLog += " Died (Rate: "+curDeath+")";
 								}
-							}
 						}						
 					}
 				}
@@ -358,13 +261,6 @@ public class PlantListener implements Listener
 		
 				if ((plugin.getConfig().getList(thisBlock+".Biome").contains(String.valueOf(e.getBlock().getBiome()))) || (plugin.getConfig().getList(thisBlock+".Biome").isEmpty())) 
 				{	
-					
-					if (fBlocksFound.contains(PwnPlantGrowth.fertilizer))
-					{
-						toLog += PwnPlantGrowth.fertFound;
-					}
-					else 
-					{
 						int curGrowth = plugin.getConfig().getInt(thisBlock+".Growth");
 						int curDeath = plugin.getConfig().getInt(thisBlock+".Death");
 						
@@ -380,14 +276,7 @@ public class PlantListener implements Listener
 						
 						// See if there are special settings for dark growth
 						if (isDark) 
-						{
-							// If uv is enabled and found, isDark remains false.
-							if (uvBlocksFound.contains(PwnPlantGrowth.uv))
-							{
-								toLog += PwnPlantGrowth.uvFound;
-							}
-							else 
-							{							
+						{						
 								toLog += " In dark. ";
 								
 								// default isDark config rates (if exist)
@@ -411,38 +300,24 @@ public class PlantListener implements Listener
 								{
 									curDeath = plugin.getConfig().getInt(thisBlock+"."+curBiome+".DeathDark");
 								}
-							}
 						}						
 						if (!(PwnPlantGrowth.random(curGrowth))) 
 						{
 							e.setCancelled(true);
 							toLog += " Failed (Rate: "+curGrowth+") ";
 							
-							if (wkBlocksFound.contains(PwnPlantGrowth.weedKiller)) 
+							if (PwnPlantGrowth.random(curDeath)) 
 							{
-								toLog += PwnPlantGrowth.wkFound;
+								e.getBlock().setType(Material.LONG_GRASS);
+								toLog += " Died (Rate: "+curDeath+")";
 							}
-							else 
-							{
-								if (PwnPlantGrowth.random(curDeath)) 
-								{
-									e.getBlock().setType(Material.LONG_GRASS);
-									toLog += " Died (Rate: "+curDeath+")";
-								}
-							}
-						}	
-					}								
+						}									
 				}
 				else 
 				{
 					e.setCancelled(true);
 					toLog += " Failed: Bad Biome";				
 				}					
-			}
-		}
-		else 
-		{
-			toLog += " Uncaptured block grow event, derp?";
 		}
 
 		// Log it
@@ -472,53 +347,6 @@ public class PlantListener implements Listener
 		
 		// Get event coords
 		String coords = String.valueOf(e.getLocation());	
-
-		List<String> fBlocksFound = new ArrayList<String>();
-		List<String> wkBlocksFound = new ArrayList<String>();
-		List<String> uvBlocksFound = new ArrayList<String>();
-		
-		if (PwnPlantGrowth.fenabled) 
-		{
-			for (int x = -(PwnPlantGrowth.fradius); x <= PwnPlantGrowth.fradius; x++) 
-			{
-	            for (int y = -(PwnPlantGrowth.fradius); y <= PwnPlantGrowth.fradius; y++) 
-	            {
-	               for (int z = -(PwnPlantGrowth.fradius); z <= PwnPlantGrowth.fradius; z++) 
-	               {
-	            	   fBlocksFound.add(String.valueOf(e.getLocation().getBlock().getRelative(x, y, z).getType()));
-	               }
-	            }
-	        }
-		}		
-		
-		if (PwnPlantGrowth.wkenabled)
-		{
-			for (int xx = -(PwnPlantGrowth.wkradius); xx <= PwnPlantGrowth.wkradius; xx++) 
-			{
-	            for (int yy = -(PwnPlantGrowth.wkradius); yy <= PwnPlantGrowth.wkradius; yy++) 
-	            {
-	               for (int zz = -(PwnPlantGrowth.wkradius); zz <= PwnPlantGrowth.wkradius; zz++) 
-	               {
-	            	   wkBlocksFound.add(String.valueOf(e.getLocation().getBlock().getRelative(xx, yy, zz).getType()));
-	               }
-	            }
-	        }
-		}		
-		
-		// Check for uv blocks
-		if (PwnPlantGrowth.uvenabled)
-		{
-			for (int xx = -(PwnPlantGrowth.uvradius); xx <= PwnPlantGrowth.uvradius; xx++) 
-			{
-	            for (int yy = -(PwnPlantGrowth.uvradius); yy <= PwnPlantGrowth.uvradius; yy++) 
-	            {
-	               for (int zz = -(PwnPlantGrowth.uvradius); zz <= PwnPlantGrowth.uvradius; zz++) 
-	               {
-	            	   uvBlocksFound.add(String.valueOf(e.getLocation().getBlock().getRelative(xx, yy, zz).getType()));
-	               }
-	            }
-	        }
-		}		
 		
 		// Setup boolean to see if event is in defined natural light or not
 		Boolean isDark = false;
@@ -537,12 +365,6 @@ public class PlantListener implements Listener
 		if ((plugin.getConfig().getList(curBlock+".Biome").contains(String.valueOf(e.getLocation().getBlock().getBiome()))) || (plugin.getConfig().getList(curBlock+".Biome").isEmpty())) 
 		{	
 			
-			if (fBlocksFound.contains(PwnPlantGrowth.fertilizer))
-			{
-				toLog += PwnPlantGrowth.fertFound;
-			}
-			else 
-			{
 				int curGrowth = plugin.getConfig().getInt(curBlock+".Growth");
 				int curDeath = plugin.getConfig().getInt(curBlock+".Death");
 				
@@ -557,37 +379,29 @@ public class PlantListener implements Listener
 				
 				// See if there are special settings for dark growth
 				if (isDark) 
-				{
-					// If uv is enabled and found, isDark remains false.
-					if (uvBlocksFound.contains(PwnPlantGrowth.uv))
+				{				
+					toLog += " In dark. ";
+					
+					// default isDark config rates (if exist)
+					if (plugin.getConfig().isSet(curBlock+".GrowthDark")) 
 					{
-						toLog += PwnPlantGrowth.uvFound;
+						curGrowth = plugin.getConfig().getInt(curBlock+".GrowthDark");
 					}
-					else 
-					{					
-						toLog += " In dark. ";
-						
-						// default isDark config rates (if exist)
-						if (plugin.getConfig().isSet(curBlock+".GrowthDark")) 
-						{
-							curGrowth = plugin.getConfig().getInt(curBlock+".GrowthDark");
-						}
-						
-						if (plugin.getConfig().isSet(curBlock+".DeathDark")) 
-						{
-							curDeath = plugin.getConfig().getInt(curBlock+".DeathDark");
-						}
-						
-						// per biome isDark rates (if exist)
-						if (plugin.getConfig().isSet(curBlock+"."+curBiome+".GrowthDark")) 
-						{
-							curGrowth = plugin.getConfig().getInt(curBlock+"."+curBiome+".GrowthDark");
-						}
-						
-						if (plugin.getConfig().isSet(curBlock+"."+curBiome+".DeathDark")) 
-						{
-							curDeath = plugin.getConfig().getInt(curBlock+"."+curBiome+".DeathDark");
-						}
+					
+					if (plugin.getConfig().isSet(curBlock+".DeathDark")) 
+					{
+						curDeath = plugin.getConfig().getInt(curBlock+".DeathDark");
+					}
+					
+					// per biome isDark rates (if exist)
+					if (plugin.getConfig().isSet(curBlock+"."+curBiome+".GrowthDark")) 
+					{
+						curGrowth = plugin.getConfig().getInt(curBlock+"."+curBiome+".GrowthDark");
+					}
+					
+					if (plugin.getConfig().isSet(curBlock+"."+curBiome+".DeathDark")) 
+					{
+						curDeath = plugin.getConfig().getInt(curBlock+"."+curBiome+".DeathDark");
 					}
 				}				
 				
@@ -596,21 +410,13 @@ public class PlantListener implements Listener
 					e.setCancelled(true);
 					toLog += " Failed (Rate: "+curGrowth+") ";
 					
-					if (wkBlocksFound.contains(PwnPlantGrowth.weedKiller))
+					if (PwnPlantGrowth.random(curDeath)) 
 					{
-						toLog += PwnPlantGrowth.wkFound;
-					}
-					else 
-					{
-						if (PwnPlantGrowth.random(curDeath)) 
-						{
-							e.getLocation().getBlock().setType(Material.LONG_GRASS);
-							toLog += " Died (Rate: "+curDeath+")";
-						}
+						e.getLocation().getBlock().setType(Material.LONG_GRASS);
+						toLog += " Died (Rate: "+curDeath+")";
 					}
 				}		
 			}										
-		}
 		else 
 		{
 			e.setCancelled(true);
