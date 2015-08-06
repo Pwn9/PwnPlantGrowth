@@ -7,15 +7,16 @@
 
 # Which worlds should this plugin be enabled in? Worlds not in this list will have default growth.
 enabled_worlds:
-  - example_world
-  - example_world_nether
+  - world
+  - world_nether
+  - world_end
 
 # Stop buckets and dispensers from transporting source blocks - adds realism.
 block_water_bucket: false
 block_water_dispenser: false
     
 # Natural sky light level: 0 allows any, 10 is sunlight through glass/tree leaves, 15 is direct sunlight
-min_natural_light: 10
+min_natural_light: 0
 
 # List of items allowed to grow in false light (torches, lightstone, lava) - use offical MATERIAL names to add to this list
 grow_in_dark: 
@@ -23,6 +24,29 @@ grow_in_dark:
   - BROWN_MUSHROOM
   - NETHER_WARTS
   - COCOA 
+  - CACTUS
+  - CARROT
+  - CROPS
+  - MELON_BLOCK
+  - MELON_STEM
+  - POTATO
+  - PUMPKIN_BLOCK
+  - PUMPKIN_STEM
+  - SUGAR_CANE_BLOCK
+  - ACACIA
+  - BIG_TREE
+  - BIRCH
+  - COCOA_TREE
+  - DARK_OAK
+  - JUNGLE
+  - JUNGLE_BUSH
+  - MEGA_REDWOOD
+  - REDWOOD
+  - SMALL_JUNGLE
+  - SWAMP
+  - TALL_BIRCH
+  - TALL_REDWOOD
+  - TREE
 
 # Enable use of weed killer
 weed_killer_enabled: false
@@ -57,84 +81,106 @@ debug_log: false
 # CROPS - Important note, as of PPG 1.6 the plant names are now all in UPPER CASE matching the actual Bukkit Material.TYPE 
 
 CACTUS:
-    Growth: 50
-    GrowthDark: 25
-    Death: 5
-    DeathDark: 25
-    Biome: 
-    - DESERT
-    - DESERT_HILLS
+    Growth: 25
+    GrowthDark: 15
+    Death: 0
+    DeathDark: 2
+    Biome: [] 
+    DESERT: 
+      Growth: 50
+      Death: 0 
 
 CARROT: 
-    Growth: 50
-    GrowthDark: 25
-    Death: 5
-    DeathDark: 25    
-    Biome: 
-    - PLAINS
-    - DESERT
+    Growth: 25
+    GrowthDark: 15
+    Death: 0
+    DeathDark: 2    
+    Biome: [] 
+
     PLAINS: 
-      Growth: 100
-      GrowthDark: 75
+      Growth: 30
+
       Death: 0 
-      DeathDark: 5
+
     DESERT:
-      Growth: 25
-      Death: 50
+      Growth: 15
+      GrowthDark: 10
+      Death: 0
 
 COCOA: 
     Growth: 25
-    Death: 5
-    Biome:
-    - JUNGLE
-    - JUNGLE_HILLS
+    Death: 0
+    Biome: []
+    JUNGLE: 
+      Growth: 50
+      Death: 0 
+
+    JUNGLE_HILLS:
+      Growth: 50
+      Death: 0 
 
 MELON_BLOCK: 
-    Growth: 50
-    Death: 5
-    Biome: []
+    Growth: 15
+    Death: 0
+    JUNGLE: 
+      Growth: 25
+      Death: 0 
+    JUNGLE_HILLS:
+      Growth: 25
+      Death: 0 
 
 MELON_STEM:
     Growth: 50
-    Death: 5
+    Death: 0
     Biome: []
 
 NETHER_WARTS:
-    Growth: 25
-    Death: 5
-    Biome: 
-    - HELL    
+    Growth: 15
+    Death: 0
+    Biome: []
+    HELL: 
+      Growth: 50
+      Death: 0     
 
 POTATO:
-    Growth: 50
-    Death: 5
+    Growth: 25
+    Death: 0
+    DeathDark: 2  
     Biome: []
 
 PUMPKIN_BLOCK:
-    Growth: 50
-    Death: 5    
+    Growth: 15
+    Death: 0   
     Biome: []
 
 PUMPKIN_STEM:
     Growth: 50
-    Death: 5
+    Death: 0
     Biome: []
     
 SUGAR_CANE_BLOCK:
-    Growth: 50
-    Death: 5
-    Biome:
-    - BEACH
-    - RIVER
-    - SWAMPLAND  
-    
+    Growth: 20
+    Death: 0
+    DeathDark: 1  
+    Biome: [] 
+    BEACH: 
+      Growth: 30
+      Death: 0 
+    RIVER:
+      Growth: 35
+      Death: 0
+    SWAMPLAND:
+      Growth: 35
+      Death: 0          
+
 # This is WHEAT - In this example wheat will grow everywhere at 50% rate, except plains it will grow at %100
 CROPS:
-    Growth: 50
-    Death: 5
+    Growth: 25
+    Death: 0
+    DeathDark: 1  
     Biome: []
     PLAINS: 
-      Growth: 100
+      Growth: 30
       Death: 0 
       
 # TREES 
@@ -142,112 +188,116 @@ CROPS:
 
 ACACIA:
     Growth: 50
-    Death: 5
-    Biome:
-    - SAVANNA
-    - SAVANNA_MOUNTAINS
-    - SAVANNA_PLATEAU
-    - SAVANNA_PLATEAU_MOUNTAINS
+    Death: 0
+    Biome: [] 
 
 BIRCH:
     Growth: 50
-    Death: 5
+    Death: 0
     Biome: []
 
 TALL_BIRCH:
     Growth: 50
-    Death: 5
+    Death: 0
     Biome: []
     
 JUNGLE:
-    Growth: 50
-    Death: 5
-    Biome:
-    - JUNGLE
-    - JUNGLE_HILLS  
+    Growth: 10
+    Death: 0
+    Biome: []
+    JUNGLE: 
+      Growth: 50
+    JUNGLE_HILLS:
+      Growth: 50
+    JUNGLE_EDGE: 
+      Growth: 50
+    JUNGLE_EDGE_MOUNTAINS:
+      Growth: 50
+    JUNGLE_MOUNTAINS:
+      Growth: 50 
 
 JUNGLE_BUSH:
     Growth: 50
-    Death: 5
-    Biome:
-    - JUNGLE
-    - JUNGLE_HILLS      
+    Biome: []
+    JUNGLE: 
+      Growth: 50
+    JUNGLE_HILLS:
+      Growth: 50
+
+
+    JUNGLE_EDGE: 
+      Growth: 50
+    JUNGLE_EDGE_MOUNTAINS:
+      Growth: 50
+    JUNGLE_MOUNTAINS:
+      Growth: 50   
 
 SMALL_JUNGLE:
     Growth: 50
-    Death: 5
-    Biome:
-    - JUNGLE
-    - JUNGLE_HILLS  
+    Death: 0
+    Biome: []
+    JUNGLE: 
+      Growth: 50
+    JUNGLE_HILLS:
+      Growth: 50
+    JUNGLE_EDGE: 
+      Growth: 50
+    JUNGLE_EDGE_MOUNTAINS:
+      Growth: 50
+    JUNGLE_MOUNTAINS:
+      Growth: 50 
     
 DARK_OAK:
     Growth: 50
-    Death: 5
-    Biome: 
-    - ROOFED_FOREST        
-    - ROOFED_FOREST_MOUNTAINS   
+    Death: 0
+    Biome: [] 
 
 REDWOOD:
     Growth: 50
-    Death: 5
-    Biome:
-    - FOREST
-    - FOREST_HILLS
-    - TAIGA
-    - TAIGA_HILLS
+    Death: 0
+    Biome: [] 
 
 TALL_REDWOOD:
     Growth: 50
-    Death: 5
-    Biome:
-    - FOREST
-    - FOREST_HILLS
-    - TAIGA
-    - TAIGA_HILLS
+    Death: 0
+    Biome: [] 
 
 MEGA_REDWOOD:
     Growth: 50
-    Death: 5
-    Biome:
-    - FOREST
-    - FOREST_HILLS
-    - TAIGA
-    - TAIGA_HILLS    
-
+    Death: 0
+    Biome: []   
+    
 SWAMP:
     Growth: 50
-    Death: 5
+    Death: 0
     Biome: []
         
 TREE:
     Growth: 50
-    Death: 5
+    Death: 0
     Biome: []
 
 BIG_TREE:
     Growth: 50
-    Death: 5
+    Death: 0
     Biome: []
 
 COCOA_TREE:
     Growth: 50
-    Death: 5
+    Death: 0
     Biome: []
     
 # GIANT MUSHROOMS
 BROWN_MUSHROOM:
-    Growth: 50
-    Death: 5
-    Biome:
-    - MUSHROOM_ISLAND
-    - MUSHROOM_SHORE
+    Growth: 80
+    Death: 0
+    Biome: [] 
 
 RED_MUSHROOM:
-    Growth: 50
-    Death: 5
-    Biome:
-    - MUSHROOM_ISLAND
-    - MUSHROOM_SHORE
+    Growth: 80
+    Death: 0
+    Biome: [] 
+
       
 # Plugin will check for the following list of plants as of ver. 2.1.1 
 # "CACTUS", "CARROT", "COCOA", "CROPS", "MELON_BLOCK", "MELON_STEM", "NETHER_WARTS", "POTATO", "PUMPKIN_BLOCK", "PUMPKIN_STEM", "SUGAR_CANE_BLOCK", "ACACIA", "BIG_TREE", "BIRCH", "BROWN_MUSHROOM", "COCOA_TREE", "DARK_OAK", "JUNGLE", "JUNGLE_BUSH", "MEGA_REDWOOD", "RED_MUSHROOM", "REDWOOD", "SMALL_JUNGLE", "SWAMP", "TALL_BIRCH", "TALL_REDWOOD", "TREE"
