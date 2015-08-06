@@ -1,0 +1,47 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>Pwn</groupId>
+  <artifactId>Pwn</artifactId>
+  <version>0.0.1</version>
+  <name>PwnPlantGrowth Lite</name>
+  <description>PwnPlantGrowth Lite</description>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<outputdir>${project.build.outputDirectory}</outputdir>
+	<mc-version>1.8.8</mc-version>
+  	<bukkit-ver>R0.1-SNAPSHOT</bukkit-ver>
+  </properties>
+   <!-- Build instructions -->
+    <build>
+        <defaultGoal>package</defaultGoal>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <!-- Repositories -->
+    <repositories>
+        <!-- Spigot Repo -->
+        <repository>
+            <id>md5</id>
+            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+        </repository>
+    </repositories>
+    <!-- Dependencies -->
+    <dependencies>
+        <!-- Bukkit -->
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>${mc-version}-${bukkit-ver}</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+</project>
