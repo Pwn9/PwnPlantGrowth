@@ -122,7 +122,6 @@ public class PlantListener implements Listener
 			toLog += "Growing: " +e.getBlock().getType();
 		}
 			
-		
 		// Regular growth blocks that do not report initially as AIR - this is most of the normal crops
 		if (curBlock != "AIR")
 		{
@@ -226,7 +225,7 @@ public class PlantListener implements Listener
 		else if (curBlock == "AIR") 
 		{
 			
-			// Handle Cactus and Sugar Cane, the 2 that grow vertically only.
+			// Handle Cactus, Sugar Cane; the plants that grow vertically only.
 			if (downBlock == "CACTUS" || downBlock == "SUGAR_CANE_BLOCK") 
 			{
 				
@@ -318,6 +317,15 @@ public class PlantListener implements Listener
 					e.setCancelled(true);
 					toLog += " Failed: Bad Biome";				
 				}					
+			}
+			
+			// This is probably the regular growing grass, let's just leave this alone for now
+			else if (downBlock == "LONGGRASS" || downBlock == "GRASS") {
+				
+				// log it, general only occurs with bonemeal use but can be spammy in the logs
+				toLog += " Grass grew";	
+				
+				// in the future we could add this to the config, initial test show it causes strange things though.
 			}
 			
 			// Specially Handle Melon/Pumpkin Blocks

@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 CACTUS:
 CARROT: 
 COCOA: 
-CROPS:
+CROPS: This refers to what is wheat in-game
 MELON_BLOCK: 
 MELON_STEM:
 NETHER_WARTS:
@@ -37,35 +37,19 @@ SUGAR_CANE_BLOCK:
 # TREES 
 # Full tree list available at http://jd.bukkit.org/dev/apidocs/org/bukkit/TreeType.html
 
-ACACIA
-#Acacia tree.
-BIG_TREE
-#Regular tree, extra tall with branches
-BIRCH
-#Birch tree
-BROWN_MUSHROOM
-#Big brown mushroom; tall and umbrella-like
-COCOA_TREE
-#Jungle tree with cocoa plants; 1 block wide
-DARK_OAK
-#Dark Oak tree.
-JUNGLE
-#Standard jungle tree; 4 blocks wide and tall
-JUNGLE_BUSH
-#Small bush that grows in the jungle
-MEGA_REDWOOD
-#Mega redwood tree; 4 blocks wide and tall
-RED_MUSHROOM
-#Big red mushroom; short and fat
-REDWOOD
-#Redwood tree, shaped like a pine tree
-SMALL_JUNGLE
-#Smaller jungle tree; 1 block wide
-SWAMP
-#Swamp tree (regular with vines on the side)
-TALL_BIRCH
-#Tall birch tree
-TALL_REDWOOD
-#Tall redwood tree with just a few leaves at the top
-TREE
-#Regular tree, no branches
+ACACIA: Acacia tree.
+BIG_TREE: Regular tree, extra tall with branches
+BIRCH: Birch tree
+BROWN_MUSHROOM: Big brown mushroom; tall and umbrella-like
+COCOA_TREE: Jungle tree with cocoa plants; 1 block wide
+DARK_OAK: Dark Oak tree.
+JUNGLE: Standard jungle tree; 4 blocks wide and tall
+JUNGLE_BUSH: Small bush that grows in the jungle
+MEGA_REDWOOD: Mega redwood tree; 4 blocks wide and tall
+RED_MUSHROOM: Big red mushroom; short and fat
+REDWOOD: Redwood tree, shaped like a pine tree
+SMALL_JUNGLE: Smaller jungle tree; 1 block wide
+SWAMP: Swamp tree (regular with vines on the side)
+TALL_BIRCH: Tall birch tree
+TALL_REDWOOD: Tall redwood tree with just a few leaves at the top
+TREE: Regular tree, no branches
