@@ -320,7 +320,7 @@ public class PlantListener implements Listener
 			}
 			
 			// This is probably the regular growing grass, let's just leave this alone for now
-			else if (downBlock == "LONGGRASS" || downBlock == "GRASS") {
+			else if (downBlock == "LONG_GRASS" || downBlock == "GRASS") {
 				
 				// log it, general only occurs with bonemeal use but can be spammy in the logs
 				toLog += " Grass grew";	
