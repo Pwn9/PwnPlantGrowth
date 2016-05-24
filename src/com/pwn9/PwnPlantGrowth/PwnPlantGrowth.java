@@ -41,6 +41,7 @@ public class PwnPlantGrowth extends JavaPlugin
 
 	// Fertilizer
 	public static int fradius;
+	public static int frate;
 	public static String fertilizer;
 	public static Boolean fenabled;
 	
@@ -74,7 +75,6 @@ public class PwnPlantGrowth extends JavaPlugin
 				
 		// Setup listeners
 		new PlantListener(this);
-		new WaterListener(this);
 		
 		// Get data folder
 		PwnPlantGrowth.dataFolder = getDataFolder();
@@ -104,6 +104,7 @@ public class PwnPlantGrowth extends JavaPlugin
 
 		// Fertilizer
 		PwnPlantGrowth.fradius = getConfig().getInt("fertilizer_radius", 5);
+		PwnPlantGrowth.frate = getConfig().getInt("fertilizer_rate", 100);
 		PwnPlantGrowth.fertilizer = getConfig().getString("fertilizer", "SOUL_SAND");
 		PwnPlantGrowth.fenabled = getConfig().getBoolean("fertilizer_enabled", false);
 		
@@ -118,7 +119,7 @@ public class PwnPlantGrowth extends JavaPlugin
 		PwnPlantGrowth.uvFound = " UV found, allowing false light growth.";
 		
 		// Load all possible plant types
-		String sArray[] = new String[] { "CACTUS", "CARROT", "COCOA", "CROPS", "MELON_BLOCK", "MELON_STEM", "NETHER_WARTS", "POTATO", "PUMPKIN_BLOCK", "PUMPKIN_STEM", "SUGAR_CANE_BLOCK", "ACACIA", "BIG_TREE", "BIRCH", "BROWN_MUSHROOM", "COCOA_TREE", "DARK_OAK", "JUNGLE", "JUNGLE_BUSH", "MEGA_REDWOOD", "RED_MUSHROOM", "REDWOOD", "SMALL_JUNGLE", "SWAMP", "TALL_BIRCH", "TALL_REDWOOD", "TREE" };
+		String sArray[] = new String[] { "BEETROOT_BLOCK", "CACTUS", "CARROT", "COCOA", "CROPS", "MELON_BLOCK", "MELON_STEM", "NETHER_WARTS", "POTATO", "PUMPKIN_BLOCK", "PUMPKIN_STEM", "SUGAR_CANE_BLOCK", "ACACIA", "BIG_TREE", "BIRCH", "BROWN_MUSHROOM", "COCOA_TREE", "DARK_OAK", "JUNGLE", "JUNGLE_BUSH", "MEGA_REDWOOD", "RED_MUSHROOM", "REDWOOD", "SMALL_JUNGLE", "SWAMP", "TALL_BIRCH", "TALL_REDWOOD", "TREE" };
 		PwnPlantGrowth.plantTypes = Arrays.asList(sArray);
 		
 		// Check for TerrainControl
@@ -160,7 +161,6 @@ public class PwnPlantGrowth extends JavaPlugin
 		    	}			    	
 		    }
 		}
-		
 	}
 	
 	static boolean random(int percentChance) 
