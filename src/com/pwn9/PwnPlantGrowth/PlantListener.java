@@ -31,6 +31,9 @@ public class PlantListener implements Listener
 		World world = e.getBlock().getWorld();
 		if (!PwnPlantGrowth.isEnabledIn(world.getName())) return;
 
+		//TODO: structure grow has a from bonemeal event, can we find a way to get it for block grow?
+		
+		
 		// Get current block type and make a string for comparison later
 		String curBlock = String.valueOf(e.getBlock().getType());	
 		String downBlock = String.valueOf(e.getBlock().getRelative(BlockFace.DOWN).getType());
@@ -478,6 +481,11 @@ public class PlantListener implements Listener
 
 		// Get current block type and make a string for comparison later
 		String curBlock = String.valueOf(e.getSpecies());
+		
+		//TODO: check for bonemeal usage
+		if (e.isFromBonemeal()) {
+			// bonemeal triggered this event, what should we do with it?
+		}
 		
 		// Is anything set for this block in the config, if not, abort
 		if (!(plugin.getConfig().isSet(curBlock))) return;
