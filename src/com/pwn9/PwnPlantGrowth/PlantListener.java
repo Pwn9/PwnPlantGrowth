@@ -9,7 +9,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockGrowEvent;
-import org.bukkit.event.world.StructureGrowEvent;
 
 public class PlantListener implements Listener 
 {
@@ -32,7 +31,6 @@ public class PlantListener implements Listener
 		if (!PwnPlantGrowth.isEnabledIn(world.getName())) return;
 
 		//TODO: structure grow has a from bonemeal event, can we find a way to get it for block grow?
-		
 		
 		// Get current block type and make a string for comparison later
 		String curBlock = String.valueOf(e.getBlock().getType());	
@@ -468,185 +466,6 @@ public class PlantListener implements Listener
     	{	
     		PwnPlantGrowth.logToFile(toLog);
     	}	
-	}
-	
-	// Structure Growth eg: trees
-	@EventHandler(ignoreCancelled = true)
-	public void structureGrow(StructureGrowEvent e) 
-	{
-	
-		// Enabled in world?
-		World world = e.getLocation().getWorld();
-		if (!PwnPlantGrowth.isEnabledIn(world.getName())) return;
-
-		// Get current block type and make a string for comparison later
-		String curBlock = String.valueOf(e.getSpecies());
-		
-		//TODO: check for bonemeal usage
-		if (e.isFromBonemeal()) {
-			// bonemeal triggered this event, what should we do with it?
-		}
-		
-		// Is anything set for this block in the config, if not, abort
-		if (!(plugin.getConfig().isSet(curBlock))) return;
-		
-		// Get current biome and make a string for comparison later
-		String curBiome = PwnPlantGrowth.getBiome(e);
-		
-		// Get event coords
-		String coords = String.valueOf(e.getLocation());	
-
-		List<String> fBlocksFound = new ArrayList<String>();
-		List<String> wkBlocksFound = new ArrayList<String>();
-		List<String> uvBlocksFound = new ArrayList<String>();
-		
-		if (PwnPlantGrowth.fenabled) 
-		{
-			for (int x = -(PwnPlantGrowth.fradius); x <= PwnPlantGrowth.fradius; x++) 
-			{
-	            for (int y = -(PwnPlantGrowth.fradius); y <= PwnPlantGrowth.fradius; y++) 
-	            {
-	               for (int z = -(PwnPlantGrowth.fradius); z <= PwnPlantGrowth.fradius; z++) 
-	               {
-	            	   fBlocksFound.add(String.valueOf(e.getLocation().getBlock().getRelative(x, y, z).getType()));
-	               }
-	            }
-	        }
-		}		
-		
-		if (PwnPlantGrowth.wkenabled)
-		{
-			for (int xx = -(PwnPlantGrowth.wkradius); xx <= PwnPlantGrowth.wkradius; xx++) 
-			{
-	            for (int yy = -(PwnPlantGrowth.wkradius); yy <= PwnPlantGrowth.wkradius; yy++) 
-	            {
-	               for (int zz = -(PwnPlantGrowth.wkradius); zz <= PwnPlantGrowth.wkradius; zz++) 
-	               {
-	            	   wkBlocksFound.add(String.valueOf(e.getLocation().getBlock().getRelative(xx, yy, zz).getType()));
-	               }
-	            }
-	        }
-		}		
-		
-		// Check for uv blocks
-		if (PwnPlantGrowth.uvenabled)
-		{
-			for (int xx = -(PwnPlantGrowth.uvradius); xx <= PwnPlantGrowth.uvradius; xx++) 
-			{
-	            for (int yy = -(PwnPlantGrowth.uvradius); yy <= PwnPlantGrowth.uvradius; yy++) 
-	            {
-	               for (int zz = -(PwnPlantGrowth.uvradius); zz <= PwnPlantGrowth.uvradius; zz++) 
-	               {
-	            	   uvBlocksFound.add(String.valueOf(e.getLocation().getBlock().getRelative(xx, yy, zz).getType()));
-	               }
-	            }
-	        }
-		}		
-		
-		// Setup boolean to see if event is in defined natural light or not
-		Boolean isDark = false;
-		
-		// Get the current natural light level
-		int lightLevel = e.getLocation().getBlock().getLightFromSky();
-		
-		// If the light level is lower than configured threshold and the plant is NOT exempt from dark grow, set this transaction to isDark = true
-		if ((PwnPlantGrowth.naturalLight > lightLevel) && (!PwnPlantGrowth.canDarkGrow(e.getSpecies().toString())))
-		{
-			isDark = true;
-		}
-		
-		String toLog = coords + ": Growing: " +e.getSpecies();
-
-		if ((plugin.getConfig().getList(curBlock+".Biome").contains(String.valueOf(e.getLocation().getBlock().getBiome()))) || (plugin.getConfig().getList(curBlock+".Biome").isEmpty())) 
-		{	
-			
-			int curGrowth = plugin.getConfig().getInt(curBlock+".Growth");
-			int curDeath = plugin.getConfig().getInt(curBlock+".Death");
-			
-			if (plugin.getConfig().isSet(curBlock+"."+curBiome+".Growth")) 
-			{
-				curGrowth = plugin.getConfig().getInt(curBlock+"."+curBiome+".Growth");
-			}
-			
-			if (plugin.getConfig().isSet(curBlock+"."+curBiome+".Death")) {
-				curDeath = plugin.getConfig().getInt(curBlock+"."+curBiome+".Death");
-			}
-			
-			// if there is fertilizer, grow this plant at the fertilizer rate - default 100%
-			// TODO: should fertilizer override dark settings or not - i think not for now
-			if (fBlocksFound.contains(PwnPlantGrowth.fertilizer))
-			{
-				toLog += PwnPlantGrowth.fertFound;
-				// set the current growth to the fertilizer rate
-				curGrowth = PwnPlantGrowth.frate;
-			}
-			
-			// See if there are special settings for dark growth
-			if (isDark) 
-			{
-				// If uv is enabled and found, isDark remains false.
-				if (uvBlocksFound.contains(PwnPlantGrowth.uv))
-				{
-					toLog += PwnPlantGrowth.uvFound;
-				}
-				else 
-				{					
-					toLog += " In dark. ";
-					
-					// default isDark config rates (if exist)
-					if (plugin.getConfig().isSet(curBlock+".GrowthDark")) 
-					{
-						curGrowth = plugin.getConfig().getInt(curBlock+".GrowthDark");
-					}
-					
-					if (plugin.getConfig().isSet(curBlock+".DeathDark")) 
-					{
-						curDeath = plugin.getConfig().getInt(curBlock+".DeathDark");
-					}
-					
-					// per biome isDark rates (if exist)
-					if (plugin.getConfig().isSet(curBlock+"."+curBiome+".GrowthDark")) 
-					{
-						curGrowth = plugin.getConfig().getInt(curBlock+"."+curBiome+".GrowthDark");
-					}
-					
-					if (plugin.getConfig().isSet(curBlock+"."+curBiome+".DeathDark")) 
-					{
-						curDeath = plugin.getConfig().getInt(curBlock+"."+curBiome+".DeathDark");
-					}
-				}
-			}				
-			
-			if (!(PwnPlantGrowth.random(curGrowth)))
-			{
-				e.setCancelled(true);
-				toLog += " Failed (Rate: "+curGrowth+") ";
-				
-				if (wkBlocksFound.contains(PwnPlantGrowth.weedKiller))
-				{
-					toLog += PwnPlantGrowth.wkFound;
-				}
-				else 
-				{
-					if (PwnPlantGrowth.random(curDeath)) 
-					{
-						e.getLocation().getBlock().setType(Material.LONG_GRASS);
-						toLog += " Died (Rate: "+curDeath+")";
-					}
-				}
-			}											
-		}
-		else 
-		{
-			e.setCancelled(true);
-			toLog += " Failed: Bad Biome";				
-		}				
-
-		// log it
-		if (PwnPlantGrowth.logEnabled) 
-		{	
-			PwnPlantGrowth.logToFile(toLog);
-		}
 	}
 	
 }
