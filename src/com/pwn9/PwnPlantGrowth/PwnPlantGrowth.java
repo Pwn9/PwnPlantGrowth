@@ -120,7 +120,7 @@ public class PwnPlantGrowth extends JavaPlugin
 		PwnPlantGrowth.uvFound = " UV found, allowing false light growth.";
 		
 		// Load all possible plant types
-		String sArray[] = new String[] { "BEETROOT_BLOCK", "CACTUS", "CARROT", "COCOA", "CROPS", "MELON_BLOCK", "MELON_STEM", "NETHER_WARTS", "POTATO", "PUMPKIN_BLOCK", "PUMPKIN_STEM", "SUGAR_CANE_BLOCK", "ACACIA", "BIG_TREE", "BIRCH", "BROWN_MUSHROOM", "COCOA_TREE", "DARK_OAK", "JUNGLE", "JUNGLE_BUSH", "MEGA_REDWOOD", "RED_MUSHROOM", "REDWOOD", "SMALL_JUNGLE", "SWAMP", "TALL_BIRCH", "TALL_REDWOOD", "TREE" };
+		String sArray[] = new String[] { "BEETROOT_BLOCK", "CACTUS", "CARROT", "COCOA", "CROPS", "MELON_BLOCK", "MELON_STEM", "NETHER_WARTS", "POTATO", "PUMPKIN_BLOCK", "PUMPKIN_STEM", "SUGAR_CANE_BLOCK", "ACACIA", "BIG_TREE", "BIRCH", "BROWN_MUSHROOM", "COCOA_TREE", "DARK_OAK", "JUNGLE", "JUNGLE_BUSH", "MEGA_REDWOOD", "RED_MUSHROOM", "REDWOOD", "SMALL_JUNGLE", "SWAMP", "TALL_BIRCH", "TALL_REDWOOD", "TREE", "CHORUS_PLANT" };
 		PwnPlantGrowth.plantTypes = Arrays.asList(sArray);
 		
 		// Check for TerrainControl
@@ -151,11 +151,13 @@ public class PwnPlantGrowth extends JavaPlugin
 	
 	public void configCheck()
 	{
-		for (int i = 0; i < PwnPlantGrowth.plantTypes.size(); i++) {
-			//System.out.println(PwnPlantGrowth.plantTypes.get(i));
-			
-		    if (!(getConfig().contains(PwnPlantGrowth.plantTypes.get(i)))) {
-		        // The config does not contain this plant value
+		for (int i = 0; i < PwnPlantGrowth.plantTypes.size(); i++) 
+		{
+		    if (!(getConfig().contains(PwnPlantGrowth.plantTypes.get(i)))) 
+		    {
+		        // The config does not contain this plant value - send to console and log if logging is enabled
+		    	getLogger().warning("PwnPlantGrowth Configuration Error: " + PwnPlantGrowth.plantTypes.get(i) + " was not found in your config.yml and is required!");
+		    	
 		    	if (PwnPlantGrowth.logEnabled) 
 		    	{	
 		    		PwnPlantGrowth.logToFile("Configuration Error: " + PwnPlantGrowth.plantTypes.get(i) + " was not found in your config.yml and is required!");
@@ -181,7 +183,7 @@ public class PwnPlantGrowth extends JavaPlugin
 	
     public static void logToFile(String message) 
     {   
-	    	try 
+	    	try
 	    	{
 			    
 			    if(!dataFolder.exists()) 

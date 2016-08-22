@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Regular Crops
 
+BEETROOT_BLOCK:
 CACTUS:
 CARROT: 
 COCOA: 
@@ -35,12 +36,13 @@ PUMPKIN_STEM:
 SUGAR_CANE_BLOCK: 
 
 # TREES 
-# Full tree list available at http://jd.bukkit.org/dev/apidocs/org/bukkit/TreeType.html
+# Full tree list available at https://hub.spigotmc.org/javadocs/spigot/org/bukkit/TreeSpecies.html
 
 ACACIA: Acacia tree.
 BIG_TREE: Regular tree, extra tall with branches
 BIRCH: Birch tree
 BROWN_MUSHROOM: Big brown mushroom; tall and umbrella-like
+CHORUS_PLANT: This is a tree I think
 COCOA_TREE: Jungle tree with cocoa plants; 1 block wide
 DARK_OAK: Dark Oak tree.
 JUNGLE: Standard jungle tree; 4 blocks wide and tall
