@@ -51,6 +51,9 @@ uv: GLOWSTONE
 # Radius that UV affects
 uv_radius: 5
 
+# Allow plugin to capture bonemeal (only works for trees right now)
+limit_bonemeal: false
+
 # Run a debug log to view additional plugin data for troubleshooting and configuration, turn off in production!
 debug_log: false
 

@@ -32,13 +32,20 @@ public class TreeListener implements Listener
 		// Get current block type and make a string for comparison later
 		String curBlock = String.valueOf(e.getSpecies());
 		
-		//TODO: check for bonemeal usage
+		//TODO: check for bonemeal usage on structure growth and handle it
 		if (e.isFromBonemeal()) {
 			// bonemeal triggered this event, what should we do with it?
+			if (!(PwnPlantGrowth.limitBonemeal)) {
+				PwnPlantGrowth.logToFile("Bonemeal was used on " + curBlock);
+				return;
+			}
 		}
 		
 		// Is anything set for this block in the config, if not, abort
-		if (!(plugin.getConfig().isSet(curBlock))) return;
+		if (!(plugin.getConfig().isSet(curBlock))) {
+			PwnPlantGrowth.logToFile("No configuration set in config for: " + curBlock);
+			return;
+		}
 		
 		// Get current biome and make a string for comparison later
 		String curBiome = PwnPlantGrowth.getBiome(e);
@@ -66,13 +73,13 @@ public class TreeListener implements Listener
 		
 		if (PwnPlantGrowth.wkenabled)
 		{
-			for (int xx = -(PwnPlantGrowth.wkradius); xx <= PwnPlantGrowth.wkradius; xx++) 
+			for (int x = -(PwnPlantGrowth.wkradius); x <= PwnPlantGrowth.wkradius; x++) 
 			{
-	            for (int yy = -(PwnPlantGrowth.wkradius); yy <= PwnPlantGrowth.wkradius; yy++) 
+	            for (int y = -(PwnPlantGrowth.wkradius); y <= PwnPlantGrowth.wkradius; y++) 
 	            {
-	               for (int zz = -(PwnPlantGrowth.wkradius); zz <= PwnPlantGrowth.wkradius; zz++) 
+	               for (int z = -(PwnPlantGrowth.wkradius); z <= PwnPlantGrowth.wkradius; z++) 
 	               {
-	            	   wkBlocksFound.add(String.valueOf(e.getLocation().getBlock().getRelative(xx, yy, zz).getType()));
+	            	   wkBlocksFound.add(String.valueOf(e.getLocation().getBlock().getRelative(x, y, z).getType()));
 	               }
 	            }
 	        }
@@ -81,13 +88,13 @@ public class TreeListener implements Listener
 		// Check for uv blocks
 		if (PwnPlantGrowth.uvenabled)
 		{
-			for (int xx = -(PwnPlantGrowth.uvradius); xx <= PwnPlantGrowth.uvradius; xx++) 
+			for (int x = -(PwnPlantGrowth.uvradius); x <= PwnPlantGrowth.uvradius; x++) 
 			{
-	            for (int yy = -(PwnPlantGrowth.uvradius); yy <= PwnPlantGrowth.uvradius; yy++) 
+	            for (int y = -(PwnPlantGrowth.uvradius); y <= PwnPlantGrowth.uvradius; y++) 
 	            {
-	               for (int zz = -(PwnPlantGrowth.uvradius); zz <= PwnPlantGrowth.uvradius; zz++) 
+	               for (int z = -(PwnPlantGrowth.uvradius); z <= PwnPlantGrowth.uvradius; z++) 
 	               {
-	            	   uvBlocksFound.add(String.valueOf(e.getLocation().getBlock().getRelative(xx, yy, zz).getType()));
+	            	   uvBlocksFound.add(String.valueOf(e.getLocation().getBlock().getRelative(x, y, z).getType()));
 	               }
 	            }
 	        }

@@ -50,6 +50,9 @@ public class PwnPlantGrowth extends JavaPlugin
 	public static String uv;
 	public static Boolean uvenabled;	
 	
+	// Bonemeal setting
+	public static Boolean limitBonemeal;
+	
 	// Common messages
 	public static String fertFound;
 	public static String wkFound;
@@ -76,6 +79,7 @@ public class PwnPlantGrowth extends JavaPlugin
 		// Setup listeners
 		new PlantListener(this);
 		new TreeListener(this);
+		new PlayerListener(this);
 		
 		// Get data folder
 		PwnPlantGrowth.dataFolder = getDataFolder();
@@ -113,6 +117,9 @@ public class PwnPlantGrowth extends JavaPlugin
 		PwnPlantGrowth.uvradius = getConfig().getInt("uv_radius", 5);
 		PwnPlantGrowth.uv = getConfig().getString("uv", "GLOWSTONE");
 		PwnPlantGrowth.uvenabled = getConfig().getBoolean("uv_enabled", false);
+		
+		// Bonemeal setting
+		PwnPlantGrowth.uvenabled = getConfig().getBoolean("limit_bonemeal", false);
 		
 		// Messages
 		PwnPlantGrowth.fertFound = " Fertilizer found, growth rate 100%";

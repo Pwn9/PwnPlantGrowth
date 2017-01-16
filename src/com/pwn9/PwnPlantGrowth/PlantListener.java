@@ -30,14 +30,15 @@ public class PlantListener implements Listener
 		World world = e.getBlock().getWorld();
 		if (!PwnPlantGrowth.isEnabledIn(world.getName())) return;
 
-		//TODO: structure grow has a from bonemeal event, can we find a way to get it for block grow?
-		
 		// Get current block type and make a string for comparison later
 		String curBlock = String.valueOf(e.getBlock().getType());	
 		String downBlock = String.valueOf(e.getBlock().getRelative(BlockFace.DOWN).getType());
 		
 		// Is anything set for this block in the config, if not, abort - NO this breaks AIR
-		if (!(plugin.getConfig().isSet(curBlock)) && (curBlock != "AIR")) return;
+		if (!(plugin.getConfig().isSet(curBlock)) && (curBlock != "AIR")) {
+			PwnPlantGrowth.logToFile("No configuration set in config for: " + curBlock);
+			return;
+		}
 		
 		// Get current biome and make a string for comparison later
 		String curBiome = PwnPlantGrowth.getBiome(e);
