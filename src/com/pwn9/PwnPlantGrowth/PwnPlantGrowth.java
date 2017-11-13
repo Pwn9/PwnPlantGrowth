@@ -18,9 +18,12 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.khorn.terraincontrol.TerrainControl;
+import com.pwn9.PwnPlantGrowth.Config;
 
 public class PwnPlantGrowth extends JavaPlugin 
 {
+	// For convenience, a reference to the instance of this plugin
+	public static PwnPlantGrowth instance;
 	
 	// declare some stuffs to be used later
 	public ArrayList<Integer> softBlocks = new ArrayList<Integer>();
@@ -63,6 +66,9 @@ public class PwnPlantGrowth extends JavaPlugin
 	
 	public void onEnable() 
 	{
+		// Create an instance of this, for some reason, I forget why.
+		instance = this;
+		
 		this.saveDefaultConfig();
 		
 		// Start Metrics
@@ -84,42 +90,8 @@ public class PwnPlantGrowth extends JavaPlugin
 		// Get data folder
 		PwnPlantGrowth.dataFolder = getDataFolder();
 		
-		// Get enabled worlds
-		PwnPlantGrowth.enabledWorlds = getConfig().getStringList("enabled_worlds");
-		
-		// Get water source setting
-		PwnPlantGrowth.blockWaterBucket = getConfig().getBoolean("block_water_bucket", false);
-		
-		// Get water source setting
-		PwnPlantGrowth.blockWaterDispenser = getConfig().getBoolean("block_water_dispenser", false);
-		
-		// Get logfile setting
-		PwnPlantGrowth.logEnabled = getConfig().getBoolean("debug_log", false);
-		
-		// Get Natural Light setting
-		PwnPlantGrowth.naturalLight = getConfig().getInt("min_natural_light", 10);
-		
-		// Dark growth
-		PwnPlantGrowth.darkGrow = getConfig().getStringList("grow_in_dark");
-
-		// Weed Killer
-		PwnPlantGrowth.wkradius = getConfig().getInt("weed_killer_radius", 5);
-		PwnPlantGrowth.weedKiller = getConfig().getString("weed_killer", "GOLD_BLOCK");
-		PwnPlantGrowth.wkenabled = getConfig().getBoolean("weed_killer_enabled", false);
-
-		// Fertilizer
-		PwnPlantGrowth.fradius = getConfig().getInt("fertilizer_radius", 5);
-		PwnPlantGrowth.frate = getConfig().getInt("fertilizer_rate", 100);
-		PwnPlantGrowth.fertilizer = getConfig().getString("fertilizer", "SOUL_SAND");
-		PwnPlantGrowth.fenabled = getConfig().getBoolean("fertilizer_enabled", false);
-		
-		// UV
-		PwnPlantGrowth.uvradius = getConfig().getInt("uv_radius", 5);
-		PwnPlantGrowth.uv = getConfig().getString("uv", "GLOWSTONE");
-		PwnPlantGrowth.uvenabled = getConfig().getBoolean("uv_enabled", false);
-		
-		// Bonemeal setting
-		PwnPlantGrowth.uvenabled = getConfig().getBoolean("limit_bonemeal", false);
+		// Load Configurable Values
+		Config.LoadConfig();
 		
 		// Messages
 		PwnPlantGrowth.fertFound = " Fertilizer found, growth rate 100%";
@@ -155,7 +127,9 @@ public class PwnPlantGrowth extends JavaPlugin
     		PwnPlantGrowth.logToFile("PwnPlantGrowth Disabled");
     	}	
 	}
-	
+
+	/*** Utility Section - Stuff that does stuff ***/
+
 	public void configCheck()
 	{
 		for (int i = 0; i < PwnPlantGrowth.plantTypes.size(); i++) 

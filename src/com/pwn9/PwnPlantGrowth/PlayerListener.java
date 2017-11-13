@@ -10,15 +10,13 @@ import org.bukkit.inventory.ItemStack;
 
 public class PlayerListener implements Listener
 {
-	private final PwnPlantGrowth plugin;
-	
+
 	public PlayerListener(PwnPlantGrowth plugin) 
 	{
 	    plugin.getServer().getPluginManager().registerEvents(this, plugin);    
-	    this.plugin = plugin;
 	}	
 	
-	// Listen for plant growth
+	// Listen for bonemeal usage, this doesn't seem to do anything at the moment.
 	@EventHandler(ignoreCancelled = true)
 	public void bonemealUse(PlayerInteractEvent e) 
 	{
