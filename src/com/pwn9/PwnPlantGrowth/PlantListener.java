@@ -21,34 +21,120 @@ public class PlantListener implements Listener
 	    this.plugin = plugin;
 	}
 	
-	// Listen for plant growth
-	@EventHandler(ignoreCancelled = true)
-	public void plantGrow(BlockGrowEvent e) 
+	// called to run the calculations and determine what happens to the plant on the event
+	public String runCalcs(BlockGrowEvent e, String thisBlock, String curBiome, Boolean isDark) 
 	{
 		
-		// Enabled in world?
-		World world = e.getBlock().getWorld();
-		if (!PwnPlantGrowth.isEnabledIn(world.getName())) return;
-
-		// Get current block type and make a string for comparison later
-		String curBlock = String.valueOf(e.getBlock().getType());	
-		String downBlock = String.valueOf(e.getBlock().getRelative(BlockFace.DOWN).getType());
+		String toLog = "";
 		
-		// Is anything set for this block in the config, if not, abort - NO this breaks AIR
-		if (!(plugin.getConfig().isSet(curBlock)) && (curBlock != "AIR")) {
-			PwnPlantGrowth.logToFile("No configuration set in config for: " + curBlock);
-			return;
-		}
-		
-		// Get current biome and make a string for comparison later
-		String curBiome = PwnPlantGrowth.getBiome(e);
-				
-		// Get coords of the event for logging
-		String coords = String.valueOf(e.getBlock().getLocation());
+		if ((plugin.getConfig().getList(thisBlock+".Biome").contains(curBiome)) || 
+				(plugin.getConfig().getList(thisBlock+".Biome").isEmpty())) 
+		{	
+			// check the area to find if any of the special blocks are found
+			List<List<String>> specialBlocks = specialBlockList(e);
+			List<String> fBlocksFound = specialBlocks.get(0);
+			List<String> wkBlocksFound = specialBlocks.get(1);
+			List<String> uvBlocksFound = specialBlocks.get(2);
 			
+			int curGrowth = plugin.getConfig().getInt(thisBlock+".Growth");
+			int curDeath = plugin.getConfig().getInt(thisBlock+".Death");
+			
+			if (plugin.getConfig().isSet(thisBlock+"."+curBiome+".Growth")) 
+			{
+				curGrowth = plugin.getConfig().getInt(thisBlock+"."+curBiome+".Growth");
+			}
+			
+			if (plugin.getConfig().isSet(thisBlock+"."+curBiome+".Death")) 
+			{
+				curDeath = plugin.getConfig().getInt(thisBlock+"."+curBiome+".Death");
+			}
+			
+			// if there is fertilizer, grow this plant at the fertilizer rate - default 100%
+			// TODO: should fertilizer override dark settings or not - i think not for now
+			if (fBlocksFound.contains(PwnPlantGrowth.fertilizer))
+			{
+				toLog += PwnPlantGrowth.fertFound;
+				// set the current growth to the fertilizer rate
+				curGrowth = PwnPlantGrowth.frate;
+			}
+			
+			// See if there are special settings for dark growth
+			if (isDark) 
+			{
+				// If uv is enabled and found, isDark remains false.
+				if (uvBlocksFound.contains(PwnPlantGrowth.uv))
+				{
+					toLog += PwnPlantGrowth.uvFound;
+				}
+				else 
+				{							
+					toLog += " In dark. ";
+					
+					// default isDark config rates (if exist)
+					if (plugin.getConfig().isSet(thisBlock+".GrowthDark")) 
+					{
+						curGrowth = plugin.getConfig().getInt(thisBlock+".GrowthDark");
+					}
+					
+					if (plugin.getConfig().isSet(thisBlock+".DeathDark")) 
+					{
+						curDeath = plugin.getConfig().getInt(thisBlock+".DeathDark");
+					}
+					
+					// per biome isDark rates (if exist)
+					if (plugin.getConfig().isSet(thisBlock+"."+curBiome+".GrowthDark")) 
+					{
+						curGrowth = plugin.getConfig().getInt(thisBlock+"."+curBiome+".GrowthDark");
+					}
+					
+					if (plugin.getConfig().isSet(thisBlock+"."+curBiome+".DeathDark")) 
+					{
+						curDeath = plugin.getConfig().getInt(thisBlock+"."+curBiome+".DeathDark");
+					}
+				}
+			}						
+			if (!(PwnPlantGrowth.random(curGrowth))) 
+			{
+				e.setCancelled(true);
+				toLog += " Failed (Rate: "+curGrowth+") ";
+				
+				if (wkBlocksFound.contains(PwnPlantGrowth.weedKiller)) 
+				{
+					toLog += PwnPlantGrowth.wkFound;
+				}
+				else 
+				{
+					if (PwnPlantGrowth.random(curDeath)) 
+					{
+						// TODO: make these configurable
+						if (thisBlock == "COCOA") {
+							e.getBlock().setType(Material.VINE);
+						}
+						else {
+							e.getBlock().setType(Material.LONG_GRASS);
+						}
+						toLog += " Died (Rate: "+curDeath+")";
+					}
+				}
+			}									
+		}
+		else 
+		{
+			e.setCancelled(true);
+			toLog += " Failed: Bad Biome";				
+		}	
+		
+		return toLog;
+	}
+	
+	// retrieve list of special blocs
+	public List<List<String>> specialBlockList(BlockGrowEvent e)
+	{
 		List<String> fBlocksFound = new ArrayList<String>();
 		List<String> wkBlocksFound = new ArrayList<String>();
-		List<String> uvBlocksFound = new ArrayList<String>();
+		List<String> uvBlocksFound = new ArrayList<String>();;
+
+		List<List<String>> result = new ArrayList<List<String>>();
 		
 		// Check for fertilizer blocks
 		if (PwnPlantGrowth.fenabled) 
@@ -93,7 +179,39 @@ public class PlantListener implements Listener
 	               }
 	            }
 	        }
+		}		
+		
+		result.add(fBlocksFound);
+		result.add(wkBlocksFound);
+		result.add(uvBlocksFound);
+
+		return result;
+	}	
+	
+	// Listen for plant growth and then do stuff
+	@EventHandler(ignoreCancelled = true)
+	public void plantGrow(BlockGrowEvent e) 
+	{
+		
+		// Enabled in world?
+		World world = e.getBlock().getWorld();
+		if (!PwnPlantGrowth.isEnabledIn(world.getName())) return;
+
+		// Get current block type and make a string for comparison later
+		String curBlock = String.valueOf(e.getBlock().getType());	
+		String downBlock = String.valueOf(e.getBlock().getRelative(BlockFace.DOWN).getType());
+		
+		// Is anything set for this block in the config, if not, abort - NO this breaks AIR
+		if (!(plugin.getConfig().isSet(curBlock)) && (curBlock != "AIR")) {
+			PwnPlantGrowth.logToFile("No configuration set in config for: " + curBlock);
+			return;
 		}
+		
+		// Get current biome and make a string for comparison later
+		String curBiome = PwnPlantGrowth.getBiome(e);
+		
+		// Get coords of the event for logging
+		String coords = String.valueOf(e.getBlock().getLocation());
 				
 		// Setup boolean to see if event is in defined natural light or not
 		Boolean isDark = false;
@@ -127,103 +245,8 @@ public class PlantListener implements Listener
 		// Regular growth blocks that do not report initially as AIR - this is most of the normal crops
 		if (curBlock != "AIR")
 		{
-			if ((plugin.getConfig().getList(curBlock+".Biome").contains(curBiome)) || (plugin.getConfig().getList(curBlock+".Biome").isEmpty())) 
-			{
-				// get the configured growth and death rates, by hierarchy of importance
-				
-				// default config rates
-				int curGrowth = plugin.getConfig().getInt(curBlock+".Growth");
-				int curDeath = plugin.getConfig().getInt(curBlock+".Death");
-				
-				// per biome rates (if exist in config)
-				if (plugin.getConfig().isSet(curBlock+"."+curBiome+".Growth")) 
-				{
-					curGrowth = plugin.getConfig().getInt(curBlock+"."+curBiome+".Growth");
-				}
-				
-				if (plugin.getConfig().isSet(curBlock+"."+curBiome+".Death")) 
-				{
-					curDeath = plugin.getConfig().getInt(curBlock+"."+curBiome+".Death");
-				}				
-				
-				// if there is fertilizer, grow this plant at the fertilizer rate - default 100%
-				// TODO: should fertilizer override dark settings or not - i think not for now
-				if (fBlocksFound.contains(PwnPlantGrowth.fertilizer))
-				{
-					toLog += PwnPlantGrowth.fertFound;
-					// set the current growth to the fertilizer rate
-					curGrowth = PwnPlantGrowth.frate;
-				}
-								
-				// See if there are special settings for dark growth
-				if (isDark) 
-				{		
-					// If uv is enabled and found, isDark remains false.
-					if (uvBlocksFound.contains(PwnPlantGrowth.uv))
-					{
-						toLog += PwnPlantGrowth.uvFound;
-					}
-					else 
-					{
-						toLog += " In dark. ";
-						
-						// default isDark config rates (if exist)
-						if (plugin.getConfig().isSet(curBlock+".GrowthDark")) 
-						{
-							curGrowth = plugin.getConfig().getInt(curBlock+".GrowthDark");
-						}
-						
-						if (plugin.getConfig().isSet(curBlock+".DeathDark")) 
-						{
-							curDeath = plugin.getConfig().getInt(curBlock+".DeathDark");
-						}
-						
-						// per biome isDark rates (if exist)
-						if (plugin.getConfig().isSet(curBlock+"."+curBiome+".GrowthDark")) 
-						{
-							curGrowth = plugin.getConfig().getInt(curBlock+"."+curBiome+".GrowthDark");
-						}
-						
-						if (plugin.getConfig().isSet(curBlock+"."+curBiome+".DeathDark")) 
-						{
-							curDeath = plugin.getConfig().getInt(curBlock+"."+curBiome+".DeathDark");
-						}
-					}
-				}
-							
-				// do some math based on curGrowth settings from above with our randomizer to determine if this plant should grow right now
-				if (!(PwnPlantGrowth.random(curGrowth))) 
-				{
-					e.setCancelled(true);
-					toLog += " Failed (Rate: "+curGrowth+") ";
-					
-					// If weedkiller is enabled and found, don't let plant die.
-					if (wkBlocksFound.contains(PwnPlantGrowth.weedKiller))
-					{
-						toLog += PwnPlantGrowth.wkFound;
-					}
-					// Else get the death chance for plant.
-					else 
-					{
-						if (PwnPlantGrowth.random(curDeath)) 
-						{
-							if (curBlock == "COCOA") {
-								e.getBlock().setType(Material.VINE);
-							}
-							else {
-								e.getBlock().setType(Material.LONG_GRASS);
-							}
-							toLog += " Died (Rate: "+curDeath+")";
-						}
-					}
-				}	
-
-			}
-			else 
-			{
-				e.setCancelled(true);
-				toLog += " Failed: Bad Biome";				
-			}				
+			// run calcs
+			toLog += runCalcs(e, curBlock, curBiome, isDark);
 		}		
 					
 		// AIR BLOCKS - when event returns AIR as the block type, it must be one of the following
@@ -236,94 +259,9 @@ public class PlantListener implements Listener
 	
 				toLog += downBlock;
 				
-				if ((plugin.getConfig().getList(downBlock+".Biome").contains(curBiome)) || (plugin.getConfig().getList(downBlock+".Biome").isEmpty())) 
-				{
-					
-					// get the configured growth and death rates, by hierarchy of importance
-						
-					// default config rates
-					int curGrowth = plugin.getConfig().getInt(downBlock+".Growth");
-					int curDeath = plugin.getConfig().getInt(downBlock+".Death");
-					
-					// per biome rates (if exist)
-					if (plugin.getConfig().isSet(downBlock+"."+curBiome+".Growth")) 
-					{
-						curGrowth = plugin.getConfig().getInt(downBlock+"."+curBiome+".Growth");
-					}
-					
-					if (plugin.getConfig().isSet(downBlock+"."+curBiome+".Death")) 
-					{
-						curDeath = plugin.getConfig().getInt(downBlock+"."+curBiome+".Death");
-					}
-					
-					// if there is fertilizer, grow this plant at the fertilizer rate - default 100%
-					// TODO: should fertilizer override dark settings or not - i think not for now
-					if (fBlocksFound.contains(PwnPlantGrowth.fertilizer))
-					{
-						toLog += PwnPlantGrowth.fertFound;
-						// set the current growth to the fertilizer rate
-						curGrowth = PwnPlantGrowth.frate;
-					}					
-					
-					// See if there are special settings for dark growth
-					if (isDark) 
-					{
-						// If uv is enabled and found, isDark remains false.
-						if (uvBlocksFound.contains(PwnPlantGrowth.uv))
-						{
-							toLog += PwnPlantGrowth.uvFound;
-						}
-						else 
-						{							
-							toLog += " In dark. ";
-							
-							// default isDark config rates (if exist)
-							if (plugin.getConfig().isSet(downBlock+".GrowthDark")) 
-							{
-								curGrowth = plugin.getConfig().getInt(downBlock+".GrowthDark");
-							}
-							
-							if (plugin.getConfig().isSet(downBlock+".DeathDark")) 
-							{
-								curDeath = plugin.getConfig().getInt(downBlock+".DeathDark");
-							}
-							
-							// per biome isDark rates (if exist)
-							if (plugin.getConfig().isSet(downBlock+"."+curBiome+".GrowthDark")) 
-							{
-								curGrowth = plugin.getConfig().getInt(downBlock+"."+curBiome+".GrowthDark");
-							}
-							
-							if (plugin.getConfig().isSet(downBlock+"."+curBiome+".DeathDark")) 
-							{
-								curDeath = plugin.getConfig().getInt(downBlock+"."+curBiome+".DeathDark");
-							}
-						}
-					}
-					
-					if (!(PwnPlantGrowth.random(curGrowth))) 
-					{
-						e.setCancelled(true);
-						toLog += " Failed (Rate: "+curGrowth+") ";
-						if (wkBlocksFound.contains(PwnPlantGrowth.weedKiller))
-						{
-							toLog += PwnPlantGrowth.wkFound;
-						}
-						else 
-						{
-							if (PwnPlantGrowth.random(curDeath)) 
-							{
-								e.getBlock().getRelative(BlockFace.DOWN).setType(Material.LONG_GRASS);
-								toLog += " Died (Rate: "+curDeath+")";
-							}
-						}
-					}						
-				}
-				else 
-				{
-					e.setCancelled(true);
-					toLog += " Failed: Bad Biome";				
-				}					
+				// run calcs
+				toLog += runCalcs(e, downBlock, curBiome, isDark);
+				
 			}
 			
 			// This is probably the regular growing grass, let's just leave this alone for now
@@ -333,6 +271,8 @@ public class PlantListener implements Listener
 				toLog += " Grass grew";	
 				
 				// in the future we could add this to the config, initial test show it causes strange things though.
+				
+				// no run calcs for now
 			}
 			
 			// Specially Handle Melon/Pumpkin Blocks
@@ -370,91 +310,10 @@ public class PlantListener implements Listener
 				}
 				
 				toLog += thisBlock;	
+				
+				// run calcs
+				toLog += runCalcs(e, thisBlock, curBiome, isDark);
 		
-				if ((plugin.getConfig().getList(thisBlock+".Biome").contains(String.valueOf(e.getBlock().getBiome()))) || (plugin.getConfig().getList(thisBlock+".Biome").isEmpty())) 
-				{	
-					
-					int curGrowth = plugin.getConfig().getInt(thisBlock+".Growth");
-					int curDeath = plugin.getConfig().getInt(thisBlock+".Death");
-					
-					if (plugin.getConfig().isSet(thisBlock+"."+curBiome+".Growth")) 
-					{
-						curGrowth = plugin.getConfig().getInt(thisBlock+"."+curBiome+".Growth");
-					}
-					
-					if (plugin.getConfig().isSet(thisBlock+"."+curBiome+".Death")) 
-					{
-						curDeath = plugin.getConfig().getInt(thisBlock+"."+curBiome+".Death");
-					}
-					
-					// if there is fertilizer, grow this plant at the fertilizer rate - default 100%
-					// TODO: should fertilizer override dark settings or not - i think not for now
-					if (fBlocksFound.contains(PwnPlantGrowth.fertilizer))
-					{
-						toLog += PwnPlantGrowth.fertFound;
-						// set the current growth to the fertilizer rate
-						curGrowth = PwnPlantGrowth.frate;
-					}
-					
-					// See if there are special settings for dark growth
-					if (isDark) 
-					{
-						// If uv is enabled and found, isDark remains false.
-						if (uvBlocksFound.contains(PwnPlantGrowth.uv))
-						{
-							toLog += PwnPlantGrowth.uvFound;
-						}
-						else 
-						{							
-							toLog += " In dark. ";
-							
-							// default isDark config rates (if exist)
-							if (plugin.getConfig().isSet(thisBlock+".GrowthDark")) 
-							{
-								curGrowth = plugin.getConfig().getInt(thisBlock+".GrowthDark");
-							}
-							
-							if (plugin.getConfig().isSet(thisBlock+".DeathDark")) 
-							{
-								curDeath = plugin.getConfig().getInt(thisBlock+".DeathDark");
-							}
-							
-							// per biome isDark rates (if exist)
-							if (plugin.getConfig().isSet(thisBlock+"."+curBiome+".GrowthDark")) 
-							{
-								curGrowth = plugin.getConfig().getInt(thisBlock+"."+curBiome+".GrowthDark");
-							}
-							
-							if (plugin.getConfig().isSet(thisBlock+"."+curBiome+".DeathDark")) 
-							{
-								curDeath = plugin.getConfig().getInt(thisBlock+"."+curBiome+".DeathDark");
-							}
-						}
-					}						
-					if (!(PwnPlantGrowth.random(curGrowth))) 
-					{
-						e.setCancelled(true);
-						toLog += " Failed (Rate: "+curGrowth+") ";
-						
-						if (wkBlocksFound.contains(PwnPlantGrowth.weedKiller)) 
-						{
-							toLog += PwnPlantGrowth.wkFound;
-						}
-						else 
-						{
-							if (PwnPlantGrowth.random(curDeath)) 
-							{
-								e.getBlock().setType(Material.LONG_GRASS);
-								toLog += " Died (Rate: "+curDeath+")";
-							}
-						}
-					}									
-				}
-				else 
-				{
-					e.setCancelled(true);
-					toLog += " Failed: Bad Biome";				
-				}					
 			}
 		}
 		else 

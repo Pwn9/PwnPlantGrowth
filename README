@@ -17,7 +17,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 === For reference - Plant Item List for Bukkit API ===
 
 # Regular Crops
@@ -55,3 +54,7 @@ SWAMP: Swamp tree (regular with vines on the side)
 TALL_BIRCH: Tall birch tree
 TALL_REDWOOD: Tall redwood tree with just a few leaves at the top
 TREE: Regular tree, no branches
+
+# BIOMES
+
+https://hub.spigotmc.org/javadocs/spigot/org/bukkit/block/Biome.html
