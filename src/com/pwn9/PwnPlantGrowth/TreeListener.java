@@ -20,42 +20,14 @@ public class TreeListener implements Listener
 	    this.plugin = plugin;
 	}
 	
-	// Structure Growth eg: trees
-	@EventHandler(ignoreCancelled = true)
-	public void structureGrow(StructureGrowEvent e) 
+	// retrieve list of special blocks
+	public List<List<String>> specialBlockList(StructureGrowEvent e)
 	{
-	
-		// Enabled in world?
-		World world = e.getLocation().getWorld();
-		if (!PwnPlantGrowth.isEnabledIn(world.getName())) return;
-
-		// Get current block type and make a string for comparison later
-		String curBlock = String.valueOf(e.getSpecies());
-		
-		//TODO: check for bonemeal usage on structure growth and handle it
-		if (e.isFromBonemeal()) {
-			// bonemeal triggered this event, what should we do with it?
-			if (!(PwnPlantGrowth.limitBonemeal)) {
-				PwnPlantGrowth.logToFile("Bonemeal was used on " + curBlock);
-				return;
-			}
-		}
-		
-		// Is anything set for this block in the config, if not, abort
-		if (!(plugin.getConfig().isSet(curBlock))) {
-			PwnPlantGrowth.logToFile("No configuration set in config for: " + curBlock);
-			return;
-		}
-		
-		// Get current biome and make a string for comparison later
-		String curBiome = PwnPlantGrowth.getBiome(e);
-		
-		// Get event coords
-		String coords = String.valueOf(e.getLocation());	
-
 		List<String> fBlocksFound = new ArrayList<String>();
 		List<String> wkBlocksFound = new ArrayList<String>();
-		List<String> uvBlocksFound = new ArrayList<String>();
+		List<String> uvBlocksFound = new ArrayList<String>();;
+
+		List<List<String>> result = new ArrayList<List<String>>();
 		
 		if (PwnPlantGrowth.fenabled) 
 		{
@@ -98,7 +70,53 @@ public class TreeListener implements Listener
 	               }
 	            }
 	        }
-		}		
+		}	
+		
+		result.add(fBlocksFound);
+		result.add(wkBlocksFound);
+		result.add(uvBlocksFound);
+
+		return result;
+	}	
+	
+	// Structure Growth eg: trees
+	@EventHandler(ignoreCancelled = true)
+	public void structureGrow(StructureGrowEvent e) 
+	{
+	
+		// Enabled in world?
+		World world = e.getLocation().getWorld();
+		if (!PwnPlantGrowth.isEnabledIn(world.getName())) return;
+
+		// Get current block type and make a string for comparison later
+		String curBlock = String.valueOf(e.getSpecies());
+		
+		//TODO: check for bonemeal usage on structure growth and handle it
+		if (e.isFromBonemeal()) {
+			// bonemeal triggered this event, what should we do with it?
+			if (!(PwnPlantGrowth.limitBonemeal)) {
+				PwnPlantGrowth.logToFile("Bonemeal was used on " + curBlock);
+				return;
+			}
+		}
+		
+		// Is anything set for this block in the config, if not, abort
+		if (!(plugin.getConfig().isSet(curBlock))) {
+			PwnPlantGrowth.logToFile("No configuration set in config for: " + curBlock);
+			return;
+		}
+		
+		// Get current biome and make a string for comparison later
+		String curBiome = PwnPlantGrowth.getBiome(e);
+		
+		// Get event coords
+		String coords = String.valueOf(e.getLocation());	
+
+		// check the area to find if any of the special blocks are found
+		List<List<String>> specialBlocks = specialBlockList(e);
+		List<String> fBlocksFound = specialBlocks.get(0);
+		List<String> wkBlocksFound = specialBlocks.get(1);
+		List<String> uvBlocksFound = specialBlocks.get(2);
 		
 		// Setup boolean to see if event is in defined natural light or not
 		Boolean isDark = false;
@@ -114,7 +132,7 @@ public class TreeListener implements Listener
 		
 		String toLog = coords + ": Growing: " +e.getSpecies();
 
-		if ((plugin.getConfig().getList(curBlock+".Biome").contains(String.valueOf(e.getLocation().getBlock().getBiome()))) || (plugin.getConfig().getList(curBlock+".Biome").isEmpty())) 
+		if ((plugin.getConfig().getList(curBlock+".Biome").contains(curBiome)) || (plugin.getConfig().getList(curBlock+".Biome").isEmpty())) 
 		{	
 			
 			int curGrowth = plugin.getConfig().getInt(curBlock+".Growth");

@@ -127,7 +127,7 @@ public class PlantListener implements Listener
 		return toLog;
 	}
 	
-	// retrieve list of special blocs
+	// retrieve list of special blocks
 	public List<List<String>> specialBlockList(BlockGrowEvent e)
 	{
 		List<String> fBlocksFound = new ArrayList<String>();
