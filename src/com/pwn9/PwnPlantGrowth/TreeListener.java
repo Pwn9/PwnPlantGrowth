@@ -135,9 +135,31 @@ public class TreeListener implements Listener
 		if ((plugin.getConfig().getList(curBlock+".Biome").contains(curBiome)) || (plugin.getConfig().getList(curBlock+".Biome").isEmpty())) 
 		{	
 			
+			// get this block's default values
 			int curGrowth = plugin.getConfig().getInt(curBlock+".Growth");
 			int curDeath = plugin.getConfig().getInt(curBlock+".Death");
 			
+			
+			//TODO: this will be useful if I can figure out a nice way to do it
+			
+			// override default values with biome group values
+			if (plugin.getConfig().isSet(curBlock+".BiomeGroup")) {
+				
+				// see if this BiomeGroup has a biomegroups list attached
+				if (plugin.getConfig().isSet("BiomeGroup.")) {
+					
+				}
+				
+				// check the list reference to config.biomegroups.thisname to see if it contains curBiome
+				
+				
+				// get the values.
+			}
+			
+			
+			
+			
+			// override default and group values with per biome settings
 			if (plugin.getConfig().isSet(curBlock+"."+curBiome+".Growth")) 
 			{
 				curGrowth = plugin.getConfig().getInt(curBlock+"."+curBiome+".Growth");
@@ -147,6 +169,7 @@ public class TreeListener implements Listener
 				curDeath = plugin.getConfig().getInt(curBlock+"."+curBiome+".Death");
 			}
 			
+			
 			// if there is fertilizer, grow this plant at the fertilizer rate - default 100%
 			// TODO: should fertilizer override dark settings or not - i think not for now
 			if (fBlocksFound.contains(PwnPlantGrowth.fertilizer))
@@ -155,6 +178,7 @@ public class TreeListener implements Listener
 				// set the current growth to the fertilizer rate
 				curGrowth = PwnPlantGrowth.frate;
 			}
+			
 			
 			// See if there are special settings for dark growth
 			if (isDark) 

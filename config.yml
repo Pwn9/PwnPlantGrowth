@@ -57,6 +57,12 @@ limit_bonemeal: false
 # Run a debug log to view additional plugin data for troubleshooting and configuration, turn off in production!
 debug_log: false
 
+# BIOME GROUPS - A way to clean up the config by declaring a cluster of biomes
+BiomeGroups:
+    Grasslands:
+    - PLAINS
+    - SAVANNA
+
 # CROPS - Important note, as of PPG 1.6 the plant names are now all in UPPER CASE matching the actual Bukkit Material.TYPE 
 
 # In this example beetroot only grows in plains, savanna, forest and taiga 
@@ -65,22 +71,17 @@ BEETROOT_BLOCK:
     Growth: 50
     GrowthDark: 25
     Death: 5
-    DeathDark: 25    
-    Biome: 
-    - PLAINS
-    - SAVANNA
-    - FOREST
-    - TAIGA
-    PLAINS: 
+    DeathDark: 25 
+    BiomeGroup:
+    - Grasslands   
+    Grasslands:
       Growth: 100
       GrowthDark: 75
       Death: 0 
-      DeathDark: 5    
-    SAVANNA: 
-      Growth: 90
-      GrowthDark: 75
-      Death: 0 
-      DeathDark: 5
+      DeathDark: 5     
+    Biome: 
+    - FOREST
+    - TAIGA
     FOREST: 
       Growth: 80
       GrowthDark: 75
