@@ -139,10 +139,7 @@ public class TreeListener implements Listener
 			int curGrowth = plugin.getConfig().getInt(curBlock+".Growth");
 			int curDeath = plugin.getConfig().getInt(curBlock+".Death");
 			
-			//TODO: this will be useful if I can figure out a nice way to do it
-			
 			// override default values with biome group values - Might be able to modularize this, its
-			// going to be re-used all over.
 			if (plugin.getConfig().isSet(curBlock+".BiomeGroup")) {
 				
 				// create list from the config setting
@@ -152,7 +149,8 @@ public class TreeListener implements Listener
 				for (int i = 0; i < groupList.size(); i++) {
 					
 					// check the biomegroup for this named group
-					if (plugin.getConfig().getList("BiomeGroup."+groupList.get(i)).contains(curBiome)) {
+					if (plugin.getConfig().getList("BiomeGroup."+groupList.get(i)).contains(curBiome)) 
+					{
 						
 						// reference the configs now to see if the config settings are set!
 						if (plugin.getConfig().isSet(curBlock+"."+groupList.get(i)+".Growth")) 
@@ -160,7 +158,8 @@ public class TreeListener implements Listener
 							curGrowth = plugin.getConfig().getInt(curBlock+"."+groupList.get(i)+".Growth");
 						}
 						
-						if (plugin.getConfig().isSet(curBlock+"."+groupList.get(i)+".Death")) {
+						if (plugin.getConfig().isSet(curBlock+"."+groupList.get(i)+".Death")) 
+						{
 							curDeath = plugin.getConfig().getInt(curBlock+"."+groupList.get(i)+".Death");
 						}						
 					}
@@ -214,7 +213,8 @@ public class TreeListener implements Listener
 					
 					
 					// override default values with biome group values
-					if (plugin.getConfig().isSet(curBlock+".BiomeGroup")) {
+					if (plugin.getConfig().isSet(curBlock+".BiomeGroup")) 
+					{
 						
 						// create list from the config setting
 						List<?> groupList = plugin.getConfig().getList(curBlock+".BiomeGroup");
@@ -223,7 +223,8 @@ public class TreeListener implements Listener
 						for (int i = 0; i < groupList.size(); i++) {
 							
 							// check the biomegroup for this named group
-							if (plugin.getConfig().getList("BiomeGroup."+groupList.get(i)).contains(curBiome)) {
+							if (plugin.getConfig().getList("BiomeGroup."+groupList.get(i)).contains(curBiome)) 
+							{
 								
 								// reference the configs now to see if the config settings are set!
 								if (plugin.getConfig().isSet(curBlock+"."+groupList.get(i)+".GrowthDark")) 
@@ -231,7 +232,8 @@ public class TreeListener implements Listener
 									curGrowth = plugin.getConfig().getInt(curBlock+"."+groupList.get(i)+".GrowthDark");
 								}
 								
-								if (plugin.getConfig().isSet(curBlock+"."+groupList.get(i)+".DeathDark")) {
+								if (plugin.getConfig().isSet(curBlock+"."+groupList.get(i)+".DeathDark")) 
+								{
 									curDeath = plugin.getConfig().getInt(curBlock+"."+groupList.get(i)+".DeathDark");
 								}						
 							}
