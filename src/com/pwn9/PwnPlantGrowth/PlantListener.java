@@ -28,7 +28,8 @@ public class PlantListener implements Listener
 		String toLog = "";
 		
 		if ((plugin.getConfig().getList(thisBlock+".Biome").contains(curBiome)) || 
-				(plugin.getConfig().getList(thisBlock+".Biome").isEmpty())) 
+				(plugin.getConfig().getList(thisBlock+".Biome").isEmpty()) || 
+				!(plugin.getConfig().getList(thisBlock+".BiomeGroup").isEmpty())) 
 		{	
 			// check the area to find if any of the special blocks are found
 			List<List<String>> specialBlocks = specialBlockList(e);
@@ -54,6 +55,8 @@ public class PlantListener implements Listener
 					if (plugin.getConfig().getList("BiomeGroup."+groupList.get(i)).contains(curBiome)) 
 					{
 						
+						toLog += "Matching BiomeGroup."+groupList.get(i);
+
 						// reference the configs now to see if the config settings are set!
 						if (plugin.getConfig().isSet(thisBlock+"."+groupList.get(i)+".Growth")) 
 						{
@@ -125,6 +128,8 @@ public class PlantListener implements Listener
 							// check the biomegroup for this named group
 							if (plugin.getConfig().getList("BiomeGroup."+groupList.get(i)).contains(curBiome)) 
 							{
+								
+								toLog += "Matching BiomeGroup."+groupList.get(i);
 								
 								// reference the configs now to see if the config settings are set!
 								if (plugin.getConfig().isSet(thisBlock+"."+groupList.get(i)+".GrowthDark")) 

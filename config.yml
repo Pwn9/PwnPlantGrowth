@@ -57,39 +57,73 @@ limit_bonemeal: false
 # Run a debug log to view additional plugin data for troubleshooting and configuration, turn off in production!
 debug_log: false
 
-# BIOME GROUPS - A way to clean up the config by declaring a cluster of biomes
+# BIOME GROUPS - You can MAKE YOUR OWN versions of these, this is just a sample set of groups
 BiomeGroups:
-    Grasslands:
+    GreatGrowing:
+    - BEACHES
+    - BIRCH_FOREST
+    - FOREST
+    - JUNGLE
+    - JUNGLE_EDGE
+    - MUSHROOM_ISLAND
+    - MUSHROOM_ISLAND_SHORE
     - PLAINS
+    - RIVER
     - SAVANNA
+    - SWAMPLAND
+    GoodGrowing: 
+    - BIRCH_FOREST_HILLS
+    - FOREST_HILLS
+    - JUNGLE_HILLS
+    - MESA
+    - ROOFED_FOREST
+    - TAIGA
+    - REDWOOD_TAIGA
+    - REDWOOD_TAIGA_HILLS
+    - TAIGA_HILLS
+    BadGrowing:
+    - COLD_BEACH
+    - DESERT
+    - DESERT_HILLS
+    - EXTREME_HILLS
+    - EXTREME_HILLS_WITH_TREES
+    - FROZEN_RIVER
+    - ICE_FLATS
+    - ICE_MOUNTAINS
+    - MESA_CLEAR_ROCK
+    - MESA_ROCK
+    - SAVANNA_ROCK
+    - STONE_BEACH
+    - TAIGA_COLD
+    - TAIGA_COLD_HILLS
+    NoGrowing:
+    - VOID
+    - SKY
+    - HELL
 
 # CROPS - Important note, as of PPG 1.6 the plant names are now all in UPPER CASE matching the actual Bukkit Material.TYPE 
 
-# In this example beetroot only grows in plains, savanna, forest and taiga 
-# and also at various growth rates with reduced rates at night and chances of death
+# In this example beetroot only grows in GoodGrowing and GreatGrowing biomes, setting biome NONE should block all others
 BEETROOT_BLOCK: 
     Growth: 50
     GrowthDark: 25
     Death: 5
     DeathDark: 25 
     BiomeGroup:
-    - Grasslands   
-    Grasslands:
+    - GreatGrowing
+    - GoodGrowing 
+    GreatGrowing:
       Growth: 100
       GrowthDark: 75
       Death: 0 
       DeathDark: 5     
-    Biome: 
-    - FOREST
-    - TAIGA
-    FOREST: 
+    GoodGrowing:
       Growth: 80
-      GrowthDark: 75
-      Death: 0 
-      DeathDark: 5
-    TAIGA:
-      Growth: 25
-      Death: 50
+      GrowthDark: 55
+      Death: 5 
+      DeathDark: 10  
+    Biome:
+    - NONE 
 
 # In this example cactus is restricted to specific biomes
 CACTUS:
@@ -102,36 +136,27 @@ CACTUS:
     - DESERT_HILLS
     - SAVANNA
 
-# Carrot example is setup like beetroot but also grows in desert
+# Carrot example is setup like beetroot but also grows in desert by setting Biome: - DESERT value
 CARROT: 
     Growth: 50
     GrowthDark: 25
     Death: 5
     DeathDark: 25    
-    Biome: 
-    - PLAINS
-    - SAVANNA
-    - FOREST
-    - TAIGA
-    - DESERT
-    PLAINS: 
+    BiomeGroup:
+    - GreatGrowing
+    - GoodGrowing 
+    GreatGrowing:
       Growth: 100
       GrowthDark: 75
       Death: 0 
-      DeathDark: 5    
-    SAVANNA: 
-      Growth: 90
-      GrowthDark: 75
-      Death: 0 
-      DeathDark: 5
-    FOREST: 
+      DeathDark: 5     
+    GoodGrowing:
       Growth: 80
-      GrowthDark: 75
-      Death: 0 
-      DeathDark: 5
-    TAIGA:
-      Growth: 25
-      Death: 50
+      GrowthDark: 55
+      Death: 5 
+      DeathDark: 10      
+    Biome: 
+    - DESERT
     DESERT:
       Growth: 25
       Death: 50
@@ -161,11 +186,27 @@ NETHER_WARTS:
     Growth: 25
     Death: 5
     Biome: 
-    - HELL    
-
+    - HELL
+        
+# Potato will grow in great and good areas, all others at its default rate with Biome: []
 POTATO:
     Growth: 50
+    GrowthDark: 25
     Death: 5
+    DeathDark: 25 
+    BiomeGroup:
+    - GreatGrowing
+    - GoodGrowing 
+    GreatGrowing:
+      Growth: 100
+      GrowthDark: 75
+      Death: 0 
+      DeathDark: 5     
+    GoodGrowing:
+      Growth: 80
+      GrowthDark: 55
+      Death: 5 
+      DeathDark: 10
     Biome: []
 
 PUMPKIN_BLOCK:
@@ -188,14 +229,26 @@ SUGAR_CANE_BLOCK:
     - RIVER
     - SWAMPLAND  
     
-# This is WHEAT - In this example wheat will grow everywhere at 50% rate, except plains it will grow at %100
+# This is WHEAT - In this example wheat will grow everywhere at 50% rate, and at better rates in great and good growing groups
 CROPS:
     Growth: 50
+    GrowthDark: 25
     Death: 5
-    Biome: []
-    PLAINS: 
+    DeathDark: 25 
+    BiomeGroup:
+    - GreatGrowing
+    - GoodGrowing 
+    GreatGrowing:
       Growth: 100
+      GrowthDark: 75
       Death: 0 
+      DeathDark: 5     
+    GoodGrowing:
+      Growth: 80
+      GrowthDark: 55
+      Death: 5 
+      DeathDark: 10
+    Biome: []
       
 # TREES 
 # Full tree list available at https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/TreeType.html

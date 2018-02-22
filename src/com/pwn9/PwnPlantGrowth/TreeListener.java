@@ -132,7 +132,9 @@ public class TreeListener implements Listener
 		
 		String toLog = coords + ": Growing: " +e.getSpecies();
 
-		if ((plugin.getConfig().getList(curBlock+".Biome").contains(curBiome)) || (plugin.getConfig().getList(curBlock+".Biome").isEmpty())) 
+		if ((plugin.getConfig().getList(curBlock+".Biome").contains(curBiome)) || 
+				(plugin.getConfig().getList(curBlock+".Biome").isEmpty()) || 
+				!(plugin.getConfig().getList(curBlock+".BiomeGroup").isEmpty())) 
 		{	
 			
 			// get this block's default values
@@ -151,6 +153,7 @@ public class TreeListener implements Listener
 					// check the biomegroup for this named group
 					if (plugin.getConfig().getList("BiomeGroup."+groupList.get(i)).contains(curBiome)) 
 					{
+						toLog += "Matching BiomeGroup."+groupList.get(i);
 						
 						// reference the configs now to see if the config settings are set!
 						if (plugin.getConfig().isSet(curBlock+"."+groupList.get(i)+".Growth")) 
@@ -225,6 +228,8 @@ public class TreeListener implements Listener
 							// check the biomegroup for this named group
 							if (plugin.getConfig().getList("BiomeGroup."+groupList.get(i)).contains(curBiome)) 
 							{
+								
+								toLog += "Matching BiomeGroup."+groupList.get(i);
 								
 								// reference the configs now to see if the config settings are set!
 								if (plugin.getConfig().isSet(curBlock+"."+groupList.get(i)+".GrowthDark")) 
