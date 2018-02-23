@@ -132,12 +132,44 @@ public class TreeListener implements Listener
 		
 		String toLog = coords + ": Growing: " +e.getSpecies();
 
-		if ((plugin.getConfig().getList(curBlock+".Biome").contains(curBiome)) || (plugin.getConfig().getList(curBlock+".Biome").isEmpty())) 
+		if ((plugin.getConfig().getList(curBlock+".Biome").contains(curBiome)) || 
+				(plugin.getConfig().getList(curBlock+".Biome").isEmpty()) || 
+				!(plugin.getConfig().getList(curBlock+".BiomeGroup").isEmpty())) 
 		{	
 			
+			// get this block's default values
 			int curGrowth = plugin.getConfig().getInt(curBlock+".Growth");
 			int curDeath = plugin.getConfig().getInt(curBlock+".Death");
 			
+			// override default values with biome group values - Might be able to modularize this, its
+			if (plugin.getConfig().isSet(curBlock+".BiomeGroup")) {
+				
+				// create list from the config setting
+				List<?> groupList = plugin.getConfig().getList(curBlock+".BiomeGroup");
+				
+				// iterate through list and see if any of that list matches curBiome
+				for (int i = 0; i < groupList.size(); i++) {
+					
+					// check the biomegroup for this named group
+					if (plugin.getConfig().getList("BiomeGroup."+groupList.get(i)).contains(curBiome)) 
+					{
+						toLog += "Matching BiomeGroup."+groupList.get(i);
+						
+						// reference the configs now to see if the config settings are set!
+						if (plugin.getConfig().isSet(curBlock+"."+groupList.get(i)+".Growth")) 
+						{
+							curGrowth = plugin.getConfig().getInt(curBlock+"."+groupList.get(i)+".Growth");
+						}
+						
+						if (plugin.getConfig().isSet(curBlock+"."+groupList.get(i)+".Death")) 
+						{
+							curDeath = plugin.getConfig().getInt(curBlock+"."+groupList.get(i)+".Death");
+						}						
+					}
+				}
+			}
+			
+			// override default and BIOME GROUP values with per biome settings if they are set
 			if (plugin.getConfig().isSet(curBlock+"."+curBiome+".Growth")) 
 			{
 				curGrowth = plugin.getConfig().getInt(curBlock+"."+curBiome+".Growth");
@@ -147,6 +179,7 @@ public class TreeListener implements Listener
 				curDeath = plugin.getConfig().getInt(curBlock+"."+curBiome+".Death");
 			}
 			
+			
 			// if there is fertilizer, grow this plant at the fertilizer rate - default 100%
 			// TODO: should fertilizer override dark settings or not - i think not for now
 			if (fBlocksFound.contains(PwnPlantGrowth.fertilizer))
@@ -155,6 +188,7 @@ public class TreeListener implements Listener
 				// set the current growth to the fertilizer rate
 				curGrowth = PwnPlantGrowth.frate;
 			}
+			
 			
 			// See if there are special settings for dark growth
 			if (isDark) 
@@ -168,6 +202,7 @@ public class TreeListener implements Listener
 				{					
 					toLog += " In dark. ";
 					
+					
 					// default isDark config rates (if exist)
 					if (plugin.getConfig().isSet(curBlock+".GrowthDark")) 
 					{
@@ -179,7 +214,39 @@ public class TreeListener implements Listener
 						curDeath = plugin.getConfig().getInt(curBlock+".DeathDark");
 					}
 					
-					// per biome isDark rates (if exist)
+					
+					// override default values with biome group values
+					if (plugin.getConfig().isSet(curBlock+".BiomeGroup")) 
+					{
+						
+						// create list from the config setting
+						List<?> groupList = plugin.getConfig().getList(curBlock+".BiomeGroup");
+						
+						// iterate through list and see if any of that list matches curBiome
+						for (int i = 0; i < groupList.size(); i++) {
+							
+							// check the biomegroup for this named group
+							if (plugin.getConfig().getList("BiomeGroup."+groupList.get(i)).contains(curBiome)) 
+							{
+								
+								toLog += "Matching BiomeGroup."+groupList.get(i);
+								
+								// reference the configs now to see if the config settings are set!
+								if (plugin.getConfig().isSet(curBlock+"."+groupList.get(i)+".GrowthDark")) 
+								{
+									curGrowth = plugin.getConfig().getInt(curBlock+"."+groupList.get(i)+".GrowthDark");
+								}
+								
+								if (plugin.getConfig().isSet(curBlock+"."+groupList.get(i)+".DeathDark")) 
+								{
+									curDeath = plugin.getConfig().getInt(curBlock+"."+groupList.get(i)+".DeathDark");
+								}						
+							}
+						}
+					}							
+					
+					
+					// per biome isDark rates (if exist) override default and group rates
 					if (plugin.getConfig().isSet(curBlock+"."+curBiome+".GrowthDark")) 
 					{
 						curGrowth = plugin.getConfig().getInt(curBlock+"."+curBiome+".GrowthDark");
