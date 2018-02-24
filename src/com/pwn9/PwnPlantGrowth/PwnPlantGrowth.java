@@ -29,6 +29,7 @@ public class PwnPlantGrowth extends JavaPlugin
 	public ArrayList<Integer> softBlocks = new ArrayList<Integer>();
 	public static File dataFolder;
 	public static Boolean logEnabled;
+	public static Boolean logCoords;
 	public static Boolean blockWaterBucket;
 	public static Boolean blockWaterDispenser;
 	public static int naturalLight;
