@@ -15,6 +15,7 @@ public class Config
 		
 		// Get logfile setting
 		PwnPlantGrowth.logEnabled = PwnPlantGrowth.instance.getConfig().getBoolean("debug_log", false);
+		PwnPlantGrowth.logCoords = PwnPlantGrowth.instance.getConfig().getBoolean("log_coords", false);
 		
 		// Get Natural Light setting
 		PwnPlantGrowth.naturalLight = PwnPlantGrowth.instance.getConfig().getInt("min_natural_light", 10);

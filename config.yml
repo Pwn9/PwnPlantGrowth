@@ -57,8 +57,11 @@ limit_bonemeal: false
 # Run a debug log to view additional plugin data for troubleshooting and configuration, turn off in production!
 debug_log: false
 
+# Set true if you want also to log the coordinates on the world of the event - gets spammy
+log_coords: false
+
 # BIOME GROUPS - You can MAKE YOUR OWN versions of these, this is just a sample set of groups
-BiomeGroups:
+BiomeGroup:
     GreatGrowing:
     - BEACHES
     - BIRCH_FOREST

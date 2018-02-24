@@ -130,11 +130,19 @@ public class TreeListener implements Listener
 			isDark = true;
 		}
 		
-		String toLog = coords + ": Growing: " +e.getSpecies();
-
+		String toLog = "";
+		
+		if (PwnPlantGrowth.logCoords) 
+		{
+			toLog += coords + ": Growing: " + e.getSpecies();
+		}
+		else {
+			toLog += "Growing: " + e.getSpecies();
+		}
+		
 		if ((plugin.getConfig().getList(curBlock+".Biome").contains(curBiome)) || 
 				(plugin.getConfig().getList(curBlock+".Biome").isEmpty()) || 
-				!(plugin.getConfig().getList(curBlock+".BiomeGroup").isEmpty())) 
+				(plugin.getConfig().isSet(curBlock+".BiomeGroup"))) 
 		{	
 			
 			// get this block's default values
@@ -147,13 +155,15 @@ public class TreeListener implements Listener
 				// create list from the config setting
 				List<?> groupList = plugin.getConfig().getList(curBlock+".BiomeGroup");
 				
+				toLog += " BiomeGroup is set: " + groupList.toString() + " - ";
+				
 				// iterate through list and see if any of that list matches curBiome
 				for (int i = 0; i < groupList.size(); i++) {
 					
 					// check the biomegroup for this named group
 					if (plugin.getConfig().getList("BiomeGroup."+groupList.get(i)).contains(curBiome)) 
 					{
-						toLog += "Matching BiomeGroup."+groupList.get(i);
+						toLog += "Matching BiomeGroup." + groupList.get(i) + " ";
 						
 						// reference the configs now to see if the config settings are set!
 						if (plugin.getConfig().isSet(curBlock+"."+groupList.get(i)+".Growth")) 
@@ -167,6 +177,9 @@ public class TreeListener implements Listener
 						}						
 					}
 				}
+			}
+			else {
+				toLog += " No BiomeGroup Found - ";
 			}
 			
 			// override default and BIOME GROUP values with per biome settings if they are set
@@ -202,7 +215,6 @@ public class TreeListener implements Listener
 				{					
 					toLog += " In dark. ";
 					
-					
 					// default isDark config rates (if exist)
 					if (plugin.getConfig().isSet(curBlock+".GrowthDark")) 
 					{
@@ -214,13 +226,14 @@ public class TreeListener implements Listener
 						curDeath = plugin.getConfig().getInt(curBlock+".DeathDark");
 					}
 					
-					
 					// override default values with biome group values
 					if (plugin.getConfig().isSet(curBlock+".BiomeGroup")) 
 					{
 						
 						// create list from the config setting
 						List<?> groupList = plugin.getConfig().getList(curBlock+".BiomeGroup");
+						
+						toLog += " BiomeGroup is set: " + groupList.toString() + " - ";
 						
 						// iterate through list and see if any of that list matches curBiome
 						for (int i = 0; i < groupList.size(); i++) {
@@ -229,7 +242,7 @@ public class TreeListener implements Listener
 							if (plugin.getConfig().getList("BiomeGroup."+groupList.get(i)).contains(curBiome)) 
 							{
 								
-								toLog += "Matching BiomeGroup."+groupList.get(i);
+								toLog += "Matching BiomeGroup." + groupList.get(i) + " ";
 								
 								// reference the configs now to see if the config settings are set!
 								if (plugin.getConfig().isSet(curBlock+"."+groupList.get(i)+".GrowthDark")) 
@@ -243,8 +256,7 @@ public class TreeListener implements Listener
 								}						
 							}
 						}
-					}							
-					
+					}	
 					
 					// per biome isDark rates (if exist) override default and group rates
 					if (plugin.getConfig().isSet(curBlock+"."+curBiome+".GrowthDark")) 
@@ -262,7 +274,7 @@ public class TreeListener implements Listener
 			if (!(PwnPlantGrowth.random(curGrowth)))
 			{
 				e.setCancelled(true);
-				toLog += " Failed (Rate: "+curGrowth+") ";
+				toLog += " Failed (Rate: " + curGrowth + ") ";
 				
 				if (wkBlocksFound.contains(PwnPlantGrowth.weedKiller))
 				{
@@ -273,7 +285,7 @@ public class TreeListener implements Listener
 					if (PwnPlantGrowth.random(curDeath)) 
 					{
 						e.getLocation().getBlock().setType(Material.LONG_GRASS);
-						toLog += " Died (Rate: "+curDeath+")";
+						toLog += " Died (Rate: " + curDeath + ")";
 					}
 				}
 			}											
