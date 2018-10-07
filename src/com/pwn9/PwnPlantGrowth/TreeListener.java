@@ -91,17 +91,27 @@ public class TreeListener implements Listener
 		// Get current block type and make a string for comparison later
 		String curBlock = String.valueOf(e.getSpecies());
 		
+		if ((PwnPlantGrowth.logEnabled) && (PwnPlantGrowth.logTreeEnabled) && (PwnPlantGrowth.logVerbose)) 
+		{
+			PwnPlantGrowth.logToFile("Being Structure Event for: " + curBlock, "TreeGrow");
+		}		
+		
 		//TODO: check for bonemeal usage on structure growth and handle it
 		if (e.isFromBonemeal()) {
 			// bonemeal triggered this event, what should we do with it?
-			if (!(PwnPlantGrowth.limitBonemeal)) {
-				PwnPlantGrowth.logToFile("Bonemeal was used on " + curBlock, "TreeGrow");
+			if (!(PwnPlantGrowth.limitBonemeal)) 
+			{
+				if ((PwnPlantGrowth.logEnabled) && (PwnPlantGrowth.logTreeEnabled)) 
+				{
+					PwnPlantGrowth.logToFile("Bonemeal was used on " + curBlock, "TreeGrow");
+				}
 				return;
 			}
 		}
 		
 		// Is anything set for this block in the config, if not, abort
-		if (!(plugin.getConfig().isSet(curBlock))) {
+		if (!(plugin.getConfig().isSet(curBlock))) 
+		{
 			PwnPlantGrowth.logToFile("No configuration set in config for: " + curBlock);
 			return;
 		}
@@ -297,7 +307,7 @@ public class TreeListener implements Listener
 		}				
 
 		// log it
-		if (PwnPlantGrowth.logEnabled) 
+		if ((PwnPlantGrowth.logEnabled) && (PwnPlantGrowth.logTreeEnabled)) 
 		{	
 			PwnPlantGrowth.logToFile(toLog, "TreeGrow");
 		}

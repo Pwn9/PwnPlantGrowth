@@ -271,7 +271,12 @@ public class PlantListener implements Listener
 		String curBlock = String.valueOf(e.getBlock().getType());	
 		String downBlock = String.valueOf(e.getBlock().getRelative(BlockFace.DOWN).getType());
 		
-		// Is anything set for this block in the config, if not, abort - NO this breaks AIR
+		if ((PwnPlantGrowth.logEnabled) && (PwnPlantGrowth.logPlantEnabled) && (PwnPlantGrowth.logVerbose))
+		{
+			PwnPlantGrowth.logToFile("Begin Block Event for: " + curBlock, "PlantGrow");
+		}	
+		
+		// Is anything set for this block in the config, or is it AIR? If not, abort.
 		if (!(plugin.getConfig().isSet(curBlock)) && (curBlock != "AIR")) {
 			PwnPlantGrowth.logToFile("No configuration set in config for: " + curBlock);
 			return;
@@ -344,7 +349,6 @@ public class PlantListener implements Listener
 				
 				// log it, general only occurs with bonemeal use but can be spammy in the logs
 				toLog += " Grass grew";	
-				
 				// in the future we could add this to the config, initial test show it causes strange things though.
 				// no run calcs for now
 			}
@@ -396,7 +400,7 @@ public class PlantListener implements Listener
 		}
 
 		// Log it
-    	if (PwnPlantGrowth.logEnabled) 
+		if ((PwnPlantGrowth.logEnabled) && (PwnPlantGrowth.logPlantEnabled))  
     	{	
     		PwnPlantGrowth.logToFile(toLog, "PlantGrow");
     	}	

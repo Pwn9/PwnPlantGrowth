@@ -54,11 +54,20 @@ uv_radius: 5
 # Allow plugin to capture bonemeal (only works for trees right now)
 limit_bonemeal: false
 
-# Run a debug log to view additional plugin data for troubleshooting and configuration, turn off in production!
+# Run various debug logs to view additional plugin data for troubleshooting and configuration. Can get spammy, use for debugging.
 debug_log: false
 
-# Set true if you want also to log the coordinates on the world of the event - gets spammy
+# Will additionally log Tree Growing Events.
+tree_log: false
+
+# Will additionally log Plant Growing Events.
+plant_log: false
+
+# Set true if you want also to log the coordinates on the world of the event - gets really spammy
 log_coords: false
+
+# Ultra verbose logging, logs tons of information that may be useful for extra debugging
+log_verbose: false
 
 # BIOME GROUPS - You can MAKE YOUR OWN versions of these, this is just a sample set of groups
 BiomeGroup:
