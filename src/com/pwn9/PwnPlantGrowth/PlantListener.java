@@ -346,7 +346,6 @@ public class PlantListener implements Listener
 				toLog += " Grass grew";	
 				
 				// in the future we could add this to the config, initial test show it causes strange things though.
-				
 				// no run calcs for now
 			}
 			
