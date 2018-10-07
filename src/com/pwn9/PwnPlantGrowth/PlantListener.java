@@ -329,7 +329,7 @@ public class PlantListener implements Listener
 		{
 			
 			// Handle Cactus, Sugar Cane; the plants that grow vertically only.
-			if (downBlock == "CACTUS" || downBlock == "SUGAR_CANE_BLOCK") 
+			if (downBlock == "CACTUS" || downBlock == "SUGAR_CANE" || downBlock == "KELP_PLANT") 
 			{
 	
 				toLog += downBlock;
@@ -361,7 +361,7 @@ public class PlantListener implements Listener
 						(e.getBlock().getRelative(BlockFace.NORTH).getType() == Material.MELON_STEM) ||
 						(e.getBlock().getRelative(BlockFace.SOUTH).getType() == Material.MELON_STEM)) 
 				{
-					thisBlock = "MELON_BLOCK";
+					thisBlock = "MELON";
 				}
 				// Pumpkin Block
 				else if ((e.getBlock().getRelative(BlockFace.EAST).getType() == Material.PUMPKIN_STEM) ||
@@ -369,7 +369,7 @@ public class PlantListener implements Listener
 						(e.getBlock().getRelative(BlockFace.NORTH).getType() == Material.PUMPKIN_STEM) ||
 						(e.getBlock().getRelative(BlockFace.SOUTH).getType() == Material.PUMPKIN_STEM)) 
 				{
-					 thisBlock = "PUMPKIN_BLOCK";	
+					 thisBlock = "PUMPKIN";	
 				}
 				else 
 				{

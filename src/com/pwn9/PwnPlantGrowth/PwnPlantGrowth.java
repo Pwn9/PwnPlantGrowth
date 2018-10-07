@@ -73,15 +73,7 @@ public class PwnPlantGrowth extends JavaPlugin
 		this.saveDefaultConfig();
 		
 		// Start Metrics
-		try 
-		{
-		    MetricsLite metricslite = new MetricsLite(this);
-		    metricslite.start();
-		} 
-		catch (IOException e) 
-		{
-		    // Failed to submit the stats :-(
-		}
+		MetricsLite metricslite = new MetricsLite(this);
 				
 		// Setup listeners
 		new PlantListener(this);
@@ -100,7 +92,7 @@ public class PwnPlantGrowth extends JavaPlugin
 		PwnPlantGrowth.uvFound = " UV found, allowing false light growth.";
 		
 		// Load all possible plant types
-		String sArray[] = new String[] { "BEETROOT_BLOCK", "CACTUS", "CARROT", "COCOA", "CROPS", "MELON_BLOCK", "MELON_STEM", "NETHER_WARTS", "POTATO", "PUMPKIN_BLOCK", "PUMPKIN_STEM", "SUGAR_CANE_BLOCK", "ACACIA", "BIG_TREE", "BIRCH", "BROWN_MUSHROOM", "COCOA_TREE", "DARK_OAK", "JUNGLE", "JUNGLE_BUSH", "MEGA_REDWOOD", "RED_MUSHROOM", "REDWOOD", "SMALL_JUNGLE", "SWAMP", "TALL_BIRCH", "TALL_REDWOOD", "TREE", "CHORUS_PLANT" };
+		String sArray[] = new String[] { "BEETROOTS", "CACTUS", "CARROT", "COCOA", "KELP_PLANT", "MELON", "MELON_STEM", "NETHER_WART_BLOCK", "POTATO", "PUMPKIN", "PUMPKIN_STEM", "SUGAR_CANE", "ACACIA", "BIG_TREE", "BIRCH", "BROWN_MUSHROOM", "CHORUS_PLANT", "COCOA_TREE", "DARK_OAK", "JUNGLE", "JUNGLE_BUSH", "MEGA_REDWOOD", "RED_MUSHROOM", "REDWOOD", "SMALL_JUNGLE", "SWAMP", "TALL_BIRCH", "TALL_REDWOOD", "TREE" };
 		PwnPlantGrowth.plantTypes = Arrays.asList(sArray);
 		
 		// Check for TerrainControl
