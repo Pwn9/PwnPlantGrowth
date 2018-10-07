@@ -16,6 +16,8 @@ public class PlayerListener implements Listener
 	    plugin.getServer().getPluginManager().registerEvents(this, plugin);    
 	}	
 	
+	//TODO: replace this with BlockFertilizeEvent 
+	
 	// Listen for bonemeal usage, this doesn't seem to do anything at the moment.
 	@EventHandler(ignoreCancelled = true)
 	public void bonemealUse(PlayerInteractEvent e) 
@@ -25,7 +27,7 @@ public class PlayerListener implements Listener
 		
 		if (!PwnPlantGrowth.isEnabledIn(world.getName())) return;
 		
-	    ItemStack bonemeal = new ItemStack(Material.INK_SACK, 1, (short) 15);
+	    ItemStack bonemeal = new ItemStack(Material.BONE_MEAL);
 	    	    
 	    Block b = e.getClickedBlock();
 

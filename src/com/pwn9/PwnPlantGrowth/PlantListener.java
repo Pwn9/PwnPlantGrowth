@@ -181,7 +181,7 @@ public class PlantListener implements Listener
 							e.getBlock().setType(Material.VINE);
 						}
 						else {
-							e.getBlock().setType(Material.LONG_GRASS);
+							e.getBlock().setType(Material.GRASS);
 						}
 						toLog += " Died (Rate: " + curDeath + ")";
 					}

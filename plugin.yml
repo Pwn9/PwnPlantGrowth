@@ -4,3 +4,4 @@ version: 2.4.0
 author: tremor77
 description: Take control over all plant growth
 website: http://pwn9.com
+api-version: 1.13

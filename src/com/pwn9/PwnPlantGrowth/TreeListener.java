@@ -284,7 +284,7 @@ public class TreeListener implements Listener
 				{
 					if (PwnPlantGrowth.random(curDeath)) 
 					{
-						e.getLocation().getBlock().setType(Material.LONG_GRASS);
+						e.getLocation().getBlock().setType(Material.GRASS);
 						toLog += " Died (Rate: " + curDeath + ")";
 					}
 				}
