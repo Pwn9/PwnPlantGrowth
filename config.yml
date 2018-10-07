@@ -140,7 +140,7 @@ CACTUS:
     - SAVANNA
 
 # Carrot example is setup like beetroot but also grows in desert by setting Biome: - DESERT value
-CARROT: 
+CARROTS: 
     Growth: 50
     GrowthDark: 25
     Death: 5
@@ -192,14 +192,14 @@ MELON_STEM:
     Biome: []
 
 # In this example netherwart is restricted to the nether at 25%
-NETHER_WART_BLOCK:
+NETHER_WART:
     Growth: 25
     Death: 5
     Biome: 
     - HELL
         
 # Potato will grow in great and good areas, all others at its default rate with Biome: []
-POTATO:
+POTATOES:
     Growth: 50
     GrowthDark: 25
     Death: 5
@@ -378,5 +378,5 @@ TREE:
     Biome: []
           
 # Plugin will check for the following list of plants as of ver. 2.4.0
-# Plants: "BEETROOTS", "CACTUS", "CARROT", "COCOA", GRASS", "KELP_PLANT", "MELON", "MELON_STEM", "NETHER_WARTS", "POTATO", "PUMPKIN", "PUMPKIN_STEM", "SUGAR_CANE", "WHEAT"
+# Plants: "BEETROOTS", "CACTUS", "CARROTS", "COCOA", GRASS", "KELP_PLANT", "MELON", "MELON_STEM", "NETHER_WART", "POTATOS", "PUMPKIN", "PUMPKIN_STEM", "SUGAR_CANE", "WHEAT"
 # Trees: "ACACIA", "BIG_TREE", "BIRCH", "BROWN_MUSHROOM", "COCOA_TREE", "CHORUS_PLANT", "DARK_OAK", "JUNGLE", "JUNGLE_BUSH", "MEGA_REDWOOD", "RED_MUSHROOM", "REDWOOD", "SMALL_JUNGLE", "SWAMP", "TALL_BIRCH", "TALL_REDWOOD", "TREE"
