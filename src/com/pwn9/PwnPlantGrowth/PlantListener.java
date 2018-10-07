@@ -398,7 +398,7 @@ public class PlantListener implements Listener
 		// Log it
     	if (PwnPlantGrowth.logEnabled) 
     	{	
-    		PwnPlantGrowth.logToFile(toLog);
+    		PwnPlantGrowth.logToFile(toLog, "PlantGrow");
     	}	
 	}
 	

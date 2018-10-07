@@ -95,7 +95,7 @@ public class TreeListener implements Listener
 		if (e.isFromBonemeal()) {
 			// bonemeal triggered this event, what should we do with it?
 			if (!(PwnPlantGrowth.limitBonemeal)) {
-				PwnPlantGrowth.logToFile("Bonemeal was used on " + curBlock);
+				PwnPlantGrowth.logToFile("Bonemeal was used on " + curBlock, "TreeGrow");
 				return;
 			}
 		}
@@ -134,10 +134,10 @@ public class TreeListener implements Listener
 		
 		if (PwnPlantGrowth.logCoords) 
 		{
-			toLog += coords + ": Growing: " + e.getSpecies();
+			toLog += coords + ": Growing: " + curBlock;
 		}
 		else {
-			toLog += "Growing: " + e.getSpecies();
+			toLog += "Growing: " + curBlock;
 		}
 		
 		if ((plugin.getConfig().getList(curBlock+".Biome").contains(curBiome)) || 
@@ -299,7 +299,7 @@ public class TreeListener implements Listener
 		// log it
 		if (PwnPlantGrowth.logEnabled) 
 		{	
-			PwnPlantGrowth.logToFile(toLog);
+			PwnPlantGrowth.logToFile(toLog, "TreeGrow");
 		}
 	}
 	
