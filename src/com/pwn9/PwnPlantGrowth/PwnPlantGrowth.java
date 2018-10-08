@@ -95,7 +95,7 @@ public class PwnPlantGrowth extends JavaPlugin
 		PwnPlantGrowth.uvFound = " UV found, allowing false light growth.";
 		
 		// Load all possible plant types
-		String sArray[] = new String[] { "BEETROOTS", "CACTUS", "CARROTS", "COCOA", "KELP_PLANT", "MELON", "MELON_STEM", "NETHER_WART", "POTATOES", "PUMPKIN", "PUMPKIN_STEM", "SUGAR_CANE", "ACACIA", "BIG_TREE", "BIRCH", "BROWN_MUSHROOM", "CHORUS_PLANT", "COCOA_TREE", "DARK_OAK", "JUNGLE", "JUNGLE_BUSH", "MEGA_REDWOOD", "RED_MUSHROOM", "REDWOOD", "SMALL_JUNGLE", "SWAMP", "TALL_BIRCH", "TALL_REDWOOD", "TREE" };
+		String sArray[] = new String[] { "BEETROOTS", "CACTUS", "CARROTS", "CHORUS_FLOWER", "COCOA", "KELP_PLANT", "MELON", "MELON_STEM", "NETHER_WART", "POTATOES", "PUMPKIN", "PUMPKIN_STEM", "SUGAR_CANE", "ACACIA_SAPLING", "BIRCH_SAPLING", "DARK_OAK_SAPLING", "JUNGLE_SAPLING", "OAK_SAPLING", "SPRUCE_SAPLING", "RED_MUSHROOM", "BROWN_MUSHROOM" };
 		PwnPlantGrowth.plantTypes = Arrays.asList(sArray);
 		
 		// Check for TerrainControl

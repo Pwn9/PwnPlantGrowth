@@ -89,11 +89,21 @@ public class TreeListener implements Listener
 		if (!PwnPlantGrowth.isEnabledIn(world.getName())) return;
 
 		// Get current block type and make a string for comparison later
-		String curBlock = String.valueOf(e.getSpecies());
+		String eventBlock = String.valueOf(e.getSpecies());
+		
+		// Get event coords
+		String coords = String.valueOf(e.getLocation());
+		
+		// Get the material type of the block at the event coords
+		String curBlock = String.valueOf(e.getLocation().getBlock().getType());
+		
+		// Get current biome and make a string for comparison later
+		String curBiome = PwnPlantGrowth.getBiome(e);
 		
 		if ((PwnPlantGrowth.logEnabled) && (PwnPlantGrowth.logTreeEnabled) && (PwnPlantGrowth.logVerbose)) 
 		{
-			PwnPlantGrowth.logToFile("Being Structure Event for: " + curBlock, "TreeGrow");
+			PwnPlantGrowth.logToFile("Structure Event for: " + curBlock + " - In biome: " + curBiome, "TreeGrow");
+			PwnPlantGrowth.logToFile("Species: " + eventBlock, "TreeGrow");
 		}		
 		
 		//TODO: check for bonemeal usage on structure growth and handle it
@@ -112,16 +122,10 @@ public class TreeListener implements Listener
 		// Is anything set for this block in the config, if not, abort
 		if (!(plugin.getConfig().isSet(curBlock))) 
 		{
-			PwnPlantGrowth.logToFile("No configuration set in config for: " + curBlock);
+			PwnPlantGrowth.logToFile("No tree configuration set in config for: " + curBlock);
 			return;
 		}
 		
-		// Get current biome and make a string for comparison later
-		String curBiome = PwnPlantGrowth.getBiome(e);
-		
-		// Get event coords
-		String coords = String.valueOf(e.getLocation());	
-
 		// check the area to find if any of the special blocks are found
 		List<List<String>> specialBlocks = specialBlockList(e);
 		List<String> fBlocksFound = specialBlocks.get(0);

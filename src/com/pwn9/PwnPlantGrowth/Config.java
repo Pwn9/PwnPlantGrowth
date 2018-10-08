@@ -7,12 +7,6 @@ public class Config
 		// Get enabled worlds
 		PwnPlantGrowth.enabledWorlds = PwnPlantGrowth.instance.getConfig().getStringList("enabled_worlds");
 		
-		// Get water source setting
-		PwnPlantGrowth.blockWaterBucket = PwnPlantGrowth.instance.getConfig().getBoolean("block_water_bucket", false);
-		
-		// Get water source setting
-		PwnPlantGrowth.blockWaterDispenser = PwnPlantGrowth.instance.getConfig().getBoolean("block_water_dispenser", false);
-		
 		// Get logfile setting
 		PwnPlantGrowth.logEnabled = PwnPlantGrowth.instance.getConfig().getBoolean("debug_log", false);
 		PwnPlantGrowth.logTreeEnabled = PwnPlantGrowth.instance.getConfig().getBoolean("tree_log", false);

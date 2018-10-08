@@ -173,6 +173,12 @@ CARROTS:
       Growth: 25
       Death: 50
 
+# Chorus flower needs endstone to grow on
+CHORUS_FLOWER:
+    Growth: 50
+    Death: 5
+    Biome: []
+    
 # In this example Cocoa will only grow in jungle biomes at 25% normal rate
 COCOA: 
     Growth: 25
@@ -271,9 +277,9 @@ WHEAT:
     Biome: []
       
 # TREES 
-# Full tree list available at https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/TreeType.html
+# As of version 2.4.0 PwnPlantGrowth is switching to the sapling type that starts the tree.
 
-ACACIA:
+ACACIA_SAPLING:
     Growth: 50
     Death: 5
     Biome:
@@ -281,16 +287,39 @@ ACACIA:
     - SAVANNA_MOUNTAINS
     - SAVANNA_PLATEAU
     - SAVANNA_PLATEAU_MOUNTAINS
-
-BIG_TREE:
+    
+BIRCH_SAPLING:
+    Growth: 50
+    Death: 5
+    Biome:
+    - FOREST
+    - FOREST_HILLS
+    - TAIGA
+    - TAIGA_HILLS
+    
+DARK_OAK_SAPLING:
+    Growth: 50
+    Death: 5
+    Biome:
+    - ROOFED_FOREST        
+    - ROOFED_FOREST_MOUNTAINS   
+    
+JUNGLE_SAPLING:
+    Growth: 50
+    Death: 5
+    Biome:
+    - JUNGLE
+    - JUNGLE_HILLS   
+    
+OAK_SAPLING:
     Growth: 50
     Death: 5
     Biome: []
-
-BIRCH:
+    
+SPRUCE_SAPLING:
     Growth: 50
     Death: 5
-    Biome: []
+    Biome: [] 
 
 BROWN_MUSHROOM:
     Growth: 50
@@ -298,94 +327,14 @@ BROWN_MUSHROOM:
     Biome:
     - MUSHROOM_ISLAND
     - MUSHROOM_SHORE
-    
-CHORUS_PLANT:
-    Growth: 50
-    Death: 5
-    Biome: []
-
-COCOA_TREE:
-    Growth: 50
-    Death: 5
-    Biome: []
-          
-DARK_OAK:
-    Growth: 50
-    Death: 5
-    Biome: 
-    - ROOFED_FOREST        
-    - ROOFED_FOREST_MOUNTAINS          
-    
-JUNGLE:
-    Growth: 50
-    Death: 5
-    Biome:
-    - JUNGLE
-    - JUNGLE_HILLS  
-
-JUNGLE_BUSH:
-    Growth: 50
-    Death: 5
-    Biome:
-    - JUNGLE
-    - JUNGLE_HILLS      
-
-MEGA_REDWOOD:
-    Growth: 50
-    Death: 5
-    Biome:
-    - FOREST
-    - FOREST_HILLS
-    - TAIGA
-    - TAIGA_HILLS    
-    
+              
 RED_MUSHROOM:
     Growth: 50
     Death: 5
     Biome:
     - MUSHROOM_ISLAND
     - MUSHROOM_SHORE
-    
-REDWOOD:
-    Growth: 50
-    Death: 5
-    Biome:
-    - FOREST
-    - FOREST_HILLS
-    - TAIGA
-    - TAIGA_HILLS
-
-SMALL_JUNGLE:
-    Growth: 50
-    Death: 5
-    Biome:
-    - JUNGLE
-    - JUNGLE_HILLS  
-
-SWAMP:
-    Growth: 50
-    Death: 5
-    Biome: []
-        
-TALL_BIRCH:
-    Growth: 50
-    Death: 5
-    Biome: []
-    
-TALL_REDWOOD:
-    Growth: 50
-    Death: 5
-    Biome:
-    - FOREST
-    - FOREST_HILLS
-    - TAIGA
-    - TAIGA_HILLS
-        
-TREE:
-    Growth: 50
-    Death: 5
-    Biome: []
-          
+                
 # Plugin will check for the following list of plants as of ver. 2.4.0
-# Plants: "BEETROOTS", "CACTUS", "CARROTS", "COCOA", GRASS", "KELP_PLANT", "MELON", "MELON_STEM", "NETHER_WART", "POTATOS", "PUMPKIN", "PUMPKIN_STEM", "SUGAR_CANE", "WHEAT"
-# Trees: "ACACIA", "BIG_TREE", "BIRCH", "BROWN_MUSHROOM", "COCOA_TREE", "CHORUS_PLANT", "DARK_OAK", "JUNGLE", "JUNGLE_BUSH", "MEGA_REDWOOD", "RED_MUSHROOM", "REDWOOD", "SMALL_JUNGLE", "SWAMP", "TALL_BIRCH", "TALL_REDWOOD", "TREE"
+# Plants: "BEETROOTS", "CACTUS", "CARROTS", "COCOA", "CHORUS_FLOWER", "KELP_PLANT", "MELON", "MELON_STEM", "NETHER_WART", "POTATOS", "PUMPKIN", "PUMPKIN_STEM", "SUGAR_CANE", "WHEAT"
+# Trees: "ACACIA_SAPLING", "BIRCH_SAPLING", "DARK_OAK_SAPLING", "JUNGLE_SAPLING", "OAK_SAPLING", "SPRUCE_SAPLING", "RED_MUSHROOM", "BROWN_MUSHROOM"

@@ -271,19 +271,19 @@ public class PlantListener implements Listener
 		String curBlock = String.valueOf(e.getBlock().getType());	
 		String downBlock = String.valueOf(e.getBlock().getRelative(BlockFace.DOWN).getType());
 		
+		// Get current biome and make a string for comparison later
+		String curBiome = PwnPlantGrowth.getBiome(e);
+		
 		if ((PwnPlantGrowth.logEnabled) && (PwnPlantGrowth.logPlantEnabled) && (PwnPlantGrowth.logVerbose))
 		{
-			PwnPlantGrowth.logToFile("Begin Block Event for: " + curBlock, "PlantGrow");
+			PwnPlantGrowth.logToFile("Block Event for: " + curBlock + " - In biome: " + curBiome, "PlantGrow");
 		}	
 		
 		// Is anything set for this block in the config, or is it AIR? If not, abort.
-		if (!(plugin.getConfig().isSet(curBlock)) && (curBlock != "AIR")) {
-			PwnPlantGrowth.logToFile("No configuration set in config for: " + curBlock);
+		if (!(plugin.getConfig().isSet(curBlock)) && (curBlock != "AIR") && (curBlock != "WATER")) {
+			PwnPlantGrowth.logToFile("No plant configuration set in config for: " + curBlock);
 			return;
 		}
-		
-		// Get current biome and make a string for comparison later
-		String curBiome = PwnPlantGrowth.getBiome(e);
 		
 		// Get coords of the event for logging
 		String coords = String.valueOf(e.getBlock().getLocation());
@@ -323,18 +323,18 @@ public class PlantListener implements Listener
 		}
 			
 		// Regular growth blocks that do not report initially as AIR - this is most of the normal crops
-		if (curBlock != "AIR")
+		if ((curBlock != "AIR") && (curBlock != "WATER"))
 		{
 			// run calcs
 			toLog += runCalcs(e, curBlock, curBiome, isDark);
 		}		
 					
 		// AIR BLOCKS - when event returns AIR as the block type, it must be one of the following
-		else if (curBlock == "AIR") 
+		else if ((curBlock == "AIR") || (curBlock == "WATER"))
 		{
 			
-			// Handle Cactus, Sugar Cane; the plants that grow vertically only.
-			if (downBlock == "CACTUS" || downBlock == "SUGAR_CANE" || downBlock == "KELP_PLANT") 
+			// Handle Cactus, Sugar Cane; Kelp; the plants that grow vertically only.
+			if (downBlock == "CACTUS" || downBlock == "SUGAR_CANE" || downBlock == "KELP_PLANT" || downBlock == "KELP") 
 			{
 	
 				toLog += downBlock;
