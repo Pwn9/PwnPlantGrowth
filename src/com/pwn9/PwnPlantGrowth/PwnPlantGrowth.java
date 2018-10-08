@@ -161,57 +161,57 @@ public class PwnPlantGrowth extends JavaPlugin
     public static void logToFile(String message) 
     {   
 	    	try
-	    	{
-			    
-			    if(!dataFolder.exists()) 
-			    {
-			    	dataFolder.mkdir();
-			    }
-			     
-			    File saveTo = new File(dataFolder, "pwnplantgrowth.log");
-			    if (!saveTo.exists())  
-			    {
-			    	saveTo.createNewFile();
-			    }
-			    
-			    FileWriter fw = new FileWriter(saveTo, true);
-			    PrintWriter pw = new PrintWriter(fw);
-			    pw.println(getDate() +" "+ message);
-			    pw.flush();
-			    pw.close();
-		    } 
-		    catch (IOException e) 
+    	{
+		    
+		    if(!dataFolder.exists()) 
 		    {
-		    	e.printStackTrace();
+		    	dataFolder.mkdir();
 		    }
+		     
+		    File saveTo = new File(dataFolder, "pwnplantgrowth.log");
+		    if (!saveTo.exists())  
+		    {
+		    	saveTo.createNewFile();
+		    }
+		    
+		    FileWriter fw = new FileWriter(saveTo, true);
+		    PrintWriter pw = new PrintWriter(fw);
+		    pw.println(getDate() +" "+ message);
+		    pw.flush();
+		    pw.close();
+	    } 
+	    catch (IOException e) 
+	    {
+	    	e.printStackTrace();
+	    }
     }
     
     public static void logToFile(String message, String fileName) 
     {   
-	    	try
-	    	{
-			    
-			    if(!dataFolder.exists()) 
-			    {
-			    	dataFolder.mkdir();
-			    }
-			     
-			    File saveTo = new File(dataFolder, fileName+".log");
-			    if (!saveTo.exists())  
-			    {
-			    	saveTo.createNewFile();
-			    }
-			    
-			    FileWriter fw = new FileWriter(saveTo, true);
-			    PrintWriter pw = new PrintWriter(fw);
-			    pw.println(getDate() +" "+ message);
-			    pw.flush();
-			    pw.close();
-		    } 
-		    catch (IOException e) 
+    	try
+    	{
+		    
+		    if(!dataFolder.exists()) 
 		    {
-		    	e.printStackTrace();
+		    	dataFolder.mkdir();
 		    }
+		     
+		    File saveTo = new File(dataFolder, fileName+".log");
+		    if (!saveTo.exists())  
+		    {
+		    	saveTo.createNewFile();
+		    }
+		    
+		    FileWriter fw = new FileWriter(saveTo, true);
+		    PrintWriter pw = new PrintWriter(fw);
+		    pw.println(getDate() +" "+ message);
+		    pw.flush();
+		    pw.close();
+	    } 
+	    catch (IOException e) 
+	    {
+	    	e.printStackTrace();
+	    }
     }    
     
     public static String getDate() 

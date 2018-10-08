@@ -80,7 +80,7 @@ public class TreeListener implements Listener
 	}	
 	
 	// Structure Growth eg: trees
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = false)
 	public void structureGrow(StructureGrowEvent e) 
 	{
 	

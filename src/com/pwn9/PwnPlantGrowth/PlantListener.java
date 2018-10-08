@@ -259,7 +259,7 @@ public class PlantListener implements Listener
 	}	
 	
 	// Listen for plant growth and then do stuff
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = false)
 	public void plantGrow(BlockGrowEvent e) 
 	{
 		
