@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockSpreadEvent;
@@ -177,8 +176,8 @@ public class BlockSpreadListener implements Listener
 					if (PwnPlantGrowth.random(curDeath)) 
 					{
 						// TODO: make these configurable
-						if (thisBlock == "COCOA") {
-							e.getBlock().setType(Material.VINE);
+						if (thisBlock == "KELP") {
+							e.getBlock().setType(Material.SEAGRASS);
 						}
 						else {
 							e.getBlock().setType(Material.GRASS);
@@ -267,21 +266,26 @@ public class BlockSpreadListener implements Listener
 		World world = e.getBlock().getWorld();
 		if (!PwnPlantGrowth.isEnabledIn(world.getName())) return;
 
-		// Get current block type and make a string for comparison later
-		String curBlock = String.valueOf(e.getBlock().getType());	
-		String downBlock = String.valueOf(e.getBlock().getRelative(BlockFace.DOWN).getType());
+		// Get source block type and make a string for comparison later
+		String sourceBlock = String.valueOf(e.getSource().getType());
+		
+		// we only care about these 2 for now
+		if (sourceBlock != "CHORUS_FLOWER" && sourceBlock != "KELP") 
+		{
+			return;
+		}
 		
 		// Get current biome and make a string for comparison later
 		String curBiome = PwnPlantGrowth.getBiome(e);
 		
 		if ((PwnPlantGrowth.logEnabled) && (PwnPlantGrowth.logPlantEnabled) && (PwnPlantGrowth.logVerbose))
 		{
-			PwnPlantGrowth.logToFile("Block Event for: " + curBlock + " - In biome: " + curBiome, "PlantGrow");
+			PwnPlantGrowth.logToFile("Block Event for: " + sourceBlock + " - In biome: " + curBiome, "BlockSpread");
 		}	
 		
 		// Is anything set for this block in the config, or is it AIR? If not, abort.
-		if (!(plugin.getConfig().isSet(curBlock)) && (curBlock != "AIR") && (curBlock != "WATER")) {
-			PwnPlantGrowth.logToFile("No plant configuration set in config for: " + curBlock);
+		if (!(plugin.getConfig().isSet(sourceBlock))) {
+			PwnPlantGrowth.logToFile("No plant configuration set in config for: " + sourceBlock);
 			return;
 		}
 		
@@ -298,7 +302,7 @@ public class BlockSpreadListener implements Listener
 		//int actualLight = e.getBlock().getLightFromBlocks();
 		
 		// If the light level is lower than configured threshold and the plant is NOT exempt from dark grow, set this transaction to isDark = true
-		if ((PwnPlantGrowth.naturalLight > lightLevel) && (!PwnPlantGrowth.canDarkGrow(e.getBlock().getType().toString())))
+		if ((PwnPlantGrowth.naturalLight > lightLevel) && (!PwnPlantGrowth.canDarkGrow(sourceBlock)))
 		{
 			isDark = true;
 		}
@@ -311,98 +315,14 @@ public class BlockSpreadListener implements Listener
 			toLog += coords + ": ";
 		}
 
-		// Log, if AIR or NORMAL growth event
-		if (e.getBlock().getType() == Material.AIR) 
-		{
-			// AIR block, get block type of the actual plant later
-			toLog += "Growing: ";
-		}
-		else 
-		{
-			toLog += "Growing: " + e.getBlock().getType();
-		}
-			
-		// Regular growth blocks that do not report initially as AIR - this is most of the normal crops
-		if ((curBlock != "AIR") && (curBlock != "WATER"))
-		{
-			// run calcs
-			toLog += runCalcs(e, curBlock, curBiome, isDark);
-		}		
-					
-		// AIR BLOCKS - when event returns AIR as the block type, it must be one of the following
-		else if ((curBlock == "AIR") || (curBlock == "WATER"))
-		{
-			
-			// Handle Cactus, Sugar Cane; Kelp; the plants that grow vertically only.
-			if (downBlock == "CACTUS" || downBlock == "SUGAR_CANE" || downBlock == "KELP_PLANT" || downBlock == "KELP") 
-			{
-	
-				toLog += downBlock;
-				
-				// run calcs
-				toLog += runCalcs(e, downBlock, curBiome, isDark);
-				
-			}
-			
-			// This is probably the regular growing grass, let's just leave this alone for now
-			else if (downBlock == "LONG_GRASS" || downBlock == "GRASS") {
-				
-				// log it, general only occurs with bonemeal use but can be spammy in the logs
-				toLog += " Grass grew";	
-				// in the future we could add this to the config, initial test show it causes strange things though.
-				// no run calcs for now
-			}
-			
-			// Specially Handle Melon/Pumpkin Blocks
-			else 
-			{
-				String thisBlock;
-				
-				// Melon Block
-				if ((e.getBlock().getRelative(BlockFace.EAST).getType() == Material.MELON_STEM) ||
-						(e.getBlock().getRelative(BlockFace.WEST).getType() == Material.MELON_STEM) ||
-						(e.getBlock().getRelative(BlockFace.NORTH).getType() == Material.MELON_STEM) ||
-						(e.getBlock().getRelative(BlockFace.SOUTH).getType() == Material.MELON_STEM)) 
-				{
-					thisBlock = "MELON";
-				}
-				// Pumpkin Block
-				else if ((e.getBlock().getRelative(BlockFace.EAST).getType() == Material.PUMPKIN_STEM) ||
-						(e.getBlock().getRelative(BlockFace.WEST).getType() == Material.PUMPKIN_STEM) ||
-						(e.getBlock().getRelative(BlockFace.NORTH).getType() == Material.PUMPKIN_STEM) ||
-						(e.getBlock().getRelative(BlockFace.SOUTH).getType() == Material.PUMPKIN_STEM)) 
-				{
-					 thisBlock = "PUMPKIN";	
-				}
-				else 
-				{
-					 thisBlock = "UNKNOWN_BLOCK";
-					 toLog += thisBlock;	
-					 // Log it
-			    	 if (PwnPlantGrowth.logEnabled) 
-			    	 {	
-			    		 PwnPlantGrowth.logToFile(toLog);
-			    	 }	
-					 e.setCancelled(true);
-					 return;
-				}
-				
-				toLog += thisBlock;	
-				
-				// run calcs
-				toLog += runCalcs(e, thisBlock, curBiome, isDark);
-		
-			}
-		}
-		else 
-		{
-			toLog += " Uncaptured block grow event, derp?";
-		}
+		toLog += "Growing: " + sourceBlock;
+
+		toLog += runCalcs(e, sourceBlock, curBiome, isDark);
 
 		// Log it
 		if ((PwnPlantGrowth.logEnabled) && (PwnPlantGrowth.logPlantEnabled))  
     	{	
-    		PwnPlantGrowth.logToFile(toLog, "PlantGrow");
+    		PwnPlantGrowth.logToFile(toLog, "BlockSpread");
     	}	
 	}
 	

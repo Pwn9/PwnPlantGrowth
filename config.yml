@@ -173,11 +173,15 @@ CARROTS:
       Growth: 25
       Death: 50
 
-# Chorus flower needs endstone to grow on
+# Chorus flower needs endstone to grow on and be in the end
 CHORUS_FLOWER:
     Growth: 50
     Death: 5
-    Biome: []
+    Biome: 
+    - END_BARRENS
+    - END_HIGHLANDS
+    - END_MIDLANDS
+    - THE_END
     
 # In this example Cocoa will only grow in jungle biomes at 25% normal rate
 COCOA: 
@@ -189,7 +193,7 @@ COCOA:
     - JUNGLE_EDGE 
 
 # In this example kelp will grow anywhere - Biome: [] - but only at 50%
-KELP_PLANT: 
+KELP: 
     Growth: 50
     Death: 5
     Biome: []
@@ -336,5 +340,5 @@ RED_MUSHROOM:
     - MUSHROOM_SHORE
                 
 # Plugin will check for the following list of plants as of ver. 2.4.0
-# Plants: "BEETROOTS", "CACTUS", "CARROTS", "COCOA", "CHORUS_FLOWER", "KELP_PLANT", "MELON", "MELON_STEM", "NETHER_WART", "POTATOS", "PUMPKIN", "PUMPKIN_STEM", "SUGAR_CANE", "WHEAT"
+# Plants: "BEETROOTS", "CACTUS", "CARROTS", "COCOA", "CHORUS_FLOWER", "KELP", "MELON", "MELON_STEM", "NETHER_WART", "POTATOS", "PUMPKIN", "PUMPKIN_STEM", "SUGAR_CANE", "WHEAT"
 # Trees: "ACACIA_SAPLING", "BIRCH_SAPLING", "DARK_OAK_SAPLING", "JUNGLE_SAPLING", "OAK_SAPLING", "SPRUCE_SAPLING", "RED_MUSHROOM", "BROWN_MUSHROOM"

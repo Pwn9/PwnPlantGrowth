@@ -79,9 +79,10 @@ public class PwnPlantGrowth extends JavaPlugin
 		MetricsLite metricslite = new MetricsLite(this);
 				
 		// Setup listeners
-		new PlantListener(this);
-		new TreeListener(this);
+		new BlockGrowListener(this);
+		new StructureGrowListener(this);
 		new PlayerListener(this);
+		new BlockSpreadListener(this);
 		
 		// Get data folder
 		PwnPlantGrowth.dataFolder = getDataFolder();
@@ -95,7 +96,7 @@ public class PwnPlantGrowth extends JavaPlugin
 		PwnPlantGrowth.uvFound = " UV found, allowing false light growth.";
 		
 		// Load all possible plant types
-		String sArray[] = new String[] { "BEETROOTS", "CACTUS", "CARROTS", "CHORUS_FLOWER", "COCOA", "KELP_PLANT", "MELON", "MELON_STEM", "NETHER_WART", "POTATOES", "PUMPKIN", "PUMPKIN_STEM", "SUGAR_CANE", "ACACIA_SAPLING", "BIRCH_SAPLING", "DARK_OAK_SAPLING", "JUNGLE_SAPLING", "OAK_SAPLING", "SPRUCE_SAPLING", "RED_MUSHROOM", "BROWN_MUSHROOM" };
+		String sArray[] = new String[] { "BEETROOTS", "CACTUS", "CARROTS", "CHORUS_FLOWER", "COCOA", "KELP", "MELON", "MELON_STEM", "NETHER_WART", "POTATOES", "PUMPKIN", "PUMPKIN_STEM", "SUGAR_CANE", "ACACIA_SAPLING", "BIRCH_SAPLING", "DARK_OAK_SAPLING", "JUNGLE_SAPLING", "OAK_SAPLING", "SPRUCE_SAPLING", "RED_MUSHROOM", "BROWN_MUSHROOM" };
 		PwnPlantGrowth.plantTypes = Arrays.asList(sArray);
 		
 		// Check for TerrainControl

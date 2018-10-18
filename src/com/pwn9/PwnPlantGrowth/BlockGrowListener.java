@@ -10,12 +10,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockGrowEvent;
 
-public class PlantListener implements Listener 
+public class BlockGrowListener implements Listener 
 {
 
 	private final PwnPlantGrowth plugin;
 	
-	public PlantListener(PwnPlantGrowth plugin) 
+	public BlockGrowListener(PwnPlantGrowth plugin) 
 	{
 	    plugin.getServer().getPluginManager().registerEvents(this, plugin);    
 	    this.plugin = plugin;
@@ -276,7 +276,7 @@ public class PlantListener implements Listener
 		
 		if ((PwnPlantGrowth.logEnabled) && (PwnPlantGrowth.logPlantEnabled) && (PwnPlantGrowth.logVerbose))
 		{
-			PwnPlantGrowth.logToFile("Block Event for: " + curBlock + " - In biome: " + curBiome, "PlantGrow");
+			PwnPlantGrowth.logToFile("Block Event for: " + curBlock + " - In biome: " + curBiome, "BlockGrow");
 		}	
 		
 		// Is anything set for this block in the config, or is it AIR? If not, abort.
@@ -298,7 +298,7 @@ public class PlantListener implements Listener
 		//int actualLight = e.getBlock().getLightFromBlocks();
 		
 		// If the light level is lower than configured threshold and the plant is NOT exempt from dark grow, set this transaction to isDark = true
-		if ((PwnPlantGrowth.naturalLight > lightLevel) && (!PwnPlantGrowth.canDarkGrow(e.getBlock().getType().toString())))
+		if ((PwnPlantGrowth.naturalLight > lightLevel) && (!PwnPlantGrowth.canDarkGrow(curBlock)))
 		{
 			isDark = true;
 		}
@@ -319,22 +319,22 @@ public class PlantListener implements Listener
 		}
 		else 
 		{
-			toLog += "Growing: " + e.getBlock().getType();
+			toLog += "Growing: " + curBlock;
 		}
 			
 		// Regular growth blocks that do not report initially as AIR - this is most of the normal crops
-		if ((curBlock != "AIR") && (curBlock != "WATER"))
+		if (curBlock != "AIR")
 		{
 			// run calcs
 			toLog += runCalcs(e, curBlock, curBiome, isDark);
 		}		
 					
 		// AIR BLOCKS - when event returns AIR as the block type, it must be one of the following
-		else if ((curBlock == "AIR") || (curBlock == "WATER"))
+		else if ((curBlock == "AIR"))
 		{
 			
 			// Handle Cactus, Sugar Cane; Kelp; the plants that grow vertically only.
-			if (downBlock == "CACTUS" || downBlock == "SUGAR_CANE" || downBlock == "KELP_PLANT" || downBlock == "KELP") 
+			if (downBlock == "CACTUS" || downBlock == "SUGAR_CANE") 
 			{
 	
 				toLog += downBlock;
@@ -402,7 +402,7 @@ public class PlantListener implements Listener
 		// Log it
 		if ((PwnPlantGrowth.logEnabled) && (PwnPlantGrowth.logPlantEnabled))  
     	{	
-    		PwnPlantGrowth.logToFile(toLog, "PlantGrow");
+    		PwnPlantGrowth.logToFile(toLog, "BlockGrow");
     	}	
 	}
 	

@@ -9,12 +9,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.StructureGrowEvent;
 
-public class TreeListener implements Listener 
+public class StructureGrowListener implements Listener 
 {
 
 	private final PwnPlantGrowth plugin;
 	
-	public TreeListener(PwnPlantGrowth plugin) 
+	public StructureGrowListener(PwnPlantGrowth plugin) 
 	{
 	    plugin.getServer().getPluginManager().registerEvents(this, plugin);    
 	    this.plugin = plugin;
@@ -102,8 +102,8 @@ public class TreeListener implements Listener
 		
 		if ((PwnPlantGrowth.logEnabled) && (PwnPlantGrowth.logTreeEnabled) && (PwnPlantGrowth.logVerbose)) 
 		{
-			PwnPlantGrowth.logToFile("Structure Event for: " + curBlock + " - In biome: " + curBiome, "TreeGrow");
-			PwnPlantGrowth.logToFile("Species: " + eventBlock, "TreeGrow");
+			PwnPlantGrowth.logToFile("Structure Event for: " + curBlock + " - In biome: " + curBiome, "StructureGrow");
+			PwnPlantGrowth.logToFile("Species: " + eventBlock, "StructureGrow");
 		}		
 		
 		//TODO: check for bonemeal usage on structure growth and handle it
@@ -313,7 +313,7 @@ public class TreeListener implements Listener
 		// log it
 		if ((PwnPlantGrowth.logEnabled) && (PwnPlantGrowth.logTreeEnabled)) 
 		{	
-			PwnPlantGrowth.logToFile(toLog, "TreeGrow");
+			PwnPlantGrowth.logToFile(toLog, "StructureGrow");
 		}
 	}
 	
