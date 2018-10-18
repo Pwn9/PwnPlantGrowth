@@ -154,15 +154,15 @@ public class StructureGrowListener implements Listener
 			toLog += "Growing: " + curBlock;
 		}
 		
+		// get this block's default values
+		int curGrowth = plugin.getConfig().getInt(curBlock+".Growth");
+		int curDeath = plugin.getConfig().getInt(curBlock+".Death");
+		
 		if ((plugin.getConfig().getList(curBlock+".Biome").contains(curBiome)) || 
 				(plugin.getConfig().getList(curBlock+".Biome").isEmpty()) || 
 				(plugin.getConfig().isSet(curBlock+".BiomeGroup"))) 
 		{	
-			
-			// get this block's default values
-			int curGrowth = plugin.getConfig().getInt(curBlock+".Growth");
-			int curDeath = plugin.getConfig().getInt(curBlock+".Death");
-			
+						
 			// override default values with biome group values - Might be able to modularize this, its
 			if (plugin.getConfig().isSet(curBlock+".BiomeGroup")) {
 				
@@ -296,6 +296,7 @@ public class StructureGrowListener implements Listener
 				}
 				else 
 				{
+					// chance of death
 					if (PwnPlantGrowth.random(curDeath)) 
 					{
 						e.getLocation().getBlock().setType(Material.GRASS);
@@ -307,7 +308,13 @@ public class StructureGrowListener implements Listener
 		else 
 		{
 			e.setCancelled(true);
-			toLog += " Failed: Bad Biome";				
+			toLog += " Failed: Bad Biome";		
+			// chance of death
+			if (PwnPlantGrowth.random(curDeath)) 
+			{
+				e.getLocation().getBlock().setType(Material.GRASS);
+				toLog += " Died (Rate: " + curDeath + ")";
+			}
 		}				
 
 		// log it

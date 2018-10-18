@@ -26,6 +26,9 @@ public class BlockSpreadListener implements Listener
 		
 		String toLog = "";
 		
+		int curGrowth = plugin.getConfig().getInt(thisBlock+".Growth");
+		int curDeath = plugin.getConfig().getInt(thisBlock+".Death");
+		
 		if ((plugin.getConfig().getList(thisBlock+".Biome").contains(curBiome)) || 
 				(plugin.getConfig().getList(thisBlock+".Biome").isEmpty()) || 
 				(plugin.getConfig().isSet(thisBlock+".BiomeGroup"))) 
@@ -35,10 +38,7 @@ public class BlockSpreadListener implements Listener
 			List<String> fBlocksFound = specialBlocks.get(0);
 			List<String> wkBlocksFound = specialBlocks.get(1);
 			List<String> uvBlocksFound = specialBlocks.get(2);
-			
-			int curGrowth = plugin.getConfig().getInt(thisBlock+".Growth");
-			int curDeath = plugin.getConfig().getInt(thisBlock+".Death");
-			
+
 			// check the biome group settings
 			if (plugin.getConfig().isSet(thisBlock+".BiomeGroup")) 
 			{
@@ -173,6 +173,7 @@ public class BlockSpreadListener implements Listener
 				}
 				else 
 				{
+					// chance of death
 					if (PwnPlantGrowth.random(curDeath)) 
 					{
 						// TODO: make these configurable
@@ -189,8 +190,22 @@ public class BlockSpreadListener implements Listener
 		}
 		else 
 		{
+			// biome or biome group does not match, plant WILL NOT grow - but should have a chance to die?
 			e.setCancelled(true);
-			toLog += " Failed: Bad Biome";				
+			toLog += " Failed: Bad Biome";	
+			
+			// chance of death
+			if (PwnPlantGrowth.random(curDeath)) 
+			{
+				// TODO: make these configurable
+				if (thisBlock == "KELP") {
+					e.getBlock().setType(Material.SEAGRASS);
+				}
+				else {
+					e.getBlock().setType(Material.GRASS);
+				}
+				toLog += " Died (Rate: " + curDeath + ")";
+			}			
 		}	
 		
 		return toLog;
