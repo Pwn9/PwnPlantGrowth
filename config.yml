@@ -258,6 +258,27 @@ SUGAR_CANE:
     - BEACH
     - RIVER
     - SWAMPLAND  
+
+# Sweet berry bush was added in minecraft 1.14 and pwnplantgrowth v2.5.0
+SWEET_BERRY_BUSH:
+    Growth: 50
+    GrowthDark: 25
+    Death: 5
+    DeathDark: 25 
+    BiomeGroup:
+    - GreatGrowing
+    - GoodGrowing 
+    GreatGrowing:
+      Growth: 100
+      GrowthDark: 75
+      Death: 0 
+      DeathDark: 5     
+    GoodGrowing:
+      Growth: 80
+      GrowthDark: 55
+      Death: 5 
+      DeathDark: 10
+    Biome: []
     
 # This is WHEAT - In this example wheat will grow everywhere at 50% rate, and at better rates in great and good growing groups
 WHEAT:
@@ -339,6 +360,6 @@ RED_MUSHROOM:
     - MUSHROOM_ISLAND
     - MUSHROOM_SHORE
                 
-# Plugin will check for the following list of plants as of ver. 2.4.0
-# Plants: "BEETROOTS", "CACTUS", "CARROTS", "COCOA", "CHORUS_FLOWER", "KELP", "MELON", "MELON_STEM", "NETHER_WART", "POTATOS", "PUMPKIN", "PUMPKIN_STEM", "SUGAR_CANE", "WHEAT"
+# Plugin will check for the following list of plants as of ver. 2.5.0
+# Plants: "BEETROOTS", "CACTUS", "CARROTS", "COCOA", "CHORUS_FLOWER", "KELP", "MELON", "MELON_STEM", "NETHER_WART", "POTATOS", "PUMPKIN", "PUMPKIN_STEM", "SUGAR_CANE", "WHEAT", "SWEET_BERRY_BUSH"
 # Trees: "ACACIA_SAPLING", "BIRCH_SAPLING", "DARK_OAK_SAPLING", "JUNGLE_SAPLING", "OAK_SAPLING", "SPRUCE_SAPLING", "RED_MUSHROOM", "BROWN_MUSHROOM"
