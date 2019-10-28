@@ -162,7 +162,8 @@ public class BlockGrowListener implements Listener
 						curDeath = plugin.getConfig().getInt(thisBlock+"."+curBiome+".DeathDark");
 					}
 				}
-			}						
+			}	
+			// Run the chance for growth here... 
 			if (!(PwnPlantGrowth.random(curGrowth))) 
 			{
 				e.setCancelled(true);
@@ -358,12 +359,15 @@ public class BlockGrowListener implements Listener
 			}
 			
 			// This is probably the regular growing grass, let's just leave this alone for now
-			else if (downBlock == "LONG_GRASS" || downBlock == "GRASS") {
+			else if (downBlock == "GRASS" || downBlock == "GRASS_BLOCK" || downBlock == "TALL_GRASS") {
 				
-				// log it, general only occurs with bonemeal use but can be spammy in the logs
-				toLog += " Grass grew";	
-				// in the future we could add this to the config, initial test show it causes strange things though.
-				// no run calcs for now
+				// log it, generally only occurs with bonemeal use but can be spammy in the logs
+				toLog += downBlock;
+				
+				// run calcs
+				toLog += runCalcs(e, downBlock, curBiome, isDark);
+				
+				//TODO: this is an odd case, we need to handle this in some other way because it's not canceling in runcalcs.
 			}
 			
 			// Specially Handle Melon/Pumpkin Blocks
@@ -389,15 +393,15 @@ public class BlockGrowListener implements Listener
 				}
 				else 
 				{
-					 thisBlock = "UNKNOWN_BLOCK";
-					 toLog += thisBlock;	
-					 // Log it
-			    	 if (PwnPlantGrowth.logEnabled) 
-			    	 {	
-			    		 PwnPlantGrowth.logToFile(toLog);
-			    	 }	
-					 e.setCancelled(true);
-					 return;
+					// were not sure what has happened so log it and cancel
+					toLog += downBlock + " as UNKNOWN EVENT";	
+					// Log it
+					if (PwnPlantGrowth.logEnabled) 
+					{	
+						PwnPlantGrowth.logToFile(toLog);
+					}	
+					e.setCancelled(true);
+					return;
 				}
 				
 				toLog += thisBlock;	
