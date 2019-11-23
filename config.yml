@@ -360,6 +360,6 @@ RED_MUSHROOM:
     - MUSHROOM_ISLAND
     - MUSHROOM_SHORE
                 
-# Plugin will check for the following list of plants as of ver. 2.5.0
+# Plugin will check for the following list of plants as of ver. 2.5.2
 # Plants: "BEETROOTS", "CACTUS", "CARROTS", "COCOA", "CHORUS_FLOWER", "KELP", "MELON", "MELON_STEM", "NETHER_WART", "POTATOS", "PUMPKIN", "PUMPKIN_STEM", "SUGAR_CANE", "WHEAT", "SWEET_BERRY_BUSH"
 # Trees: "ACACIA_SAPLING", "BIRCH_SAPLING", "DARK_OAK_SAPLING", "JUNGLE_SAPLING", "OAK_SAPLING", "SPRUCE_SAPLING", "RED_MUSHROOM", "BROWN_MUSHROOM"
