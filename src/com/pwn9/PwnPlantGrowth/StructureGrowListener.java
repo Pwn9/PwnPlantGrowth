@@ -175,7 +175,7 @@ public class StructureGrowListener implements Listener
 				for (int i = 0; i < groupList.size(); i++) {
 					
 					// check the biomegroup for this named group
-					if (plugin.getConfig().getList("BiomeGroup."+groupList.get(i)).contains(curBiome)) 
+					if ((plugin.getConfig().getList("BiomeGroup."+groupList.get(i)) != null) && (plugin.getConfig().getList("BiomeGroup."+groupList.get(i)).contains(curBiome))) 
 					{
 						toLog += "Matching BiomeGroup." + groupList.get(i) + " ";
 						
@@ -189,6 +189,10 @@ public class StructureGrowListener implements Listener
 						{
 							curDeath = plugin.getConfig().getInt(curBlock+"."+groupList.get(i)+".Death");
 						}						
+					}
+					else 
+					{
+						toLog += "Missing BiomeGroup." + groupList.get(i) + " ";
 					}
 				}
 			}
@@ -253,7 +257,7 @@ public class StructureGrowListener implements Listener
 						for (int i = 0; i < groupList.size(); i++) {
 							
 							// check the biomegroup for this named group
-							if (plugin.getConfig().getList("BiomeGroup."+groupList.get(i)).contains(curBiome)) 
+							if  ((plugin.getConfig().getList("BiomeGroup."+groupList.get(i)) != null) && (plugin.getConfig().getList("BiomeGroup."+groupList.get(i)).contains(curBiome))) 
 							{
 								
 								toLog += "Matching BiomeGroup." + groupList.get(i) + " ";
@@ -268,6 +272,10 @@ public class StructureGrowListener implements Listener
 								{
 									curDeath = plugin.getConfig().getInt(curBlock+"."+groupList.get(i)+".DeathDark");
 								}						
+							}
+							else 
+							{
+								toLog += "Missing BiomeGroup." + groupList.get(i) + " ";
 							}
 						}
 					}	
