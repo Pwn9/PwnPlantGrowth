@@ -54,7 +54,7 @@ public class BlockGrowListener implements Listener
 				{
 					
 					// check the biomegroup for this named group
-					if (plugin.getConfig().getList("BiomeGroup."+groupList.get(i)).contains(curBiome)) 
+					if ((plugin.getConfig().getList("BiomeGroup."+groupList.get(i)) != null) && (plugin.getConfig().getList("BiomeGroup."+groupList.get(i)).contains(curBiome))) 
 					{
 						
 						toLog += "Matching BiomeGroup." + groupList.get(i) + " ";
@@ -69,6 +69,9 @@ public class BlockGrowListener implements Listener
 						{
 							curDeath = plugin.getConfig().getInt(thisBlock+"."+groupList.get(i)+".Death");
 						}						
+					}
+					else {
+						toLog += "Missing BiomeGroup." + groupList.get(i) + " ";
 					}
 				}
 			}	
