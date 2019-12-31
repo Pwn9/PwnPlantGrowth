@@ -30,9 +30,7 @@ public class BlockGrowListener implements Listener
 		int curGrowth = plugin.getConfig().getInt(thisBlock+".Growth");
 		int curDeath = plugin.getConfig().getInt(thisBlock+".Death");
 		
-		if ((plugin.getConfig().getList(thisBlock+".Biome").contains(curBiome)) || 
-				(plugin.getConfig().getList(thisBlock+".Biome").isEmpty()) || 
-				(plugin.getConfig().isSet(thisBlock+".BiomeGroup"))) 
+		if ((plugin.getConfig().isSet(thisBlock+".BiomeGroup")) || (plugin.getConfig().getList(thisBlock+".Biome").isEmpty()) || (plugin.getConfig().getList(thisBlock+".Biome").contains(curBiome))) 
 		{	
 			// check the area to find if any of the special blocks are found
 			List<List<String>> specialBlocks = specialBlockList(e);
