@@ -192,6 +192,12 @@ COCOA:
     - JUNGLE_HILLS
     - JUNGLE_EDGE 
 
+# In this example grass, tallgrass, bonemeal used on grass - will grow anywhere - Biome: [] - but only at 50%
+GRASS: 
+    Growth: 50
+    Death: 0
+    Biome: []
+
 # In this example kelp will grow anywhere - Biome: [] - but only at 50%
 KELP: 
     Growth: 50
@@ -335,7 +341,21 @@ JUNGLE_SAPLING:
     Biome:
     - JUNGLE
     - JUNGLE_HILLS   
+
+BAMBOO:
+    Growth: 50
+    Death: 5
+    Biome:
+    - JUNGLE
+    - JUNGLE_HILLS   
     
+BAMBOO_SAPLING:
+    Growth: 50
+    Death: 5
+    Biome:
+    - JUNGLE
+    - JUNGLE_HILLS   
+            
 OAK_SAPLING:
     Growth: 50
     Death: 5
@@ -361,5 +381,5 @@ RED_MUSHROOM:
     - MUSHROOM_SHORE
                 
 # Plugin will check for the following list of plants as of ver. 2.5.2
-# Plants: "BEETROOTS", "CACTUS", "CARROTS", "COCOA", "CHORUS_FLOWER", "KELP", "MELON", "MELON_STEM", "NETHER_WART", "POTATOS", "PUMPKIN", "PUMPKIN_STEM", "SUGAR_CANE", "WHEAT", "SWEET_BERRY_BUSH"
-# Trees: "ACACIA_SAPLING", "BIRCH_SAPLING", "DARK_OAK_SAPLING", "JUNGLE_SAPLING", "OAK_SAPLING", "SPRUCE_SAPLING", "RED_MUSHROOM", "BROWN_MUSHROOM"
+# Plants: "BEETROOTS", "CACTUS", "CARROTS", "COCOA", "CHORUS_FLOWER", "GRASS", "KELP", "MELON", "MELON_STEM", "NETHER_WART", "POTATOS", "PUMPKIN", "PUMPKIN_STEM", "SUGAR_CANE", "WHEAT", "SWEET_BERRY_BUSH"
+# Trees: "ACACIA_SAPLING", "BAMBOO", "BAMBOO_SAPLING", "BIRCH_SAPLING", "DARK_OAK_SAPLING", "JUNGLE_SAPLING", "OAK_SAPLING", "SPRUCE_SAPLING", "RED_MUSHROOM", "BROWN_MUSHROOM"

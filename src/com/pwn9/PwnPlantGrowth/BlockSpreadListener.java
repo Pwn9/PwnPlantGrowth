@@ -188,7 +188,7 @@ public class BlockSpreadListener implements Listener
 							e.getBlock().setType(Material.SEAGRASS);
 						}
 						else {
-							e.getBlock().setType(Material.GRASS);
+							e.getBlock().setType(Material.DEAD_BUSH);
 						}
 						toLog += " Died (Rate: " + curDeath + ")";
 					}
@@ -209,7 +209,7 @@ public class BlockSpreadListener implements Listener
 					e.getBlock().setType(Material.SEAGRASS);
 				}
 				else {
-					e.getBlock().setType(Material.GRASS);
+					e.getBlock().setType(Material.DEAD_BUSH);
 				}
 				toLog += " Died (Rate: " + curDeath + ")";
 			}			
@@ -292,7 +292,7 @@ public class BlockSpreadListener implements Listener
 		String sourceBlock = String.valueOf(e.getSource().getType());
 		
 		// we only care about these 2 for now
-		if (sourceBlock != "CHORUS_FLOWER" && sourceBlock != "KELP") 
+		if (sourceBlock != "CHORUS_FLOWER" && sourceBlock != "KELP" && sourceBlock != "BAMBOO" && sourceBlock != "BAMBOO_SAPLING") 
 		{
 			return;
 		}

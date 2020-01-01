@@ -20,6 +20,7 @@ public class BlockGrowListener implements Listener
 	    plugin.getServer().getPluginManager().registerEvents(this, plugin);    
 	    this.plugin = plugin;
 	}
+
 	
 	// called to run the calculations and determine what happens to the plant on the event
 	public String runCalcs(BlockGrowEvent e, String thisBlock, String curBiome, Boolean isDark) 
@@ -188,7 +189,7 @@ public class BlockGrowListener implements Listener
 							e.getBlock().setType(Material.VINE);
 						}
 						else {
-							e.getBlock().setType(Material.GRASS);
+							e.getBlock().setType(Material.DEAD_BUSH);
 						}
 						toLog += " Died (Rate: " + curDeath + ")";
 					}
@@ -207,7 +208,7 @@ public class BlockGrowListener implements Listener
 					e.getBlock().setType(Material.VINE);
 				}
 				else {
-					e.getBlock().setType(Material.GRASS);
+					e.getBlock().setType(Material.DEAD_BUSH);
 				}
 				toLog += " Died (Rate: " + curDeath + ")";
 			}			
@@ -352,7 +353,7 @@ public class BlockGrowListener implements Listener
 		else if ((curBlock == "AIR"))
 		{
 			
-			// Handle Cactus, Sugar Cane; Kelp; the plants that grow vertically only.
+			// Handle Cactus, Sugar Cane; the plants that grow vertically only.
 			if (downBlock == "CACTUS" || downBlock == "SUGAR_CANE") 
 			{
 	
@@ -363,16 +364,15 @@ public class BlockGrowListener implements Listener
 				
 			}
 			
-			// This is probably the regular growing grass, let's just leave this alone for now
+			// This is regular growing grass or bonemeal on grass
 			else if (downBlock == "GRASS" || downBlock == "GRASS_BLOCK" || downBlock == "TALL_GRASS") {
 				
 				// log it, generally only occurs with bonemeal use but can be spammy in the logs
 				toLog += downBlock;
+
+				// run calcs - we're using GRASS as the downblock for all of these so that we only need one config
+				toLog += runCalcs(e, "GRASS", curBiome, isDark);
 				
-				// run calcs
-				toLog += runCalcs(e, downBlock, curBiome, isDark);
-				
-				//TODO: this is an odd case, we need to handle this in some other way because it's not canceling in runcalcs.
 			}
 			
 			// Specially Handle Melon/Pumpkin Blocks

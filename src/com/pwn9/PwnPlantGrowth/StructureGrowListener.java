@@ -307,7 +307,7 @@ public class StructureGrowListener implements Listener
 					// chance of death
 					if (PwnPlantGrowth.random(curDeath)) 
 					{
-						e.getLocation().getBlock().setType(Material.GRASS);
+						e.getLocation().getBlock().setType(Material.DEAD_BUSH);
 						toLog += " Died (Rate: " + curDeath + ")";
 					}
 				}
@@ -320,7 +320,7 @@ public class StructureGrowListener implements Listener
 			// chance of death
 			if (PwnPlantGrowth.random(curDeath)) 
 			{
-				e.getLocation().getBlock().setType(Material.GRASS);
+				e.getLocation().getBlock().setType(Material.DEAD_BUSH);
 				toLog += " Died (Rate: " + curDeath + ")";
 			}
 		}				
