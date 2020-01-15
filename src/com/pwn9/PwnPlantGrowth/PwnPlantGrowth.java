@@ -18,6 +18,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.khorn.terraincontrol.TerrainControl;
+import com.pwn9.PwnPlantGrowth.PpgCommands;
 import com.pwn9.PwnPlantGrowth.Config;
 
 public class PwnPlantGrowth extends JavaPlugin 
@@ -77,7 +78,10 @@ public class PwnPlantGrowth extends JavaPlugin
 		
 		// Start Metrics
 		MetricsLite metricslite = new MetricsLite(this);
-				
+
+    	// Command Executor
+    	getCommand("ppg").setExecutor(new PpgCommands(this));
+    	
 		// Setup listeners
 		new BlockGrowListener(this);
 		new StructureGrowListener(this);
@@ -263,6 +267,10 @@ public class PwnPlantGrowth extends JavaPlugin
 		{
 			return String.valueOf(e.getLocation().getBlock().getBiome());
 		}
+	}
+
+	public void loadConfig() {
+		Config.LoadConfig();
 	}
 
 }
