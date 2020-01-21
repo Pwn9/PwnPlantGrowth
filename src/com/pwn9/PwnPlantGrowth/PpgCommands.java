@@ -25,16 +25,16 @@ public class PpgCommands implements CommandExecutor
 		}
 		else
 		{
-			if (cmd.getName().equalsIgnoreCase("pwnlay"))
+			if (cmd.getName().equalsIgnoreCase("ppg"))
 			{
-				pwnlay(sender, cmd, label, args);
+				ppg(sender, cmd, label, args);
 				return true;
 			}
 		}
 		return false;
    }	
    
-	public void pwnlay(CommandSender sender, Command cmd, String label, String[] args)
+	public void ppg(CommandSender sender, Command cmd, String label, String[] args)
 	{	
 		if(args.length > 0) 
 		{

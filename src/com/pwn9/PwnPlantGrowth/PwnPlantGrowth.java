@@ -18,17 +18,17 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.khorn.terraincontrol.TerrainControl;
-import com.pwn9.PwnPlantGrowth.PpgCommands;
-import com.pwn9.PwnPlantGrowth.Config;
 
 public class PwnPlantGrowth extends JavaPlugin 
 {
 	// For convenience, a reference to the instance of this plugin
 	public static PwnPlantGrowth instance;
 	
+    // Get the datafolder
+	public static File dataFolder;
+	
 	// declare some stuffs to be used later
 	public ArrayList<Integer> softBlocks = new ArrayList<Integer>();
-	public static File dataFolder;
 	public static Boolean logEnabled;
 	public static Boolean logTreeEnabled;
 	public static Boolean logPlantEnabled;
@@ -78,9 +78,6 @@ public class PwnPlantGrowth extends JavaPlugin
 		
 		// Start Metrics
 		MetricsLite metricslite = new MetricsLite(this);
-
-    	// Command Executor
-    	getCommand("ppg").setExecutor(new PpgCommands(this));
     	
 		// Setup listeners
 		new BlockGrowListener(this);
@@ -93,7 +90,7 @@ public class PwnPlantGrowth extends JavaPlugin
 		
 		// Load Configurable Values
 		Config.LoadConfig();
-		
+		    	
 		// Messages
 		PwnPlantGrowth.fertFound = " Fertilizer found, growth rate 100%";
 		PwnPlantGrowth.wkFound = " Weed Killer found, plants won't die.";
@@ -119,6 +116,9 @@ public class PwnPlantGrowth extends JavaPlugin
     	}	
     	
     	configCheck();
+    	
+    	// Command Executor
+    	getCommand("ppg").setExecutor(new PpgCommands(this));
 	}
 		
 	public void onDisable() 
