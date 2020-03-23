@@ -25,9 +25,16 @@ public class BlockSpreadListener implements Listener
 	{
 		
 		String toLog = "";
+		String frontLog = ", Biome: " + curBiome + ", Dark: " + isDark.toString() + ", ";
+		String darkLog = "Dark Settings: {";
+		String groupLog = "Settings: {";
+		// bool to catch if the biome is never declared in any config, therefor a bad biome and should not grow
+		boolean noBiome = true;
 		
 		int curGrowth = plugin.getConfig().getInt(thisBlock+".Growth");
+		frontLog += "Default Growth: " + curGrowth + ", ";
 		int curDeath = plugin.getConfig().getInt(thisBlock+".Death");
+		frontLog += "Default Death: " + curDeath + ", ";
 		
 		if ((plugin.getConfig().getList(thisBlock+".Biome").contains(curBiome)) || 
 				(plugin.getConfig().getList(thisBlock+".Biome").isEmpty()) || 
@@ -46,9 +53,10 @@ public class BlockSpreadListener implements Listener
 				// create list from the config setting
 				List<?> groupList = plugin.getConfig().getList(thisBlock+".BiomeGroup");
 				
-				toLog += " BiomeGroup is set: " + groupList.toString() + " - ";
+				groupLog += "BiomeGroup: " + groupList.toString() + ", ";
 				
 				// iterate through list and see if any of that list matches curBiome
+				boolean matches = false;
 				for (int i = 0; i < groupList.size(); i++) 
 				{
 					
@@ -56,48 +64,59 @@ public class BlockSpreadListener implements Listener
 					if ((plugin.getConfig().getList("BiomeGroup."+groupList.get(i)) != null) && (plugin.getConfig().getList("BiomeGroup."+groupList.get(i)).contains(curBiome))) 
 					{
 						
-						toLog += "Matching BiomeGroup." + groupList.get(i) + " ";
+						matches = true;
+						noBiome = false;
+						groupLog += "Matches: " + groupList.get(i) + ", ";
 
 						// reference the configs now to see if the config settings are set!
 						if (plugin.getConfig().isSet(thisBlock+"."+groupList.get(i)+".Growth")) 
 						{
 							curGrowth = plugin.getConfig().getInt(thisBlock+"."+groupList.get(i)+".Growth");
+							groupLog += "New Growth: " + curGrowth + ", ";
 						}
 						
 						if (plugin.getConfig().isSet(thisBlock+"."+groupList.get(i)+".Death")) 
 						{
 							curDeath = plugin.getConfig().getInt(thisBlock+"."+groupList.get(i)+".Death");
+							groupLog += "New Death: " + curDeath + ", ";
 						}						
 					}
-					else 
-					{
-						toLog += "Missing BiomeGroup." + groupList.get(i) + " ";
-					}
+				}
+				if (!matches) {
+					groupLog += "Matches: NULL, ";
 				}
 			}	
 			else {
-				toLog += " No BiomeGroup Found - ";
+				groupLog += "BiomeGroup: NULL,  ";
 			}
 			
-			// override with individual settings
-			if (plugin.getConfig().isSet(thisBlock+"."+curBiome+".Growth")) 
-			{
-				curGrowth = plugin.getConfig().getInt(thisBlock+"."+curBiome+".Growth");
-			}
+			groupLog += "Specific Settings: {";
 			
-			if (plugin.getConfig().isSet(thisBlock+"."+curBiome+".Death")) 
-			{
-				curDeath = plugin.getConfig().getInt(thisBlock+"."+curBiome+".Death");
+			if (plugin.getConfig().getList(thisBlock+".Biome").contains(curBiome)) {
+				noBiome = false;
+				// override with individual settings
+				if (plugin.getConfig().isSet(thisBlock+"."+curBiome+".Growth")) 
+				{
+					curGrowth = plugin.getConfig().getInt(thisBlock+"."+curBiome+".Growth");
+					groupLog += "Growth for " + curBiome + ": " + curGrowth + ", ";
+				}
+				
+				if (plugin.getConfig().isSet(thisBlock+"."+curBiome+".Death")) 
+				{
+					curDeath = plugin.getConfig().getInt(thisBlock+"."+curBiome+".Death");
+					groupLog += "Death for " + curBiome + ": " + curDeath + ", ";
+				}
 			}
 			
 			// if there is fertilizer, grow this plant at the fertilizer rate - default 100%
 			// TODO: should fertilizer override dark settings or not - i think not for now
 			if (fBlocksFound.contains(PwnPlantGrowth.fertilizer))
 			{
-				toLog += PwnPlantGrowth.fertFound;
+				groupLog += PwnPlantGrowth.fertFound;
 				// set the current growth to the fertilizer rate
 				curGrowth = PwnPlantGrowth.frate;
 			}
+			groupLog += "}}, ";
 			
 			// See if there are special settings for dark growth
 			if (isDark) 
@@ -105,21 +124,21 @@ public class BlockSpreadListener implements Listener
 				// If uv is enabled and found, isDark remains false.
 				if (uvBlocksFound.contains(PwnPlantGrowth.uv))
 				{
-					toLog += PwnPlantGrowth.uvFound;
+					darkLog += PwnPlantGrowth.uvFound;
 				}
 				else 
 				{							
-					toLog += " In dark. ";
-					
 					// default isDark config rates (if exist)
 					if (plugin.getConfig().isSet(thisBlock+".GrowthDark")) 
 					{
 						curGrowth = plugin.getConfig().getInt(thisBlock+".GrowthDark");
+						darkLog += "Growth: " + curGrowth + ", ";
 					}
 					
 					if (plugin.getConfig().isSet(thisBlock+".DeathDark")) 
 					{
 						curDeath = plugin.getConfig().getInt(thisBlock+".DeathDark");
+						darkLog += "Death: " + curDeath + ", ";
 					}
 					
 					// override default values with biome group values
@@ -129,50 +148,87 @@ public class BlockSpreadListener implements Listener
 						// create list from the config setting
 						List<?> groupList = plugin.getConfig().getList(thisBlock+".BiomeGroup");
 						
-						toLog += " BiomeGroup is set: " + groupList.toString() + " - ";
+						darkLog += "BiomeGroup: " + groupList.toString() + ", ";
 						
 						// iterate through list and see if any of that list matches curBiome
+						boolean matches = false;
 						for (int i = 0; i < groupList.size(); i++) {
 							
 							// check the biomegroup for this named group
 							if ((plugin.getConfig().getList("BiomeGroup."+groupList.get(i)) != null) && (plugin.getConfig().getList("BiomeGroup."+groupList.get(i)).contains(curBiome))) 
 							{	
-								toLog += "Matching BiomeGroup." + groupList.get(i) + " ";
+								
+								matches = true;
+								noBiome = false;
+								darkLog += "Matching: " + groupList.get(i) + ", ";
 								
 								// reference the configs now to see if the config settings are set!
 								if (plugin.getConfig().isSet(thisBlock+"."+groupList.get(i)+".GrowthDark")) 
 								{
 									curGrowth = plugin.getConfig().getInt(thisBlock+"."+groupList.get(i)+".GrowthDark");
+									darkLog += "New Growth: " + curGrowth + ", ";
 								}
 								
 								if (plugin.getConfig().isSet(thisBlock+"."+groupList.get(i)+".DeathDark")) 
 								{
 									curDeath = plugin.getConfig().getInt(thisBlock+"."+groupList.get(i)+".DeathDark");
+									darkLog += "New Death: " + curDeath + ", ";
 								}						
 							}
-							else 
-							{
-								toLog += "Missing BiomeGroup." + groupList.get(i) + " ";
-							}
 						}
+						if (!matches) {
+							darkLog += "Matches: NULL, ";
+						}						
 					}	
+					else {
+						darkLog += "BiomeGroup: NULL, ";
+					}
 					
+					darkLog += "Specific Settings: {";
+										
 					// per biome isDark rates (if exist)
-					if (plugin.getConfig().isSet(thisBlock+"."+curBiome+".GrowthDark")) 
-					{
-						curGrowth = plugin.getConfig().getInt(thisBlock+"."+curBiome+".GrowthDark");
+					if (plugin.getConfig().getList(thisBlock+".Biome").contains(curBiome)) {
+						noBiome = false;					
+						if (plugin.getConfig().isSet(thisBlock+"."+curBiome+".GrowthDark")) 
+						{
+							curGrowth = plugin.getConfig().getInt(thisBlock+"."+curBiome+".GrowthDark");
+							darkLog += "Growth for " + curBiome + ": " + curGrowth + ", ";
+						}
+						
+						if (plugin.getConfig().isSet(thisBlock+"."+curBiome+".DeathDark")) 
+						{
+							curDeath = plugin.getConfig().getInt(thisBlock+"."+curBiome+".DeathDark");
+							darkLog += "Death for " + curBiome + ": " + curDeath + ", ";
+						}
 					}
 					
-					if (plugin.getConfig().isSet(thisBlock+"."+curBiome+".DeathDark")) 
-					{
-						curDeath = plugin.getConfig().getInt(thisBlock+"."+curBiome+".DeathDark");
-					}
+					darkLog += "}}, ";
 				}
-			}						
-			if (!(PwnPlantGrowth.random(curGrowth))) 
+			}
+			
+			// cancel bad biomes here
+			if (noBiome) 
 			{
 				e.setCancelled(true);
-				toLog += " Failed (Rate: " + curGrowth + ") ";
+				toLog += "RESULT: {Failed Growth: Bad Biome}";	
+				// chance of death
+				if (PwnPlantGrowth.random(curDeath)) 
+				{
+					// TODO: make these configurable
+					if (thisBlock == "COCOA") {
+						e.getBlock().setType(Material.VINE);
+					}
+					else {
+						e.getBlock().setType(Material.DEAD_BUSH);
+					}
+					toLog += " {Plant Died, Rate: " + curDeath + "}";
+				}				
+			}
+			// Run the chance for growth here... 
+			else if (!(PwnPlantGrowth.random(curGrowth)))			
+			{
+				e.setCancelled(true);
+				toLog += "RESULT: {Failed Growth, Rate: " + curGrowth + "} ";
 				
 				if (wkBlocksFound.contains(PwnPlantGrowth.weedKiller)) 
 				{
@@ -190,16 +246,21 @@ public class BlockSpreadListener implements Listener
 						else {
 							e.getBlock().setType(Material.DEAD_BUSH);
 						}
-						toLog += " Died (Rate: " + curDeath + ")";
+						toLog += " {Plant Died, Rate: " + curDeath + "}";
 					}
 				}
-			}									
+			}
+			else 
+			{
+				toLog += "RESULT: {Plant Grew, Rate: " + curGrowth + "}";
+				
+			}
 		}
 		else 
 		{
 			// biome or biome group does not match, plant WILL NOT grow - but should have a chance to die?
 			e.setCancelled(true);
-			toLog += " Failed: Bad Biome";	
+			toLog += "RESULT: {Failed Growth: Bad Biome}";		
 			
 			// chance of death
 			if (PwnPlantGrowth.random(curDeath)) 
@@ -211,11 +272,19 @@ public class BlockSpreadListener implements Listener
 				else {
 					e.getBlock().setType(Material.DEAD_BUSH);
 				}
-				toLog += " Died (Rate: " + curDeath + ")";
+				toLog += " {Plant Died, Rate: " + curDeath + "}";
 			}			
 		}	
 		
-		return toLog;
+		String midLog = "";
+		if (isDark) {
+			midLog += darkLog;
+		} 
+		else {
+			midLog += groupLog;
+		}
+		
+		return frontLog + midLog + ", "+ toLog;
 	}
 	
 	// retrieve list of special blocks
