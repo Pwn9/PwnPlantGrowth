@@ -235,7 +235,7 @@ public class BlockGrowListener implements Listener
 				}
 			}
 			
-			// An unkown block growth event from AIR has occurred
+			// An unknown block growth event from AIR has occurred
 			else 
 			{
 				// were not sure what has happened so log it and let it grow, maybe a new plant we haven't caught yet.

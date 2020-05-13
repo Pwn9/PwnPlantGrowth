@@ -54,6 +54,9 @@ uv_radius: 5
 # Allow plugin to capture bonemeal (only works for trees right now)
 limit_bonemeal: false
 
+# Show players possible growth rates for an item if they click it on a block in a biome
+report_growth: false
+
 # Run various debug logs to view additional plugin data for troubleshooting and configuration. Can get spammy, use for debugging.
 debug_log: false
 

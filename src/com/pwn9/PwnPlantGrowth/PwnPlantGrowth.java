@@ -40,6 +40,7 @@ public class PwnPlantGrowth extends JavaPlugin
 	public static List<String> darkGrow;
 	public static List<String> enabledWorlds;
 	public static List<String> plantTypes;
+	public static List<String> seedTypes;
 	static Random randomNumberGenerator = new Random();
 	
 	// Weedkiller
@@ -60,6 +61,9 @@ public class PwnPlantGrowth extends JavaPlugin
 	
 	// Bonemeal setting
 	public static Boolean limitBonemeal;
+
+	// Report growth setting
+	public static Boolean reportGrowth;
 	
 	// Common messages
 	public static String fertFound;
@@ -97,8 +101,12 @@ public class PwnPlantGrowth extends JavaPlugin
 		PwnPlantGrowth.uvFound = " UV found, allowing false light growth.";
 		
 		// Load all possible plant types
-		String sArray[] = new String[] { "BAMBOO", "BAMBOO_SAPLING", "BEETROOTS", "CACTUS", "CARROTS", "CHORUS_FLOWER", "COCOA", "GRASS", "KELP", "MELON", "MELON_STEM", "NETHER_WART", "POTATOES", "PUMPKIN", "PUMPKIN_STEM", "SUGAR_CANE", "SWEET_BERRY_BUSH", "ACACIA_SAPLING", "BIRCH_SAPLING", "DARK_OAK_SAPLING", "JUNGLE_SAPLING", "OAK_SAPLING", "SPRUCE_SAPLING", "RED_MUSHROOM", "BROWN_MUSHROOM"};
+		String sArray[] = new String[] { "BAMBOO", "BAMBOO_SAPLING", "BEETROOTS", "CACTUS", "CARROTS", "CHORUS_FLOWER", "COCOA", "GRASS", "KELP", "MELON", "MELON_STEM", "NETHER_WART", "POTATOES", "PUMPKIN", "PUMPKIN_STEM", "SUGAR_CANE", "SWEET_BERRY_BUSH", "WEHAT", "ACACIA_SAPLING", "BIRCH_SAPLING", "DARK_OAK_SAPLING", "JUNGLE_SAPLING", "OAK_SAPLING", "SPRUCE_SAPLING", "RED_MUSHROOM", "BROWN_MUSHROOM"};
 		PwnPlantGrowth.plantTypes = Arrays.asList(sArray);
+
+		// Load all possible plant types
+		String gArray[] = new String[] { "BAMBOO_SAPLING", "BEETROOT_SEEDS", "CACTUS", "CARROTS", "CHORUS_FLOWER", "COCOA_BEANS", "KELP", "MELON_SEEDS", "NETHER_WART", "POTATOES", "PUMPKIN_SEEDS", "SUGAR_CANE", "SWEET_BERRIES", "WHEAT_SEEDS", "ACACIA_SAPLING", "BIRCH_SAPLING", "DARK_OAK_SAPLING", "JUNGLE_SAPLING", "OAK_SAPLING", "SPRUCE_SAPLING", "RED_MUSHROOM", "BROWN_MUSHROOM"};
+		PwnPlantGrowth.seedTypes = Arrays.asList(gArray);
 		
 		// Check for TerrainControl
 		Plugin plug = getServer().getPluginManager().getPlugin("TerrainControl");

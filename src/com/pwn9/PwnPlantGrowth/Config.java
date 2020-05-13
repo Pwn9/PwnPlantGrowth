@@ -37,6 +37,9 @@ public class Config
 		PwnPlantGrowth.uvenabled = PwnPlantGrowth.instance.getConfig().getBoolean("uv_enabled", false);
 		
 		// Bonemeal setting
-		PwnPlantGrowth.limitBonemeal = PwnPlantGrowth.instance.getConfig().getBoolean("limit_bonemeal", false);		
+		PwnPlantGrowth.limitBonemeal = PwnPlantGrowth.instance.getConfig().getBoolean("limit_bonemeal", false);
+		
+		// Report growth settings
+		PwnPlantGrowth.reportGrowth = PwnPlantGrowth.instance.getConfig().getBoolean("report_growth", false);			
 	}
 }
