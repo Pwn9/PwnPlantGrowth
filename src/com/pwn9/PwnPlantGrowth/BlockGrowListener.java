@@ -167,6 +167,29 @@ public class BlockGrowListener implements Listener
 		else if ((curBlock == "AIR"))
 		{
 			
+			// Get facing blocks, to check for melon or pumpkin stem.
+			String faceBlock;
+
+			// Melon Block
+			if ((e.getBlock().getRelative(BlockFace.EAST).getType() == Material.MELON_STEM) ||
+					(e.getBlock().getRelative(BlockFace.WEST).getType() == Material.MELON_STEM) ||
+					(e.getBlock().getRelative(BlockFace.NORTH).getType() == Material.MELON_STEM) ||
+					(e.getBlock().getRelative(BlockFace.SOUTH).getType() == Material.MELON_STEM)) 
+			{
+				faceBlock = "MELON";
+			}
+			// Pumpkin Block
+			else if ((e.getBlock().getRelative(BlockFace.EAST).getType() == Material.PUMPKIN_STEM) ||
+					(e.getBlock().getRelative(BlockFace.WEST).getType() == Material.PUMPKIN_STEM) ||
+					(e.getBlock().getRelative(BlockFace.NORTH).getType() == Material.PUMPKIN_STEM) ||
+					(e.getBlock().getRelative(BlockFace.SOUTH).getType() == Material.PUMPKIN_STEM)) 
+			{
+				 faceBlock = "PUMPKIN";	
+			}
+			else {
+				faceBlock = "AIR";
+			}
+			
 			// Handle Cactus, Sugar Cane; the plants that grow vertically only.
 			if (downBlock == "CACTUS" || downBlock == "SUGAR_CANE") 
 			{
@@ -174,7 +197,6 @@ public class BlockGrowListener implements Listener
 				toLog += downBlock;
 				
 				// run calcs
-				//toLog += runCalcs(e, downBlock, curBiome, isDark);
 				Calculate cal = getCalcs(specialBlockList(e), downBlock, curBiome, isDark);
 				toLog += cal.doLog;
 				e.setCancelled(cal.isCancelled);
@@ -182,6 +204,20 @@ public class BlockGrowListener implements Listener
 					e.getBlock().setType(cal.replacement);
 				}
 			}
+			// Handle Cactus, Sugar Cane; the plants that grow vertically only.
+			else if (faceBlock == "MELON" || faceBlock == "PUMPKING") 
+			{
+	
+				toLog += faceBlock;
+				
+				// run calcs
+				Calculate cal = getCalcs(specialBlockList(e), faceBlock, curBiome, isDark);
+				toLog += cal.doLog;
+				e.setCancelled(cal.isCancelled);
+				if (cal.replacement != null) {
+					e.getBlock().setType(cal.replacement);
+				}
+			}			
 			
 			// This is regular growing grass or bonemeal on grass
 			else if (downBlock == "GRASS" || downBlock == "GRASS_BLOCK" || downBlock == "TALL_GRASS") {
@@ -199,50 +235,18 @@ public class BlockGrowListener implements Listener
 				}
 			}
 			
-			// Specially Handle Melon/Pumpkin Blocks
+			// An unkown block growth event from AIR has occurred
 			else 
 			{
-				String thisBlock;
-				
-				// Melon Block
-				if ((e.getBlock().getRelative(BlockFace.EAST).getType() == Material.MELON_STEM) ||
-						(e.getBlock().getRelative(BlockFace.WEST).getType() == Material.MELON_STEM) ||
-						(e.getBlock().getRelative(BlockFace.NORTH).getType() == Material.MELON_STEM) ||
-						(e.getBlock().getRelative(BlockFace.SOUTH).getType() == Material.MELON_STEM)) 
-				{
-					thisBlock = "MELON";
-				}
-				// Pumpkin Block
-				else if ((e.getBlock().getRelative(BlockFace.EAST).getType() == Material.PUMPKIN_STEM) ||
-						(e.getBlock().getRelative(BlockFace.WEST).getType() == Material.PUMPKIN_STEM) ||
-						(e.getBlock().getRelative(BlockFace.NORTH).getType() == Material.PUMPKIN_STEM) ||
-						(e.getBlock().getRelative(BlockFace.SOUTH).getType() == Material.PUMPKIN_STEM)) 
-				{
-					 thisBlock = "PUMPKIN";	
-				}
-				else 
-				{
-					// were not sure what has happened so log it and cancel
-					toLog += downBlock + " as UNKNOWN EVENT";	
-					// Log it
-					if (PwnPlantGrowth.logEnabled) 
-					{	
-						PwnPlantGrowth.logToFile(toLog);
-					}	
-					e.setCancelled(true);
-					return;
-				}
-				
-				toLog += thisBlock;	
-				
-				// run calcs
-				//toLog += runCalcs(e, thisBlock, curBiome, isDark);
-				Calculate cal = getCalcs(specialBlockList(e), thisBlock, curBiome, isDark);
-				toLog += cal.doLog;
-				e.setCancelled(cal.isCancelled);
-				if (cal.replacement != null) {
-					e.getBlock().setType(cal.replacement);
-				}
+				// were not sure what has happened so log it and let it grow, maybe a new plant we haven't caught yet.
+				toLog += downBlock + " as UNKNOWN EVENT";	
+				// Log it
+				if (PwnPlantGrowth.logEnabled) 
+				{	
+					PwnPlantGrowth.logToFile(toLog);
+				}	
+				//e.setCancelled(true);
+				return;
 			}
 		}
 		else 
