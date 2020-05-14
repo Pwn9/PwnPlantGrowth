@@ -34,9 +34,6 @@ public class PlayerListener implements Listener
 		// bail if no item in hand
 		if (!e.hasItem()) return;
 		
-		// bail if the item is a block
-		//if (e.isBlockInHand()) return;
-	
 		// get action
 		Action action = e.getAction();
 		
@@ -47,9 +44,8 @@ public class PlayerListener implements Listener
 			
 			Block block = e.getClickedBlock();
 			
-			if (block.getType() == Material.FARMLAND || block.getType() == Material.DIRT || block.getType() == Material.GRASS) 
+			if (block.getType() == Material.FARMLAND || block.getType() == Material.DIRT || block.getType() == Material.GRASS_BLOCK || block.getType() == Material.JUNGLE_LOG || block.getType() == Material.SAND || block.getType() == Material.SOUL_SAND) 
 			{
-				// is this the material in their hand?
 				Material m = e.getMaterial();
 				
 				if(PwnPlantGrowth.plantTypes.contains(m.toString())) {
@@ -61,7 +57,7 @@ public class PlayerListener implements Listener
 					
 					String msg = "";
 					
-					if (m == Material.BEETROOT_SEEDS) {
+					if (m == Material.BEETROOT_SEEDS || m == Material.BEETROOT) {
 						int a = PwnPlantGrowth.instance.getConfig().getInt("BEETROOTS.Growth");
 						msg = "BEETROOT: " + a;
 					}
@@ -99,8 +95,6 @@ public class PlayerListener implements Listener
 				}
 			}
 		}
-		
-
 	}
 	
 }
