@@ -2,9 +2,11 @@ package com.pwn9.PwnPlantGrowth;
 
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class PlayerListener implements Listener
@@ -33,29 +35,72 @@ public class PlayerListener implements Listener
 		if (!e.hasItem()) return;
 		
 		// bail if the item is a block
-		if (e.isBlockInHand()) return;
+		//if (e.isBlockInHand()) return;
 	
-		if (e.getHand() != null) {
+		// get action
+		Action action = e.getAction();
+		
+		if (action == Action.LEFT_CLICK_BLOCK) 
+		{
 			
 			Player p = e.getPlayer();
 			
-			//Block b = e.getClickedBlock();
+			Block block = e.getClickedBlock();
 			
-			// is this the material in their hand?
-			Material m = e.getMaterial();
-			
-			if(PwnPlantGrowth.seedTypes.contains(m.toString()));
-			
-			p.sendMessage("You just click with: " + m.toString());
-			
+			if (block.getType() == Material.FARMLAND || block.getType() == Material.DIRT || block.getType() == Material.GRASS) 
+			{
+				// is this the material in their hand?
+				Material m = e.getMaterial();
+				
+				if(PwnPlantGrowth.plantTypes.contains(m.toString())) {
+					int a = PwnPlantGrowth.instance.getConfig().getInt(m.toString() + ".Growth");
+					p.sendMessage("Growth rate for " + m.toString() + ": " + a);
+					
+				}
+				else if(PwnPlantGrowth.seedTypes.contains(m.toString())) {
+					
+					String msg = "";
+					
+					if (m == Material.BEETROOT_SEEDS) {
+						int a = PwnPlantGrowth.instance.getConfig().getInt("BEETROOTS.Growth");
+						msg = "BEETROOT: " + a;
+					}
+					else if (m == Material.CARROT) {
+						int a = PwnPlantGrowth.instance.getConfig().getInt("CARROTS.Growth");
+						msg = "CARROTS: " + a;
+					}						
+					else if (m == Material.COCOA_BEANS) {
+						int a = PwnPlantGrowth.instance.getConfig().getInt("COCOA.Growth");
+						msg = "COCOA: " + a;
+					}	
+					else if (m == Material.MELON_SEEDS) {
+						int a = PwnPlantGrowth.instance.getConfig().getInt("MELON.Growth");
+						msg = "MELON: " + a;
+					}
+					else if (m == Material.POTATO) {
+						int a = PwnPlantGrowth.instance.getConfig().getInt("POTATOES.Growth");	
+						msg = "POTATOES: " + a;
+					}					
+					else if (m == Material.PUMPKIN_SEEDS) {
+						int a = PwnPlantGrowth.instance.getConfig().getInt("PUMPKIN.Growth");	
+						msg = "PUMPKIN: " + a;
+					}
+					else if (m == Material.SWEET_BERRIES) {
+						int a = PwnPlantGrowth.instance.getConfig().getInt("SWEET_BERRY_BUSH.Growth");		
+						msg = "SWEET_BERRY_BUSH: " + a;
+					}
+					else if (m == Material.WHEAT_SEEDS) {
+						int a = PwnPlantGrowth.instance.getConfig().getInt("WHEAT.Growth");		
+						msg = "WHEAT: " + a;
+					}
+					
+					p.sendMessage("Growth rate for " + msg);
+	
+				}
+			}
 		}
 		
-	    
-	    
-	    
 
-
-	    
 	}
 	
 }

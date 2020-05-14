@@ -351,7 +351,8 @@ BAMBOO:
     Biome:
     - JUNGLE
     - JUNGLE_HILLS   
-    
+
+# This may no longer be needed    
 BAMBOO_SAPLING:
     Growth: 50
     Death: 5

@@ -104,8 +104,8 @@ public class PwnPlantGrowth extends JavaPlugin
 		String sArray[] = new String[] { "BAMBOO", "BAMBOO_SAPLING", "BEETROOTS", "CACTUS", "CARROTS", "CHORUS_FLOWER", "COCOA", "GRASS", "KELP", "MELON", "MELON_STEM", "NETHER_WART", "POTATOES", "PUMPKIN", "PUMPKIN_STEM", "SUGAR_CANE", "SWEET_BERRY_BUSH", "WEHAT", "ACACIA_SAPLING", "BIRCH_SAPLING", "DARK_OAK_SAPLING", "JUNGLE_SAPLING", "OAK_SAPLING", "SPRUCE_SAPLING", "RED_MUSHROOM", "BROWN_MUSHROOM"};
 		PwnPlantGrowth.plantTypes = Arrays.asList(sArray);
 
-		// Load all possible plant types
-		String gArray[] = new String[] { "BAMBOO_SAPLING", "BEETROOT_SEEDS", "CACTUS", "CARROTS", "CHORUS_FLOWER", "COCOA_BEANS", "KELP", "MELON_SEEDS", "NETHER_WART", "POTATOES", "PUMPKIN_SEEDS", "SUGAR_CANE", "SWEET_BERRIES", "WHEAT_SEEDS", "ACACIA_SAPLING", "BIRCH_SAPLING", "DARK_OAK_SAPLING", "JUNGLE_SAPLING", "OAK_SAPLING", "SPRUCE_SAPLING", "RED_MUSHROOM", "BROWN_MUSHROOM"};
+		// Load all possible seed types not in plant types, the items that plant a plant
+		String gArray[] = new String[] { "BEETROOT_SEEDS", "CARROT", "COCOA_BEANS", "MELON_SEEDS", "POTATO", "PUMPKIN_SEEDS", "SWEET_BERRIES", "WHEAT_SEEDS"};
 		PwnPlantGrowth.seedTypes = Arrays.asList(gArray);
 		
 		// Check for TerrainControl
