@@ -1,5 +1,8 @@
 package com.pwn9.PwnPlantGrowth;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -17,6 +20,72 @@ public class PlayerListener implements Listener
 	    plugin.getServer().getPluginManager().registerEvents(this, plugin);    
 	}	
 	
+	
+	static Calculate getCalcs(Boolean report, List<List<String>> specialBlocks, String thisBlock, String curBiome, Boolean isDark)
+	{
+		return new Calculate(report, specialBlocks, thisBlock, curBiome, isDark);
+	}
+	
+	// retrieve list of special blocks
+	public List<List<String>> specialBlockList(PlayerInteractEvent e)
+	{
+		List<String> fBlocksFound = new ArrayList<String>();
+		List<String> wkBlocksFound = new ArrayList<String>();
+		List<String> uvBlocksFound = new ArrayList<String>();;
+
+		List<List<String>> result = new ArrayList<List<String>>();
+		
+		// Check for fertilizer blocks
+		if (PwnPlantGrowth.fenabled) 
+		{
+			for (int fx = -(PwnPlantGrowth.fradius); fx <= PwnPlantGrowth.fradius; fx++) 
+			{
+	            for (int fy = -(PwnPlantGrowth.fradius); fy <= PwnPlantGrowth.fradius; fy++) 
+	            {
+	               for (int fz = -(PwnPlantGrowth.fradius); fz <= PwnPlantGrowth.fradius; fz++) 
+	               {
+	            	   fBlocksFound.add(String.valueOf(e.getPlayer().getLocation().getBlock().getRelative(fx, fy, fz).getType()));
+	               }
+	            }
+	        }
+		}		
+		
+		// Check for weed killer blocks
+		if (PwnPlantGrowth.wkenabled)
+		{
+			for (int wx = -(PwnPlantGrowth.wkradius); wx <= PwnPlantGrowth.wkradius; wx++) 
+			{
+	            for (int wy = -(PwnPlantGrowth.wkradius); wy <= PwnPlantGrowth.wkradius; wy++) 
+	            {
+	               for (int wz = -(PwnPlantGrowth.wkradius); wz <= PwnPlantGrowth.wkradius; wz++) 
+	               {
+	            	   wkBlocksFound.add(String.valueOf(e.getPlayer().getLocation().getBlock().getRelative(wx, wy, wz).getType()));
+	               }
+	            }
+	        }
+		}
+		
+		// Check for uv blocks
+		if (PwnPlantGrowth.uvenabled)
+		{
+			for (int ux = -(PwnPlantGrowth.uvradius); ux <= PwnPlantGrowth.uvradius; ux++) 
+			{
+	            for (int uy = -(PwnPlantGrowth.uvradius); uy <= PwnPlantGrowth.uvradius; uy++) 
+	            {
+	               for (int uz = -(PwnPlantGrowth.uvradius); uz <= PwnPlantGrowth.uvradius; uz++) 
+	               {
+	            	   uvBlocksFound.add(String.valueOf(e.getPlayer().getLocation().getBlock().getRelative(ux, uy, uz).getType()));
+	               }
+	            }
+	        }
+		}		
+		
+		result.add(fBlocksFound);
+		result.add(wkBlocksFound);
+		result.add(uvBlocksFound);
+
+		return result;
+	}	
 	//TODO: BlockFertilizeEvent for bonemeal 
 	
 	// https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/player/PlayerInteractEvent.html
@@ -44,53 +113,73 @@ public class PlayerListener implements Listener
 			
 			Block block = e.getClickedBlock();
 			
+			
 			if (block.getType() == Material.FARMLAND || block.getType() == Material.DIRT || block.getType() == Material.GRASS_BLOCK || block.getType() == Material.JUNGLE_LOG || block.getType() == Material.SAND || block.getType() == Material.SOUL_SAND) 
 			{
+				
 				Material m = e.getMaterial();
+				String a = "";
+				boolean isDark = false;
+				// need to get biome data
+
+				String curBiome = PwnPlantGrowth.getBiome(e);
+
+				// Get the current natural light level
+				int lightLevel = e.getPlayer().getLocation().getBlock().getLightFromSky();
+
 				
 				if(PwnPlantGrowth.plantTypes.contains(m.toString())) {
-					int a = PwnPlantGrowth.instance.getConfig().getInt(m.toString() + ".Growth");
-					p.sendMessage("Growth rate for " + m.toString() + ": " + a);
+					
+					
+					// If the light level is lower than configured threshold and the plant is NOT exempt from dark grow, set this transaction to isDark = true
+					if ((PwnPlantGrowth.naturalLight > lightLevel) && (!PwnPlantGrowth.canDarkGrow(m.toString())))
+					{
+						isDark = true;
+					}					
+					
+					//do a calculate here
+					Calculate cal = getCalcs(true, specialBlockList(e), m.toString(), curBiome, isDark);
+					a += cal.doLog;
+
+					p.sendMessage(a);
 					
 				}
 				else if(PwnPlantGrowth.seedTypes.contains(m.toString())) {
 					
-					String msg = "";
-					
 					if (m == Material.BEETROOT_SEEDS || m == Material.BEETROOT) {
-						int a = PwnPlantGrowth.instance.getConfig().getInt("BEETROOTS.Growth");
-						msg = "BEETROOT: " + a;
+						Calculate cal = getCalcs(true, specialBlockList(e), "BEETROOTS", curBiome, isDark);
+						a += cal.doLog;
 					}
 					else if (m == Material.CARROT) {
-						int a = PwnPlantGrowth.instance.getConfig().getInt("CARROTS.Growth");
-						msg = "CARROTS: " + a;
+						Calculate cal = getCalcs(true, specialBlockList(e), "CARROTS", curBiome, isDark);
+						a += cal.doLog;						
 					}						
 					else if (m == Material.COCOA_BEANS) {
-						int a = PwnPlantGrowth.instance.getConfig().getInt("COCOA.Growth");
-						msg = "COCOA: " + a;
+						Calculate cal = getCalcs(true, specialBlockList(e), "COCOA", curBiome, isDark);
+						a += cal.doLog;						
 					}	
 					else if (m == Material.MELON_SEEDS) {
-						int a = PwnPlantGrowth.instance.getConfig().getInt("MELON.Growth");
-						msg = "MELON: " + a;
+						Calculate cal = getCalcs(true, specialBlockList(e), "MELON", curBiome, isDark);
+						a += cal.doLog;						
 					}
 					else if (m == Material.POTATO) {
-						int a = PwnPlantGrowth.instance.getConfig().getInt("POTATOES.Growth");	
-						msg = "POTATOES: " + a;
+						Calculate cal = getCalcs(true, specialBlockList(e), "POTATOES", curBiome, isDark);
+						a += cal.doLog;						
 					}					
 					else if (m == Material.PUMPKIN_SEEDS) {
-						int a = PwnPlantGrowth.instance.getConfig().getInt("PUMPKIN.Growth");	
-						msg = "PUMPKIN: " + a;
+						Calculate cal = getCalcs(true, specialBlockList(e), "PUMPKIN", curBiome, isDark);
+						a += cal.doLog;						
 					}
-					else if (m == Material.SWEET_BERRIES) {
-						int a = PwnPlantGrowth.instance.getConfig().getInt("SWEET_BERRY_BUSH.Growth");		
-						msg = "SWEET_BERRY_BUSH: " + a;
+					else if (m == Material.SWEET_BERRIES) {		
+						Calculate cal = getCalcs(true, specialBlockList(e), "SWEET_BERRY_BUSH", curBiome, isDark);
+						a += cal.doLog;						
 					}
-					else if (m == Material.WHEAT_SEEDS) {
-						int a = PwnPlantGrowth.instance.getConfig().getInt("WHEAT.Growth");		
-						msg = "WHEAT: " + a;
+					else if (m == Material.WHEAT_SEEDS) {	
+						Calculate cal = getCalcs(true, specialBlockList(e), "WHEAT", curBiome, isDark);
+						a += cal.doLog;						
 					}
 					
-					p.sendMessage("Growth rate for " + msg);
+					p.sendMessage(a);
 	
 				}
 			}

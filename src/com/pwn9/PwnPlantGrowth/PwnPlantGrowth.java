@@ -13,6 +13,7 @@ import java.util.Random;
 import java.util.ArrayList;
 
 import org.bukkit.event.block.BlockGrowEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -277,6 +278,26 @@ public class PwnPlantGrowth extends JavaPlugin
 		}
 	}
 
+
+	public static String getBiome(PlayerInteractEvent e) {
+		if (tc != null) 
+		{
+			String tControl = TerrainControl.getBiomeName(e.getPlayer().getWorld().getName(), e.getPlayer().getLocation().getBlockX(), e.getPlayer().getLocation().getBlockZ());
+			if (tControl != null)
+			{
+				return tControl;
+			}
+			else 
+			{
+				return String.valueOf(e.getPlayer().getLocation().getBlock().getBiome());
+			}
+		}
+		else
+		{
+			return String.valueOf(e.getPlayer().getLocation().getBlock().getBiome());
+		}
+	}
+	
 	public void loadConfig() {
 		Config.LoadConfig();
 	}

@@ -277,4 +277,171 @@ public class Calculate {
 		
 		doLog = frontLog + midLog + toLog;
 	}
+
+	// just report the rate for listerner feature
+	Calculate(Boolean report, List<List<String>> specialBlocks, String thisBlock, String curBiome, Boolean isDark)
+	{
+		isCancelled = false;
+		String toLog = "";
+		// bool to catch if the biome is never declared in any config, therefor a bad biome and should not grow
+		boolean noBiome = true;
+		boolean fert = false;
+		boolean uv = false;
+		
+		// defaults
+		int curGrowth = PwnPlantGrowth.instance.getConfig().getInt(thisBlock+".Growth");
+		int curDeath = PwnPlantGrowth.instance.getConfig().getInt(thisBlock+".Death");
+
+		
+		if ((PwnPlantGrowth.instance.getConfig().isSet(thisBlock+".BiomeGroup")) || (PwnPlantGrowth.instance.getConfig().getList(thisBlock+".Biome").isEmpty()) || (PwnPlantGrowth.instance.getConfig().getList(thisBlock+".Biome").contains(curBiome))) 
+		{	
+			// check the area to find if any of the special blocks are found
+			List<String> fBlocksFound = specialBlocks.get(0);
+			//List<String> wkBlocksFound = specialBlocks.get(1);
+			List<String> uvBlocksFound = specialBlocks.get(2);
+			
+			// check the biome group settings
+			if (PwnPlantGrowth.instance.getConfig().isSet(thisBlock+".BiomeGroup")) 
+			{
+				
+				// create list from the config setting
+				List<?> groupList = PwnPlantGrowth.instance.getConfig().getList(thisBlock+".BiomeGroup");
+				
+				// iterate through list and see if any of that list matches curBiome
+				for (int i = 0; i < groupList.size(); i++) 
+				{
+					
+					// check the biomegroup for this named group
+					if ((PwnPlantGrowth.instance.getConfig().getList("BiomeGroup."+groupList.get(i)) != null) && (PwnPlantGrowth.instance.getConfig().getList("BiomeGroup."+groupList.get(i)).contains(curBiome))) 
+					{
+						noBiome = false;
+						
+						// reference the configs now to see if the config settings are set!
+						if (PwnPlantGrowth.instance.getConfig().isSet(thisBlock+"."+groupList.get(i)+".Growth")) 
+						{
+							curGrowth = PwnPlantGrowth.instance.getConfig().getInt(thisBlock+"."+groupList.get(i)+".Growth");
+						}
+						
+						if (PwnPlantGrowth.instance.getConfig().isSet(thisBlock+"."+groupList.get(i)+".Death")) 
+						{
+							curDeath = PwnPlantGrowth.instance.getConfig().getInt(thisBlock+"."+groupList.get(i)+".Death");
+						}						
+					}	
+				}
+			}	
+			
+			if (PwnPlantGrowth.instance.getConfig().getList(thisBlock+".Biome").contains(curBiome)) {
+				noBiome = false;
+				// override with individual settings
+				if (PwnPlantGrowth.instance.getConfig().isSet(thisBlock+"."+curBiome+".Growth")) 
+				{
+					curGrowth = PwnPlantGrowth.instance.getConfig().getInt(thisBlock+"."+curBiome+".Growth");
+				}
+				
+				if (PwnPlantGrowth.instance.getConfig().isSet(thisBlock+"."+curBiome+".Death")) 
+				{
+					curDeath = PwnPlantGrowth.instance.getConfig().getInt(thisBlock+"."+curBiome+".Death");
+				}
+			}
+			
+			// if there is fertilizer, grow this plant at the fertilizer rate - default 100%
+			if (fBlocksFound.contains(PwnPlantGrowth.fertilizer))
+			{
+				// set the current growth to the fertilizer rate
+				curGrowth = PwnPlantGrowth.frate;
+				fert = true;
+			}
+			
+			// See if there are special settings for dark growth
+			if (isDark) 
+			{
+				// If no UV isDark remains false.
+				if (uvBlocksFound.contains(PwnPlantGrowth.uv))
+				{
+					uv = true;
+				}
+				else
+				{
+					// default isDark config rates (if exist)
+					if (PwnPlantGrowth.instance.getConfig().isSet(thisBlock+".GrowthDark")) 
+					{
+						curGrowth = PwnPlantGrowth.instance.getConfig().getInt(thisBlock+".GrowthDark");
+					}
+					
+					if (PwnPlantGrowth.instance.getConfig().isSet(thisBlock+".DeathDark")) 
+					{
+						curDeath = PwnPlantGrowth.instance.getConfig().getInt(thisBlock+".DeathDark");
+					}
+					
+					// override default values with biome group values
+					if (PwnPlantGrowth.instance.getConfig().isSet(thisBlock+".BiomeGroup")) 
+					{
+						
+						// create list from the config setting
+						List<?> groupList = PwnPlantGrowth.instance.getConfig().getList(thisBlock+".BiomeGroup");
+						
+						// iterate through list and see if any of that list matches curBiome
+						for (int i = 0; i < groupList.size(); i++) {
+							
+							// check the biomegroup for this named group
+							if  ((PwnPlantGrowth.instance.getConfig().getList("BiomeGroup."+groupList.get(i)) != null) && (PwnPlantGrowth.instance.getConfig().getList("BiomeGroup."+groupList.get(i)).contains(curBiome))) 
+							{
+								
+								noBiome = false;
+								
+								// reference the configs now to see if the config settings are set!
+								if (PwnPlantGrowth.instance.getConfig().isSet(thisBlock+"."+groupList.get(i)+".GrowthDark")) 
+								{
+									curGrowth = PwnPlantGrowth.instance.getConfig().getInt(thisBlock+"."+groupList.get(i)+".GrowthDark");
+								}
+								
+								if (PwnPlantGrowth.instance.getConfig().isSet(thisBlock+"."+groupList.get(i)+".DeathDark")) 
+								{
+									curDeath = PwnPlantGrowth.instance.getConfig().getInt(thisBlock+"."+groupList.get(i)+".DeathDark");
+								}						
+							}
+						}
+					}
+
+					
+					// per biome isDark rates (if exist)
+					if (PwnPlantGrowth.instance.getConfig().getList(thisBlock+".Biome").contains(curBiome)) {
+						noBiome = false;
+						if (PwnPlantGrowth.instance.getConfig().isSet(thisBlock+"."+curBiome+".GrowthDark")) 
+						{
+							curGrowth = PwnPlantGrowth.instance.getConfig().getInt(thisBlock+"."+curBiome+".GrowthDark");
+						}
+						
+						if (PwnPlantGrowth.instance.getConfig().isSet(thisBlock+"."+curBiome+".DeathDark")) 
+						{
+							curDeath = PwnPlantGrowth.instance.getConfig().getInt(thisBlock+"."+curBiome+".DeathDark");
+						}
+					}
+				}
+			}	
+		}
+
+		if (noBiome) 
+		{
+			toLog += thisBlock + " will not grow in biome: " + curBiome;				
+		}
+		else 
+		{
+			toLog += thisBlock + " grows at " + curGrowth + "% at this location in biome " + curBiome;
+			if (isDark) 
+			{
+				toLog += " in the dark";
+				if (uv) 
+				{
+					toLog += " with UV block nearby";
+				}
+			}
+			if (fert)
+			{
+				toLog += " with fertilzer block nearby";
+			}
+		}
+
+		doLog = toLog;
+	}	
 }
