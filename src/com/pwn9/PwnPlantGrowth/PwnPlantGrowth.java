@@ -66,6 +66,9 @@ public class PwnPlantGrowth extends JavaPlugin
 	// Report growth setting
 	public static Boolean reportGrowth;
 	
+	// Message format from config
+	public static String msgFormat;
+	
 	// Common messages
 	public static String fertFound;
 	public static String wkFound;

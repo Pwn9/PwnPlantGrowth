@@ -141,7 +141,7 @@ public class PlayerListener implements Listener
 					Calculate cal = getCalcs(true, specialBlockList(e), m.toString(), curBiome, isDark);
 					a += cal.doLog;
 
-					p.sendMessage(a);
+					p.sendMessage(PwnPlantGrowth.msgFormat + a);
 					
 				}
 				else if(PwnPlantGrowth.seedTypes.contains(m.toString())) {
@@ -159,16 +159,20 @@ public class PlayerListener implements Listener
 						a += cal.doLog;						
 					}	
 					else if (m == Material.MELON_SEEDS) {
-						Calculate cal = getCalcs(true, specialBlockList(e), "MELON", curBiome, isDark);
-						a += cal.doLog;						
+						Calculate cal = getCalcs(true, specialBlockList(e), "MELON_STEM", curBiome, isDark);
+						a += cal.doLog;		
+						Calculate cal2 = getCalcs(true, specialBlockList(e), "MELON", curBiome, isDark);
+						a += " " + cal2.doLog;							
 					}
 					else if (m == Material.POTATO) {
 						Calculate cal = getCalcs(true, specialBlockList(e), "POTATOES", curBiome, isDark);
 						a += cal.doLog;						
 					}					
 					else if (m == Material.PUMPKIN_SEEDS) {
-						Calculate cal = getCalcs(true, specialBlockList(e), "PUMPKIN", curBiome, isDark);
-						a += cal.doLog;						
+						Calculate cal = getCalcs(true, specialBlockList(e), "PUMPKIN_STEM", curBiome, isDark);
+						a += cal.doLog;		
+						Calculate cal2 = getCalcs(true, specialBlockList(e), "PUMPKIN", curBiome, isDark);
+						a += " " + cal2.doLog;						
 					}
 					else if (m == Material.SWEET_BERRIES) {		
 						Calculate cal = getCalcs(true, specialBlockList(e), "SWEET_BERRY_BUSH", curBiome, isDark);
@@ -179,7 +183,7 @@ public class PlayerListener implements Listener
 						a += cal.doLog;						
 					}
 					
-					p.sendMessage(a);
+					p.sendMessage(PwnPlantGrowth.msgFormat + a);
 	
 				}
 			}

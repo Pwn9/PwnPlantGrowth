@@ -57,6 +57,9 @@ limit_bonemeal: false
 # Show players possible growth rates for an item if they click it on a block in a biome
 report_growth: false
 
+# Message format - set how the plugin displays messages to users
+msg_format: "&2PwnPlantGrowth: &r"
+
 # Run various debug logs to view additional plugin data for troubleshooting and configuration. Can get spammy, use for debugging.
 debug_log: false
 

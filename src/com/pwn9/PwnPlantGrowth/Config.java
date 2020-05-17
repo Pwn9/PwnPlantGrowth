@@ -40,6 +40,10 @@ public class Config
 		PwnPlantGrowth.limitBonemeal = PwnPlantGrowth.instance.getConfig().getBoolean("limit_bonemeal", false);
 		
 		// Report growth settings
-		PwnPlantGrowth.reportGrowth = PwnPlantGrowth.instance.getConfig().getBoolean("report_growth", false);			
+		PwnPlantGrowth.reportGrowth = PwnPlantGrowth.instance.getConfig().getBoolean("report_growth", false);
+		
+		// Msg Format settings
+		PwnPlantGrowth.msgFormat = PwnPlantGrowth.instance.getConfig().getString("msg_format", "&2PwnPlantGrowth: &r");
+		
 	}
 }
