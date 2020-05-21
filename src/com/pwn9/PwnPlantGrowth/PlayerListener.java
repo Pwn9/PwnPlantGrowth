@@ -3,6 +3,8 @@ package com.pwn9.PwnPlantGrowth;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -113,7 +115,6 @@ public class PlayerListener implements Listener
 			
 			Block block = e.getClickedBlock();
 			
-			
 			if (block.getType() == Material.FARMLAND || block.getType() == Material.DIRT || block.getType() == Material.GRASS_BLOCK || block.getType() == Material.JUNGLE_LOG || block.getType() == Material.SAND || block.getType() == Material.SOUL_SAND) 
 			{
 				
@@ -141,7 +142,13 @@ public class PlayerListener implements Listener
 					Calculate cal = getCalcs(true, specialBlockList(e), m.toString(), curBiome, isDark);
 					a += cal.doLog;
 
-					p.sendMessage(PwnPlantGrowth.msgFormat + a);
+					String msg = ChatColor.translateAlternateColorCodes('&', PwnPlantGrowth.msgFormat + a);
+					p.sendMessage(msg);
+					
+					// annoying unable to test in create without breaking block so cancel even in creative only
+					if (p.getGameMode() == GameMode.CREATIVE) {
+						e.setCancelled(true);
+					}
 					
 				}
 				else if(PwnPlantGrowth.seedTypes.contains(m.toString())) {
@@ -183,7 +190,13 @@ public class PlayerListener implements Listener
 						a += cal.doLog;						
 					}
 					
-					p.sendMessage(PwnPlantGrowth.msgFormat + a);
+					String msg = ChatColor.translateAlternateColorCodes('&', PwnPlantGrowth.msgFormat + a);
+					p.sendMessage(msg);
+					
+					// annoying unable to test in create without breaking block so cancel even in creative only
+					if (p.getGameMode() == GameMode.CREATIVE) {
+						e.setCancelled(true);
+					}					
 	
 				}
 			}

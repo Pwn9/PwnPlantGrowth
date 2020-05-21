@@ -281,23 +281,24 @@ public class PwnPlantGrowth extends JavaPlugin
 		}
 	}
 
-
+	// need to get the biome of the clicked block, not the player, in case the block is in a different biome
 	public static String getBiome(PlayerInteractEvent e) {
 		if (tc != null) 
 		{
-			String tControl = TerrainControl.getBiomeName(e.getPlayer().getWorld().getName(), e.getPlayer().getLocation().getBlockX(), e.getPlayer().getLocation().getBlockZ());
+			//String tControl = TerrainControl.getBiomeName(e.getPlayer().getWorld().getName(), e.getPlayer().getLocation().getBlockX(), e.getPlayer().getLocation().getBlockZ());
+			String tControl = TerrainControl.getBiomeName(e.getPlayer().getWorld().getName(), e.getClickedBlock().getLocation().getBlockX(), e.getClickedBlock().getLocation().getBlockZ());
 			if (tControl != null)
 			{
 				return tControl;
 			}
 			else 
 			{
-				return String.valueOf(e.getPlayer().getLocation().getBlock().getBiome());
+				return String.valueOf(e.getClickedBlock().getBiome());
 			}
 		}
 		else
 		{
-			return String.valueOf(e.getPlayer().getLocation().getBlock().getBiome());
+			return String.valueOf(e.getClickedBlock().getBiome());
 		}
 	}
 	

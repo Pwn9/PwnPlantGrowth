@@ -205,7 +205,7 @@ public class BlockGrowListener implements Listener
 				}
 			}
 			// Handle Cactus, Sugar Cane; the plants that grow vertically only.
-			else if (faceBlock == "MELON" || faceBlock == "PUMPKING") 
+			else if (faceBlock == "MELON" || faceBlock == "PUMPKIN") 
 			{
 	
 				toLog += faceBlock;
@@ -235,11 +235,11 @@ public class BlockGrowListener implements Listener
 				}
 			}
 			
-			// An unknown block growth event from AIR has occurred
+			// An unknown block growth event from AIR has occurred - log to main log for debugging
 			else 
 			{
 				// were not sure what has happened so log it and let it grow, maybe a new plant we haven't caught yet.
-				toLog += downBlock + " as UNKNOWN EVENT";	
+				toLog += "on " + downBlock + " as UNKNOWN EVENT at location: " + coords;
 				// Log it
 				if (PwnPlantGrowth.logEnabled) 
 				{	

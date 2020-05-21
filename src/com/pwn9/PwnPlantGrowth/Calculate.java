@@ -16,13 +16,16 @@ public class Calculate {
 		String frontLog = ", Biome: " + curBiome + ", Dark: " + isDark.toString() + ", ";
 		String darkLog = "Dark Settings: {";
 		String groupLog = "Settings: {";
+		
 		// bool to catch if the biome is never declared in any config, therefor a bad biome and should not grow
+		// not true - i'm an idiot, the null biome is ok to have actually and means default growth
 		boolean noBiome = true;
 		
 		int curGrowth = PwnPlantGrowth.instance.getConfig().getInt(thisBlock+".Growth");
 		frontLog += "Default Growth: " + curGrowth + ", ";
 		int curDeath = PwnPlantGrowth.instance.getConfig().getInt(thisBlock+".Death");
 		frontLog += "Default Death: " + curDeath + ", ";
+		
 		
 		if ((PwnPlantGrowth.instance.getConfig().isSet(thisBlock+".BiomeGroup")) || (PwnPlantGrowth.instance.getConfig().getList(thisBlock+".Biome").isEmpty()) || (PwnPlantGrowth.instance.getConfig().getList(thisBlock+".Biome").contains(curBiome))) 
 		{	
@@ -31,7 +34,9 @@ public class Calculate {
 			List<String> wkBlocksFound = specialBlocks.get(1);
 			List<String> uvBlocksFound = specialBlocks.get(2);
 			
-			// check the biome group settings
+			
+
+			// check the biome group settings if they are set.
 			if (PwnPlantGrowth.instance.getConfig().isSet(thisBlock+".BiomeGroup")) 
 			{
 				
@@ -76,6 +81,9 @@ public class Calculate {
 			
 			groupLog += "Specific Settings: {";
 			
+			
+			
+			// BIOME SETTINGS - if per biome is set, it overrides a biome group
 			if (PwnPlantGrowth.instance.getConfig().getList(thisBlock+".Biome").contains(curBiome)) {
 				noBiome = false;
 				// override with individual settings
@@ -92,6 +100,9 @@ public class Calculate {
 				}
 			}
 			
+			
+			
+			
 			// if there is fertilizer, grow this plant at the fertilizer rate - default 100%
 			// TODO: should fertilizer override dark settings or not - i think not for now
 			if (fBlocksFound.contains(PwnPlantGrowth.fertilizer))
@@ -101,6 +112,9 @@ public class Calculate {
 				curGrowth = PwnPlantGrowth.frate;
 			}
 			groupLog += "}}, ";
+			
+			
+			
 			
 			// See if there are special settings for dark growth
 			if (isDark) 
@@ -112,7 +126,7 @@ public class Calculate {
 				}
 				else 
 				{							
-					// default isDark config rates (if exist)
+					// ISDARK: default isDark config rates (if exist)
 					if (PwnPlantGrowth.instance.getConfig().isSet(thisBlock+".GrowthDark")) 
 					{
 						curGrowth = PwnPlantGrowth.instance.getConfig().getInt(thisBlock+".GrowthDark");
@@ -125,7 +139,9 @@ public class Calculate {
 						darkLog += "Death: " + curDeath + ", ";
 					}
 					
-					// override default values with biome group values
+					
+					
+					// ISDARK: override default values with biome group values
 					if (PwnPlantGrowth.instance.getConfig().isSet(thisBlock+".BiomeGroup")) 
 					{
 						
@@ -170,7 +186,7 @@ public class Calculate {
 					
 					darkLog += "Specific Settings: {";
 					
-					// per biome isDark rates (if exist)
+					// ISDARK: per biome isDark rates (if exist) override biomegroup rates
 					if (PwnPlantGrowth.instance.getConfig().getList(thisBlock+".Biome").contains(curBiome)) {
 						noBiome = false;
 						if (PwnPlantGrowth.instance.getConfig().isSet(thisBlock+"."+curBiome+".GrowthDark")) 
@@ -190,7 +206,13 @@ public class Calculate {
 				}
 			}	
 			
-			// cancel bad biomes here
+			// if BIOME was left empty, BIOME: [] it was intentional.. and this means use default growth rate.
+			if ((PwnPlantGrowth.instance.getConfig().getList(thisBlock+".Biome").isEmpty())) {
+				noBiome = false;
+			}
+			
+			
+			// check config again - nobiome means the plant had no config available anywhere not even empty/default
 			if (noBiome) 
 			{
 				isCancelled = true;
@@ -278,7 +300,7 @@ public class Calculate {
 		doLog = frontLog + midLog + toLog;
 	}
 
-	// just report the rate for listerner feature
+	// just report the rate for player listener feature for growth rates
 	Calculate(Boolean report, List<List<String>> specialBlocks, String thisBlock, String curBiome, Boolean isDark)
 	{
 		isCancelled = false;
@@ -402,7 +424,6 @@ public class Calculate {
 							}
 						}
 					}
-
 					
 					// per biome isDark rates (if exist)
 					if (PwnPlantGrowth.instance.getConfig().getList(thisBlock+".Biome").contains(curBiome)) {
@@ -420,6 +441,11 @@ public class Calculate {
 				}
 			}	
 		}
+		
+		// if BIOME was left empty, BIOME: [] it was intentional.. and this means use default growth rate.
+		if ((PwnPlantGrowth.instance.getConfig().getList(thisBlock+".Biome").isEmpty())) {
+			noBiome = false;
+		}		
 
 		if (noBiome) 
 		{
@@ -427,7 +453,7 @@ public class Calculate {
 		}
 		else 
 		{
-			toLog += thisBlock + " grows at " + curGrowth + "% at this location in biome " + curBiome;
+			toLog += thisBlock + " grows at " + curGrowth + "% in biome " + curBiome;
 			if (isDark) 
 			{
 				toLog += " in the dark";
@@ -442,6 +468,6 @@ public class Calculate {
 			}
 		}
 
-		doLog = toLog;
+		doLog = toLog + ". ";
 	}	
 }

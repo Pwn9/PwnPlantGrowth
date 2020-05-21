@@ -198,7 +198,7 @@ COCOA:
     - JUNGLE_HILLS
     - JUNGLE_EDGE 
 
-# In this example grass, tallgrass, bonemeal used on grass - will grow anywhere - Biome: [] - but only at 50%
+# In this example grass, tallgrass, bonemeal used on grass - will grow anywhere - Biome: [] - but only at 50% (also handles GRASS_BLOCK?)
 GRASS: 
     Growth: 50
     Death: 0

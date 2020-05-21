@@ -85,7 +85,7 @@ public class BlockSpreadListener implements Listener
 		return result;
 	}	
 	
-	// Listen for plant growth and then do stuff
+	// Listen for plant growth from block spread, this is like chorus plant, and then do stuff
 	@EventHandler(ignoreCancelled = false)
 	public void blockSpread(BlockSpreadEvent e) 
 	{
@@ -97,7 +97,7 @@ public class BlockSpreadListener implements Listener
 		// Get source block type and make a string for comparison later
 		String sourceBlock = String.valueOf(e.getSource().getType());
 		
-		// we only care about these 2 for now
+		// we only care about these for now
 		if (sourceBlock != "CHORUS_FLOWER" && sourceBlock != "KELP" && sourceBlock != "BAMBOO" && sourceBlock != "BAMBOO_SAPLING") 
 		{
 			return;
