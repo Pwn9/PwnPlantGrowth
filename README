@@ -1,6 +1,6 @@
 PwnPlantGrowth is a Bukkit plugin that aims to make the ability to grow, 
 and at what chance of growth, for all plant items into a configurable
-percentage.
+percentage, per biome.
 
 Plugin development by: tREMor
 
@@ -17,22 +17,16 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-=== For reference - Plant Item List for Bukkit API ===
+=== Where to find Bukkit/Spigot Block and Material declarations ===
 
-# Regular Crops
+Most of the items in this plugin are defined by their MATERIAL NAME 
+which can be found here:
+https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
 
-BEETROOT_BLOCK:
-CACTUS:
-CARROT: 
-COCOA: 
-CROPS: This refers to what is wheat in-game
-MELON_BLOCK: 
-MELON_STEM:
-NETHER_WARTS:
-POTATO:
-PUMPKIN_BLOCK:
-PUMPKIN_STEM:
-SUGAR_CANE_BLOCK: 
+# PLANTS
+"BEETROOTS", "CACTUS", "CARROTS", "COCOA", "CHORUS_FLOWER", "GRASS", 
+"KELP", "MELON", "MELON_STEM", "NETHER_WART", "POTATOS", "PUMPKIN", 
+"PUMPKIN_STEM", "SUGAR_CANE", "WHEAT", "SWEET_BERRY_BUSH"...
 
 # TREES 
 # Full tree list available at https://hub.spigotmc.org/javadocs/spigot/org/bukkit/TreeSpecies.html
