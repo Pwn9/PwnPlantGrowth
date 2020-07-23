@@ -313,7 +313,6 @@ public class Calculate {
 		// defaults
 		int curGrowth = PwnPlantGrowth.instance.getConfig().getInt(thisBlock+".Growth");
 		int curDeath = PwnPlantGrowth.instance.getConfig().getInt(thisBlock+".Death");
-
 		
 		if ((PwnPlantGrowth.instance.getConfig().isSet(thisBlock+".BiomeGroup")) || (PwnPlantGrowth.instance.getConfig().getList(thisBlock+".Biome").isEmpty()) || (PwnPlantGrowth.instance.getConfig().getList(thisBlock+".Biome").contains(curBiome))) 
 		{	

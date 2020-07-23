@@ -9,6 +9,7 @@
 enabled_worlds:
   - example_world
   - example_world_nether
+  - example_world_end
   
 # Natural sky light level: 0 allows any, 10 is sunlight through glass/tree leaves, 15 is direct sunlight
 min_natural_light: 10
@@ -77,6 +78,30 @@ log_verbose: false
 
 # BIOME GROUPS - You can MAKE YOUR OWN versions of these, this is just a sample set of groups
 BiomeGroup:
+    Hell:
+    - BASALT_DELTAS
+    - CRIMSON_FOREST
+    - NETHER_WASTES
+    - SOUL_SAND_VALLEY
+    - WARPED_FOREST
+    End:
+    - END_BARRENS
+    - END_HIGHLANDS
+    - END_MIDLANDS
+    - SMALL_END_ISLANDS
+    - THE_END
+    - THE_VOID
+    Badland:
+    - BADLANDS
+    - BADLANDS_PLATEAU
+    - ERODED_BADLANDS
+    - MODIFIED_BADLANDS_PLATEAU
+    - MODIFIED_WOODED_BADLANDS_PLATEAU
+    - WOODED_BADLANDS_PLATEAU
+    Deserts:
+    - DESERT
+    - DESERT_HILLS
+    - DESERT_LAKES
     GreatGrowing:
     - BEACHES
     - BIRCH_FOREST
@@ -117,10 +142,15 @@ BiomeGroup:
     NoGrowing:
     - VOID
     - SKY
-    - HELL
 
-# CROPS - Important note, as of PPG 1.6 the plant names are now all in UPPER CASE matching the actual Bukkit Material.TYPE 
-
+# Ageable / BlockGrowEvent or BlockSpreadEvent - Important note, as of PPG 1.6 the plant names are now all in UPPER CASE matching the actual Bukkit Material.TYPE 
+BAMBOO:
+    Growth: 50
+    Death: 5
+    Biome:
+    - JUNGLE
+    - JUNGLE_HILLS   
+    
 # In this example beetroot only grows in GoodGrowing and GreatGrowing biomes, setting biome NONE should block all others
 BEETROOTS: 
     Growth: 50
@@ -222,13 +252,17 @@ MELON_STEM:
     Death: 5
     Biome: []
 
-# In this example netherwart is restricted to the nether at 25%
+# In this example netherwart is restricted to the nether biomegroup at 25%
 NETHER_WART:
     Growth: 25
     Death: 5
-    Biome: 
-    - HELL
-        
+    BiomeGroup: 
+    - Hell
+    Hell: 
+      Growth: 25
+      Death: 5
+    Biome: []
+            
 # Potato will grow in great and good areas, all others at its default rate with Biome: []
 POTATOES:
     Growth: 50
@@ -292,6 +326,26 @@ SWEET_BERRY_BUSH:
       DeathDark: 10
     Biome: []
     
+TWISTING_VINES: 
+    Growth: 25
+    Death: 5
+    BiomeGroup: 
+    - Hell
+    Hell: 
+      Growth: 25
+      Death: 5
+    Biome: []
+    
+WEEPING_VINES:
+    Growth: 25
+    Death: 5
+    BiomeGroup: 
+    - Hell
+    Hell: 
+      Growth: 25
+      Death: 5
+    Biome: []
+    
 # This is WHEAT - In this example wheat will grow everywhere at 50% rate, and at better rates in great and good growing groups
 WHEAT:
     Growth: 50
@@ -312,10 +366,10 @@ WHEAT:
       Death: 5 
       DeathDark: 10
     Biome: []
+    
       
-# TREES 
-# As of version 2.4.0 PwnPlantGrowth is switching to the sapling type that starts the tree.
-
+# StructureGrowEvent Items
+# As of version 2.4.0 PwnPlantGrowth switched to the block type (sapling) that starts the tree/structure, the growth result could be regular, tall, mega, etc based on other conditions.
 ACACIA_SAPLING:
     Growth: 50
     Death: 5
@@ -347,22 +401,7 @@ JUNGLE_SAPLING:
     Biome:
     - JUNGLE
     - JUNGLE_HILLS   
-
-BAMBOO:
-    Growth: 50
-    Death: 5
-    Biome:
-    - JUNGLE
-    - JUNGLE_HILLS   
-
-# This may no longer be needed    
-BAMBOO_SAPLING:
-    Growth: 50
-    Death: 5
-    Biome:
-    - JUNGLE
-    - JUNGLE_HILLS   
-            
+           
 OAK_SAPLING:
     Growth: 50
     Death: 5
@@ -387,6 +426,7 @@ RED_MUSHROOM:
     - MUSHROOM_ISLAND
     - MUSHROOM_SHORE
                 
-# Plugin will check for the following list of plants as of ver. 2.5.4
-# Plants: "BEETROOTS", "CACTUS", "CARROTS", "COCOA", "CHORUS_FLOWER", "GRASS", "KELP", "MELON", "MELON_STEM", "NETHER_WART", "POTATOS", "PUMPKIN", "PUMPKIN_STEM", "SUGAR_CANE", "WHEAT", "SWEET_BERRY_BUSH"
-# Trees: "ACACIA_SAPLING", "BAMBOO", "BAMBOO_SAPLING", "BIRCH_SAPLING", "DARK_OAK_SAPLING", "JUNGLE_SAPLING", "OAK_SAPLING", "SPRUCE_SAPLING", "RED_MUSHROOM", "BROWN_MUSHROOM"
+# Plugin will check for the following list of plants as of ver. 2.6.0 for Minecraft 1.16.x 
+
+# Ageable / BlockGrowEvent: "BAMBO", "BEETROOTS", "CACTUS", "CARROTS", "COCOA", "CHORUS_FLOWER", "GRASS", "KELP", "MELON", "MELON_STEM", "NETHER_WART", "POTATOS", "PUMPKIN", "PUMPKIN_STEM", "SUGAR_CANE", "TWISTING_VINES", "WEEPING_VINES", "WHEAT", "SWEET_BERRY_BUSH"
+# Structures / StructureGrowEvent: "ACACIA_SAPLING", "BIRCH_SAPLING", "DARK_OAK_SAPLING", "JUNGLE_SAPLING", "OAK_SAPLING", "SPRUCE_SAPLING", "RED_MUSHROOM", "BROWN_MUSHROOM"
