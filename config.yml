@@ -144,6 +144,13 @@ BiomeGroup:
     - STONE_BEACH
     - TAIGA_COLD
     - TAIGA_COLD_HILLS
+    Snowy:
+    - SNOWY_BEACH
+    - SNOWY_MOUNTAINS
+    - SNOWY_TAIGA
+    - SNOWY_TAIGA_HILLS
+    - SNOWY_TAIGA_MOUNTAINS
+    - SNOWY_TUNDRA
     NoGrowing:
     - VOID
     - SKY
@@ -456,8 +463,20 @@ RED_MUSHROOM:
     Biome:
     - MUSHROOM_ISLAND
     - MUSHROOM_SHORE
+    
+CRIMSON_FUNGUS:
+    Growth: 50
+    Death: 5
+    Biome:
+    - CRIMSON_FOREST
+              
+WARPED_FUNGUS:
+    Growth: 50
+    Death: 5
+    Biome:
+    - WARPED_FOREST
                 
 # Plugin will check for the following list of plants as of ver. 2.6.0 for Minecraft 1.16.x 
 
 # Ageable / BlockGrowEvent: "BAMBO", "BEETROOTS", "CACTUS", "CARROTS", "COCOA", "CHORUS_FLOWER", "GRASS", "KELP", "MELON", "MELON_STEM", "NETHER_WART", "POTATOS", "PUMPKIN", "PUMPKIN_STEM", "SUGAR_CANE", "TWISTING_VINES", "WEEPING_VINES", "WHEAT", "SWEET_BERRY_BUSH"
-# Structures / StructureGrowEvent: "ACACIA_SAPLING", "BIRCH_SAPLING", "DARK_OAK_SAPLING", "JUNGLE_SAPLING", "OAK_SAPLING", "SPRUCE_SAPLING", "RED_MUSHROOM", "BROWN_MUSHROOM"
+# Structures / StructureGrowEvent: "ACACIA_SAPLING", "BIRCH_SAPLING", "DARK_OAK_SAPLING", "JUNGLE_SAPLING", "OAK_SAPLING", "SPRUCE_SAPLING", "RED_MUSHROOM", "BROWN_MUSHROOM", "CRIMSON_FUNGUS", "WARPED_FUNGUS"
