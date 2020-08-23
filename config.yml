@@ -91,23 +91,30 @@ BiomeGroup:
     - SMALL_END_ISLANDS
     - THE_END
     - THE_VOID
-    Badland:
+    Badlands:
     - BADLANDS
     - BADLANDS_PLATEAU
     - ERODED_BADLANDS
     - MODIFIED_BADLANDS_PLATEAU
     - MODIFIED_WOODED_BADLANDS_PLATEAU
     - WOODED_BADLANDS_PLATEAU
-    Deserts:
+    Desert:
     - DESERT
     - DESERT_HILLS
     - DESERT_LAKES
+    Jungle:
+    - BAMBOO_JUNGLE
+    - BAMBOO_JUNGLE_HILLS
+    - JUNGLE
+    - JUNGLE_EDGE
+    - JUNGLE_HILLS
+    - MODIFIED_JUNGLE
+    - MODIFIED_JUNGLE_EDGE
     GreatGrowing:
     - BEACHES
     - BIRCH_FOREST
     - FOREST
     - JUNGLE
-    - JUNGLE_EDGE
     - MUSHROOM_ISLAND
     - MUSHROOM_ISLAND_SHORE
     - PLAINS
@@ -126,8 +133,6 @@ BiomeGroup:
     - TAIGA_HILLS
     BadGrowing:
     - COLD_BEACH
-    - DESERT
-    - DESERT_HILLS
     - EXTREME_HILLS
     - EXTREME_HILLS_WITH_TREES
     - FROZEN_RIVER
@@ -147,9 +152,16 @@ BiomeGroup:
 BAMBOO:
     Growth: 50
     Death: 5
+    BiomeGroup:
+    - Jungle
+    Jungle:
+      Growth: 50
+      GrowthDark: 25
+      Death: 0 
+      DeathDark: 5    
     Biome:
-    - JUNGLE
-    - JUNGLE_HILLS   
+    - NONE
+
     
 # In this example beetroot only grows in GoodGrowing and GreatGrowing biomes, setting biome NONE should block all others
 BEETROOTS: 
@@ -173,16 +185,24 @@ BEETROOTS:
     Biome:
     - NONE 
 
-# In this example cactus is restricted to specific biomes
+# In this example cactus is restricted to the biomegroup desert and savanna
 CACTUS:
     Growth: 50
     GrowthDark: 25
     Death: 5
     DeathDark: 25
+    BiomeGroup:
+    - Desert
+    Desert:
+      Growth: 50
+      GrowthDark: 25
+      Death: 0 
+      DeathDark: 5      
     Biome: 
-    - DESERT
-    - DESERT_HILLS
     - SAVANNA
+    SAVANNA:
+      Growth: 25
+      Death: 50
 
 # Carrot example is setup like beetroot but also grows in desert by setting Biome: - DESERT value
 CARROTS: 
@@ -223,12 +243,17 @@ CHORUS_FLOWER:
 COCOA: 
     Growth: 25
     Death: 5
+    BiomeGroup:
+    - Jungle
+    Jungle:
+      Growth: 25
+      GrowthDark: 25
+      Death: 5 
+      DeathDark: 5    
     Biome:
-    - JUNGLE
-    - JUNGLE_HILLS
-    - JUNGLE_EDGE 
+    - NONE
 
-# In this example grass, tallgrass, bonemeal used on grass - will grow anywhere - Biome: [] - but only at 50% (also handles GRASS_BLOCK?)
+# In this example grass, tallgrass, bonemeal used on grass - will grow anywhere - Biome: [] - but only at 50% 
 GRASS: 
     Growth: 50
     Death: 0
@@ -398,9 +423,15 @@ DARK_OAK_SAPLING:
 JUNGLE_SAPLING:
     Growth: 50
     Death: 5
+    BiomeGroup:
+    - Jungle
+    Jungle:
+      Growth: 50
+      GrowthDark: 25
+      Death: 0 
+      DeathDark: 5    
     Biome:
-    - JUNGLE
-    - JUNGLE_HILLS   
+    - NONE 
            
 OAK_SAPLING:
     Growth: 50
