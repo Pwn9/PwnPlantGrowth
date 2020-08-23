@@ -452,7 +452,7 @@ public class Calculate {
 		}
 		else 
 		{
-			toLog += thisBlock + " grows at " + curGrowth + "% in biome " + curBiome;
+			toLog += thisBlock + " grows at " + curGrowth + "%, dies at " + curDeath +"% in biome " + curBiome;
 			if (isDark) 
 			{
 				toLog += " in the dark";
@@ -463,7 +463,7 @@ public class Calculate {
 			}
 			if (fert)
 			{
-				toLog += " with fertilzer block nearby";
+				toLog += " with fertilizer block nearby";
 			}
 		}
 
