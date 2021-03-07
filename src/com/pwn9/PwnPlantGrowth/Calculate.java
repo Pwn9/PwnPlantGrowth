@@ -468,5 +468,6 @@ public class Calculate {
 		}
 
 		doLog = toLog + ". ";
+		return;
 	}	
 }

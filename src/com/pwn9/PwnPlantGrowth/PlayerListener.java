@@ -128,7 +128,6 @@ public class PlayerListener implements Listener
 				// Get the current natural light level
 				int lightLevel = e.getPlayer().getLocation().getBlock().getLightFromSky();
 
-				
 				if(PwnPlantGrowth.plantTypes.contains(m.toString())) {
 					
 					
@@ -193,14 +192,12 @@ public class PlayerListener implements Listener
 					String msg = ChatColor.translateAlternateColorCodes('&', PwnPlantGrowth.msgFormat + a);
 					p.sendMessage(msg);
 					
-					// annoying unable to test in create without breaking block so cancel even in creative only
+					// annoying unable to test in creative without breaking block so cancel event in creative only
 					if (p.getGameMode() == GameMode.CREATIVE) {
 						e.setCancelled(true);
 					}					
-	
 				}
 			}
 		}
-	}
-	
+	}	
 }

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
 
+import org.bukkit.event.block.BlockFertilizeEvent;
 import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.StructureGrowEvent;
@@ -33,6 +34,7 @@ public class PwnPlantGrowth extends JavaPlugin
 	public static Boolean logEnabled;
 	public static Boolean logTreeEnabled;
 	public static Boolean logPlantEnabled;
+	public static Boolean logBonemealEnabled;
 	public static Boolean logCoords;
 	public static Boolean logVerbose;
 	public static Boolean blockWaterBucket;
@@ -92,6 +94,7 @@ public class PwnPlantGrowth extends JavaPlugin
 		new StructureGrowListener(this);
 		new PlayerListener(this);
 		new BlockSpreadListener(this);
+		new BlockFertilizeListener(this);
 		
 		// Get data folder
 		PwnPlantGrowth.dataFolder = getDataFolder();
@@ -105,7 +108,7 @@ public class PwnPlantGrowth extends JavaPlugin
 		PwnPlantGrowth.uvFound = " UV found, allowing false light growth.";
 		
 		// Load all possible plant types
-		String sArray[] = new String[] { "BAMBOO", "BEETROOTS", "CACTUS", "CARROTS", "CHORUS_FLOWER", "COCOA", "GRASS", "KELP", "MELON", "MELON_STEM", "NETHER_WART", "POTATOES", "PUMPKIN", "PUMPKIN_STEM", "SUGAR_CANE", "SWEET_BERRY_BUSH", "TWISTING_VINES", "WEEPING_VINES", "WHEAT", "ACACIA_SAPLING", "BIRCH_SAPLING", "DARK_OAK_SAPLING", "JUNGLE_SAPLING", "OAK_SAPLING", "SPRUCE_SAPLING", "RED_MUSHROOM", "BROWN_MUSHROOM", "CRIMSON_FUNGUS", "WARPED_FUNGUS"};
+		String sArray[] = new String[] { "BAMBOO", "BAMBOO_SAPLING", "BEETROOTS", "CACTUS", "CARROTS", "CHORUS_FLOWER", "COCOA", "GRASS", "KELP", "MELON", "MELON_STEM", "NETHER_WART", "POTATOES", "PUMPKIN", "PUMPKIN_STEM", "SUGAR_CANE", "SWEET_BERRY_BUSH", "TWISTING_VINES", "WEEPING_VINES", "WHEAT", "ACACIA_SAPLING", "BIRCH_SAPLING", "DARK_OAK_SAPLING", "JUNGLE_SAPLING", "OAK_SAPLING", "SPRUCE_SAPLING", "RED_MUSHROOM", "BROWN_MUSHROOM", "CRIMSON_FUNGUS", "WARPED_FUNGUS"};
 		PwnPlantGrowth.plantTypes = Arrays.asList(sArray);
 
 		// Load all possible seed types not in plant types, the items that plant a plant
@@ -281,6 +284,26 @@ public class PwnPlantGrowth extends JavaPlugin
 		}
 	}
 
+	public static String getBiome(BlockFertilizeEvent e) 
+	{
+		if (tc != null) 
+		{		
+			String tControl = TerrainControl.getBiomeName(e.getBlock().getWorld().getName(), e.getBlock().getLocation().getBlockX(), e.getBlock().getLocation().getBlockZ());
+			if (tControl != null)
+			{
+				return tControl;
+			}
+			else
+			{
+				return String.valueOf(e.getBlock().getBiome());
+			}
+		}
+		else
+		{
+			return String.valueOf(e.getBlock().getBiome());
+		}
+	}
+	
 	// need to get the biome of the clicked block, not the player, in case the block is in a different biome
 	public static String getBiome(PlayerInteractEvent e) {
 		if (tc != null) 

@@ -52,7 +52,7 @@ uv: GLOWSTONE
 # Radius that UV affects
 uv_radius: 5
 
-# Allow plugin to capture bonemeal (only works for trees right now)
+# Allow plugin to capture bonemeal
 limit_bonemeal: false
 
 # Show players possible growth rates for an item if they click it on a block in a biome
@@ -69,6 +69,9 @@ tree_log: false
 
 # Will additionally log Plant Growing Events.
 plant_log: false
+
+# Will additionally log Bonemeal Growing Events.
+bonemeal_log: false
 
 # Set true if you want also to log the coordinates on the world of the event - gets really spammy
 log_coords: false
@@ -169,6 +172,19 @@ BAMBOO:
     Biome:
     - NONE
 
+# Bamboo Sapling is a freshly planted bamboo, it is a block item not a tree item even though it is labeled "sapling"
+BAMBOO_SAPLING:
+    Growth: 50
+    Death: 5
+    BiomeGroup:
+    - Jungle
+    Jungle:
+      Growth: 50
+      GrowthDark: 25
+      Death: 0 
+      DeathDark: 5    
+    Biome:
+    - NONE
     
 # In this example beetroot only grows in GoodGrowing and GreatGrowing biomes, setting biome NONE should block all others
 BEETROOTS: 
@@ -266,6 +282,12 @@ GRASS:
     Death: 0
     Biome: []
 
+# Similar to GRASS above, specifically for when bonemeal is used on a grass block
+GRASS_BLOCK: 
+    Growth: 50
+    Death: 0
+    Biome: []
+    
 # In this example kelp will grow anywhere - Biome: [] - but only at 50%
 KELP: 
     Growth: 50
@@ -476,7 +498,7 @@ WARPED_FUNGUS:
     Biome:
     - WARPED_FOREST
                 
-# Plugin will check for the following list of plants as of ver. 2.6.0 for Minecraft 1.16.x 
+# Plugin will check for the following list of plants as of ver. 2.6.1 for Minecraft 1.16.x 
 
-# Ageable / BlockGrowEvent: "BAMBO", "BEETROOTS", "CACTUS", "CARROTS", "COCOA", "CHORUS_FLOWER", "GRASS", "KELP", "MELON", "MELON_STEM", "NETHER_WART", "POTATOS", "PUMPKIN", "PUMPKIN_STEM", "SUGAR_CANE", "TWISTING_VINES", "WEEPING_VINES", "WHEAT", "SWEET_BERRY_BUSH"
+# Ageable / BlockGrowEvent: "BAMBOO", "BAMBOO_SAPLING", "BEETROOTS", "CACTUS", "CARROTS", "COCOA", "CHORUS_FLOWER", "GRASS", "GRASS_BLOCK", "KELP", "MELON", "MELON_STEM", "NETHER_WART", "POTATOS", "PUMPKIN", "PUMPKIN_STEM", "SUGAR_CANE", "TWISTING_VINES", "WEEPING_VINES", "WHEAT", "SWEET_BERRY_BUSH"
 # Structures / StructureGrowEvent: "ACACIA_SAPLING", "BIRCH_SAPLING", "DARK_OAK_SAPLING", "JUNGLE_SAPLING", "OAK_SAPLING", "SPRUCE_SAPLING", "RED_MUSHROOM", "BROWN_MUSHROOM", "CRIMSON_FUNGUS", "WARPED_FUNGUS"

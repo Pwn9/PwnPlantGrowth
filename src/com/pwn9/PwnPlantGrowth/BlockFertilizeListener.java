@@ -7,14 +7,14 @@ import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockSpreadEvent;
+import org.bukkit.event.block.BlockFertilizeEvent;
 
-public class BlockSpreadListener implements Listener 
+public class BlockFertilizeListener implements Listener 
 {
 
 	private final PwnPlantGrowth plugin;
 	
-	public BlockSpreadListener(PwnPlantGrowth plugin) 
+	public BlockFertilizeListener(PwnPlantGrowth plugin) 
 	{
 	    plugin.getServer().getPluginManager().registerEvents(this, plugin);    
 	    this.plugin = plugin;
@@ -26,7 +26,7 @@ public class BlockSpreadListener implements Listener
 	}
 
 	// retrieve list of special blocks
-	public List<List<String>> specialBlockList(BlockSpreadEvent e)
+	public List<List<String>> specialBlockList(BlockFertilizeEvent e)
 	{
 		List<String> fBlocksFound = new ArrayList<String>();
 		List<String> wkBlocksFound = new ArrayList<String>();
@@ -86,9 +86,9 @@ public class BlockSpreadListener implements Listener
 		return result;
 	}	
 	
-	// Listen for plant growth from block spread, this is like chorus plant, and then do stuff
+	// Listen for plant growth from block fertilize, and then do stuff
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
-	public void blockSpread(BlockSpreadEvent e) 
+	public void blockFertilize(BlockFertilizeEvent e) 
 	{
 		
 		// Enabled in world?
@@ -96,20 +96,14 @@ public class BlockSpreadListener implements Listener
 		if (!PwnPlantGrowth.isEnabledIn(world.getName())) return;
 
 		// Get source block type and make a string for comparison later
-		String sourceBlock = String.valueOf(e.getSource().getType());
-		
-		// we only care about these for now
-		if (sourceBlock != "CHORUS_FLOWER" && sourceBlock != "KELP" && sourceBlock != "BAMBOO" && sourceBlock != "BAMBOO_SAPLING") 
-		{
-			return;
-		}
+		String sourceBlock = String.valueOf(e.getBlock().getType());
 		
 		// Get current biome and make a string for comparison later
 		String curBiome = PwnPlantGrowth.getBiome(e);
 		
 		if ((PwnPlantGrowth.logEnabled) && (PwnPlantGrowth.logPlantEnabled) && (PwnPlantGrowth.logVerbose))
 		{
-			PwnPlantGrowth.logToFile("Block Event for: " + sourceBlock + " - In biome: " + curBiome, "BlockSpread");
+			PwnPlantGrowth.logToFile("Block Event for: " + sourceBlock + " - In biome: " + curBiome, "BlockFertilize");
 		}	
 		
 		// Is anything set for this block in the config? If not, abort.
@@ -126,7 +120,7 @@ public class BlockSpreadListener implements Listener
 		
 		// Get the current natural light level
 		int lightLevel = e.getBlock().getLightFromSky();
-				
+		
 		// If the light level is lower than configured threshold and the plant is NOT exempt from dark grow, set this transaction to isDark = true
 		if ((PwnPlantGrowth.naturalLight > lightLevel) && (!PwnPlantGrowth.canDarkGrow(sourceBlock)))
 		{
@@ -141,19 +135,17 @@ public class BlockSpreadListener implements Listener
 			toLog += coords + ": ";
 		}
 
-		toLog += "Growing: " + sourceBlock;
+		toLog += "Fertilizing: " + sourceBlock;
 
 		Calculate cal = getCalcs(specialBlockList(e), sourceBlock, curBiome, isDark);
 		toLog += cal.doLog;
 		e.setCancelled(cal.isCancelled);
-		if (cal.replacement != null) {
-			e.getBlock().setType(cal.replacement);
-		}
+		// don't do replacement if death and replace for a fertilze event
 		
 		// Log it
-		if ((PwnPlantGrowth.logEnabled) && (PwnPlantGrowth.logPlantEnabled))  
+		if ((PwnPlantGrowth.logEnabled) && (PwnPlantGrowth.logBonemealEnabled))  
     	{	
-    		PwnPlantGrowth.logToFile(toLog, "BlockSpread");
+    		PwnPlantGrowth.logToFile(toLog, "Fertilize");
     	}
 		
 		return;

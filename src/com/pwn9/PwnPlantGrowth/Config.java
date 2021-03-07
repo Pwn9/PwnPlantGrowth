@@ -11,6 +11,7 @@ public class Config
 		PwnPlantGrowth.logEnabled = PwnPlantGrowth.instance.getConfig().getBoolean("debug_log", false);
 		PwnPlantGrowth.logTreeEnabled = PwnPlantGrowth.instance.getConfig().getBoolean("tree_log", false);
 		PwnPlantGrowth.logPlantEnabled = PwnPlantGrowth.instance.getConfig().getBoolean("plant_log", false);
+		PwnPlantGrowth.logBonemealEnabled = PwnPlantGrowth.instance.getConfig().getBoolean("bonemeal_log", false);
 		PwnPlantGrowth.logCoords = PwnPlantGrowth.instance.getConfig().getBoolean("log_coords", false);
 		PwnPlantGrowth.logVerbose = PwnPlantGrowth.instance.getConfig().getBoolean("log_verbose", false);
 		

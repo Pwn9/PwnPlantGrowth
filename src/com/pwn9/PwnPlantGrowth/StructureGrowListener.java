@@ -165,6 +165,8 @@ public class StructureGrowListener implements Listener
 		{	
 			PwnPlantGrowth.logToFile(toLog, "StructureGrow");
 		}
+		
+		return;
 	}
 	
 }

@@ -190,7 +190,7 @@ public class BlockGrowListener implements Listener
 				faceBlock = "AIR";
 			}
 			
-			// Handle Cactus, Sugar Cane; the plants that grow vertically only.
+			// Handle Cactus, Sugar Cane, Bamboo; the plants that grow vertically only.
 			if (downBlock == "CACTUS" || downBlock == "SUGAR_CANE") 
 			{
 	
@@ -204,7 +204,7 @@ public class BlockGrowListener implements Listener
 					e.getBlock().setType(cal.replacement);
 				}
 			}
-			// Handle Cactus, Sugar Cane; the plants that grow vertically only.
+			// not a vertical growing plant so fallback to a melon
 			else if (faceBlock == "MELON" || faceBlock == "PUMPKIN") 
 			{
 	
@@ -259,6 +259,8 @@ public class BlockGrowListener implements Listener
     	{	
     		PwnPlantGrowth.logToFile(toLog, "BlockGrow");
     	}	
+		
+		return;
 	}
 	
 }
