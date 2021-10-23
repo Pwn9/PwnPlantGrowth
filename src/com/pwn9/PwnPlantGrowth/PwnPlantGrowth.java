@@ -87,7 +87,7 @@ public class PwnPlantGrowth extends JavaPlugin
 		this.saveDefaultConfig();
 		
 		// Start Metrics
-		MetricsLite metricslite = new MetricsLite(this);
+		Metrics metrics = new Metrics(this, 3434);
     	
 		// Setup listeners
 		new BlockGrowListener(this);
